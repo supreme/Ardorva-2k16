@@ -1,0 +1,12 @@
+Added item wielding.
+Added running.
+Added most of the emotes.
+Added teleporting functionality.
+Added functionality for removing equipment.
+Better command system.
+Loaded new item def through JSON serialization.
+Regional ground item support.
+Loaded new NPC def through JSON serialization.
+NPC rendering. 
+NPC interact packet handling.
+Started shops.
