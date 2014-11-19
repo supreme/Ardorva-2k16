@@ -296,6 +296,19 @@ public class Container {
 	}
 	
 	/**
+	 * Gets the amount of items in a slot.
+	 * @param slot The slot.
+	 * @return The amount of items, or <code>-1</code> if the slot is invalid.
+	 */
+	public int getAmountInSlot(int slot) {
+		if (items[slot] == null) {
+			return -1;
+		}
+		
+		return items[slot].getCount();
+	}
+	
+	/**
 	 * Sets an item.
 	 * @param index The position in the container.
 	 * @param item The item.
