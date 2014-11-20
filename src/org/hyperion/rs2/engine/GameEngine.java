@@ -11,9 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.task.Task;
-import org.hyperion.rs2.task.impl.NPCUpdateTask;
+import org.hyperion.rs2.task.impl.NPCResetTask;
+import org.hyperion.rs2.task.impl.PlayerResetTask;
+import org.hyperion.rs2.task.impl.PlayerTickTask;
 import org.hyperion.rs2.task.impl.PlayerUpdateTask;
 import org.hyperion.util.BlockingExecutorService;
 
@@ -100,13 +103,9 @@ public class GameEngine implements Runnable {
 	public void run() {
 		try {
 			while(running) {
+				long currentTime = System.currentTimeMillis();
 				TaskManager.tick();
-				
-				try {
-					World.getWorld().getTickableManager().pulse();
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
+			
 				try {
 					final Task task = tasks.take();
 					submitLogic(new Runnable() {
@@ -118,6 +117,16 @@ public class GameEngine implements Runnable {
 				} catch(InterruptedException e) {
 					continue;
 				}
+				
+				long sleepTime = 600 + currentTime - System.currentTimeMillis();
+				System.out.println("[KERNAL] Sleep time: " + sleepTime);
+				if (sleepTime <= 0)
+					continue;
+			    try {
+			    	Thread.sleep(sleepTime);
+			    } catch (InterruptedException e) {
+			    	e.printStackTrace();
+			    }
 			}
 		} finally {
 			logicService.shutdown();

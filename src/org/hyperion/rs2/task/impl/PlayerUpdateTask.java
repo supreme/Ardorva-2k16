@@ -2,7 +2,7 @@ package org.hyperion.rs2.task.impl;
 
 import java.util.Iterator;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.engine.task.listener.OnFireActionListener;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
 import org.hyperion.rs2.model.Entity;
@@ -15,9 +15,9 @@ import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Equipment.EquipmentType;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.player.WeaponAnimations;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.PacketBuilder;
-import org.hyperion.rs2.task.Task;
 import org.hyperion.rs2.util.TextUtils;
 
 /**
@@ -25,23 +25,21 @@ import org.hyperion.rs2.util.TextUtils;
  * @author Graham Edgecombe
  *
  */
-public class PlayerUpdateTask implements Task {
-	
-	/**
-	 * The player.
-	 */
+public class PlayerUpdateTask extends OnFireActionListener {
+
 	private Player player;
 	
-	/**
-	 * Creates an update task.
-	 * @param player The player.
-	 */
 	public PlayerUpdateTask(Player player) {
 		this.player = player;
 	}
+	
+	@Override
+	public boolean cancelWhen() {
+		return !player.getSession().isConnected();
+	}
 
 	@Override
-	public void execute(GameEngine context) {
+	public void run() {
 		/*
 		 * If the map region changed send the new one.
 		 * We do this immediately as the client can begin loading it before the
@@ -477,11 +475,11 @@ public class PlayerUpdateTask implements Task {
 	/**
 	 * Appends an appearance update.
 	 * @param packet The packet.
-	 * @param otherPlayer The player.
+	 * @param player The player.
 	 */
-	private void appendPlayerAppearanceUpdate(PacketBuilder packet, Player otherPlayer) {
-		Appearance app = otherPlayer.getAppearance();
-		Container eq = otherPlayer.getEquipment();
+	private void appendPlayerAppearanceUpdate(PacketBuilder packet, Player player) {
+		Appearance app = player.getAppearance();
+		Container eq = player.getEquipment();
 		
 		PacketBuilder playerProps = new PacketBuilder();
 		playerProps.put((byte) app.getGender()); // gender
@@ -556,16 +554,16 @@ public class PlayerUpdateTask implements Task {
 		playerProps.put((byte) app.getFeetColour()); // feetc
 		playerProps.put((byte) app.getSkinColour()); // skinc
 		
-		playerProps.putShort((short) 0x328); // stand
-		playerProps.putShort((short) 0x337); // stand turn
-		playerProps.putShort((short) 0x333); // walk
-		playerProps.putShort((short) 0x334); // turn 180
-		playerProps.putShort((short) 0x335); // turn 90 cw
-		playerProps.putShort((short) 0x336); // turn 90 ccw
-		playerProps.putShort((short) 0x338); // run
+		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // stand
+		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // stand turn
+		playerProps.putShort((short) WeaponAnimations.getWalkAnim(player)); // walk
+		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // turn 180
+		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // turn 90 cw
+		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // turn 90 ccw
+		playerProps.putShort((short) WeaponAnimations.getRunAnim(player)); // run
 		
-		playerProps.putLong(otherPlayer.getNameAsLong()); // player name
-		playerProps.put((byte) otherPlayer.getSkills().getCombatLevel()); // combat level
+		playerProps.putLong(player.getNameAsLong()); // player name
+		playerProps.put((byte) player.getSkills().getCombatLevel()); // combat level
 		playerProps.putShort(0); // (skill-level instead of combat-level) otherPlayer.getSkills().getTotalLevel()); // total level
 		
 		Packet propsPacket = playerProps.toPacket();
@@ -692,5 +690,4 @@ public class PlayerUpdateTask implements Task {
 			}
 		}
 	}
-
 }

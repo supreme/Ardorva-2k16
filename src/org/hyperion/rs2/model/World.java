@@ -18,6 +18,7 @@ import org.hyperion.rs2.WorldLoader;
 import org.hyperion.rs2.WorldLoader.LoginResult;
 import org.hyperion.rs2.cache.Cache;
 import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.event.EventManager;
 import org.hyperion.rs2.event.impl.CleanupEvent;
@@ -185,7 +186,7 @@ public class World {
 		} else {
 			this.engine = engine;
 			this.eventManager = new EventManager(engine);
-			tickableManager = new TickableManager();
+			this.tickableManager = new TickableManager();
 			this.registerGlobalEvents();
 			this.loadConfiguration();
 		}
@@ -237,7 +238,7 @@ public class World {
 	 * Registers global events such as updating.
 	 */
 	private void registerGlobalEvents() {
-		submit(new UpdateEvent());
+		//submit(new UpdateEvent());
 		submit(new CleanupEvent());
 		submit(new ControlPanelUpdationEvent());
 	}

@@ -3,6 +3,7 @@ package org.hyperion.rs2.net;
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
@@ -16,6 +17,9 @@ import org.hyperion.rs2.model.container.impl.InterfaceContainerListener;
 import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet.Type;
+import org.hyperion.rs2.task.impl.PlayerResetTask;
+import org.hyperion.rs2.task.impl.PlayerTickTask;
+import org.hyperion.rs2.task.impl.PlayerUpdateTask;
 
 /**
  * A utility class for sending packets.
@@ -62,6 +66,9 @@ public class ActionSender {
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
 		
+		TaskManager.submit(new PlayerTickTask(player));
+		TaskManager.submit(new PlayerUpdateTask(player));
+		TaskManager.submit(new PlayerResetTask(player));
 		return this;
 	}
 

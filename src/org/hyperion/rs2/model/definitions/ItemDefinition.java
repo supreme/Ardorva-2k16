@@ -190,7 +190,7 @@ public class ItemDefinition {
 	 * Structure of the nested object for weapon definitions.
 	 * @author Stephen Andrews
 	 */
-	private class WeaponDefinition {
+	public class WeaponDefinition {
 		
 		/**
 		 * Whether or not the weapon is a two hander.

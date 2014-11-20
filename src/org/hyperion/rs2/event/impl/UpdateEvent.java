@@ -54,9 +54,9 @@ public class UpdateEvent extends Event {
 			if(!player.getSession().isConnected()) {
 				it$.remove();
 			} else {
-				tickTasks.add(new PlayerTickTask(player));
-				updateTasks.add(new ConsecutiveTask(new PlayerUpdateTask(player), new NPCUpdateTask(player)));
-				resetTasks.add(new PlayerResetTask(player));
+				//tickTasks.add(new PlayerTickTask(player));
+				//updateTasks.add(new ConsecutiveTask(new PlayerUpdateTask(player), new NPCUpdateTask(player)));
+				//resetTasks.add(new PlayerResetTask(player));
 			}
 		}
 		
