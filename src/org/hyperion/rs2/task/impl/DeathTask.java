@@ -1,6 +1,6 @@
 package org.hyperion.rs2.task.impl;
 
-import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.task.Task;
 
 /**

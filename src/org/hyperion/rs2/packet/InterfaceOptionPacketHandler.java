@@ -1,6 +1,7 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.model.container.Bank;
+import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
 
@@ -74,7 +75,7 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 				if (slot < 0 || slot > 13) {
 					break;
 				}
-				//Equipment.unequipItem(player, itemId, slot, interfaceId == 465);
+				Equipment.unequipItem(player, itemId, slot);
 				break;
 			default:
 				player.getActionSender().sendMessage("Unhandled interface ID | Interface Option 1, interface ID: " + interfaceId);

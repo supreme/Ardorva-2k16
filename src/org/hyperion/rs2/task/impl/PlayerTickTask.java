@@ -2,7 +2,7 @@ package org.hyperion.rs2.task.impl;
 
 import java.util.Queue;
 
-import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.model.ChatMessage;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.player.Player;

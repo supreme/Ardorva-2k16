@@ -4,7 +4,7 @@ import java.net.SocketAddress;
 import java.util.logging.Logger;
 
 import org.apache.mina.core.session.IoSession;
-import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.task.Task;

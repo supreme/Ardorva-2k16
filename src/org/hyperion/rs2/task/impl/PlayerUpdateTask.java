@@ -2,7 +2,7 @@ package org.hyperion.rs2.task.impl;
 
 import java.util.Iterator;
 
-import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
 import org.hyperion.rs2.model.Entity;

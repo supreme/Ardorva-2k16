@@ -6,6 +6,8 @@ import java.util.Map;
 import org.hyperion.rs2.LivingClasses;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.definitions.ItemDefinition;
+import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.net.Packet;
 
 /**
  * Contains equipment utility methods.
@@ -76,7 +78,7 @@ public class Equipment {
 		4955, 4976, 4977, 4978, 4979, 4732, 4753, 4611, 6188, 6182, 4511,
 		4056, 4071, 4724, 2639, 2641, 2643, 2665, 6109, 5525, 5527, 5529,
 		5531, 5533, 5535, 5537, 5539, 5541, 5543, 5545, 5547, 5549, 5551,
-		74, 579, 656, 658, 660, 662, 664, 740, 1017, 1037, 1040, 1042,
+		74, 579, 656, 658, 660, 662, 664, 740, 1017, 1037, 1038, 1040, 1042,
 		1044, 1046, 1048, 1050, 1053, 1055, 1057, 1137, 1139, 1141, 1143,
 		1145, 1147, 1149, 1151, 1153, 1155, 1157, 1159, 1161, 1163, 1165,
 		1506, 1949, 2422, 2581, 2587, 2595, 2605, 2613, 2619, 2627, 2631,
@@ -376,6 +378,26 @@ public class Equipment {
 	 */
 	public static boolean is(EquipmentType type, Item item) {
 		return getType(item).equals(type);
+	}
+	
+	/**
+	 * Unequips an item.
+	 * @param player The player unequipping the item.
+	 * @param id The id of the item being unequipped.
+	 * @param slot The slot of the item being unequipped.
+	 */
+	public static void unequipItem(Player player, int id, int slot) {
+		if (slot >= 0 && slot <= 10) {
+			Item item = player.getEquipment().get(slot);
+			if (item != null && item.getId() == id) {
+				if (player.getInventory().hasRoomFor(item)) {
+					player.getInventory().add(item);
+					player.getEquipment().set(slot, null);
+				} else {
+					player.getActionSender().sendMessage("You do not have any room in your inventory.");
+				}
+			}
+		}
 	}
 
 }

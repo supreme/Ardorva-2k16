@@ -12,6 +12,7 @@ import org.hyperion.rs2.net.command.commands.Position;
 import org.hyperion.rs2.net.command.commands.SpawnItem;
 import org.hyperion.rs2.net.command.commands.SpawnNPC;
 import org.hyperion.rs2.net.command.commands.Teleport;
+import org.hyperion.rs2.net.command.commands.Test;
 
 /**
  * Manages all the commands.
@@ -73,7 +74,12 @@ public class CommandManager {
 		/**
 		 * Displays an interface.
 		 */
-		DISPLAY_INTERFACE("inter", new DisplayInterface());
+		DISPLAY_INTERFACE("inter", new DisplayInterface()),
+		
+		/**
+		 * A test command.
+		 */
+		TEST("test", new Test());
 		
 		/**
 		 * Identifies which command is being executed.

@@ -1,4 +1,4 @@
-package org.hyperion.rs2;
+package org.hyperion.rs2.engine;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.task.Task;
@@ -99,6 +100,8 @@ public class GameEngine implements Runnable {
 	public void run() {
 		try {
 			while(running) {
+				TaskManager.tick();
+				
 				try {
 					World.getWorld().getTickableManager().pulse();
 				} catch (Throwable e) {
