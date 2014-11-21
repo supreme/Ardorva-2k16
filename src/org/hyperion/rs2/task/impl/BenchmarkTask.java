@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.task.Task;
 
 /**

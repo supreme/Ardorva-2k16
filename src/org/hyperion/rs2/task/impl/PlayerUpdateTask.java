@@ -2,7 +2,7 @@ package org.hyperion.rs2.task.impl;
 
 import java.util.Iterator;
 
-import org.hyperion.rs2.engine.task.listener.OnFireActionListener;
+import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
 import org.hyperion.rs2.model.Entity;
@@ -18,6 +18,7 @@ import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.WeaponAnimations;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.PacketBuilder;
+import org.hyperion.rs2.task.Task;
 import org.hyperion.rs2.util.TextUtils;
 
 /**
@@ -25,21 +26,23 @@ import org.hyperion.rs2.util.TextUtils;
  * @author Graham Edgecombe
  *
  */
-public class PlayerUpdateTask extends OnFireActionListener {
-
+public class PlayerUpdateTask implements Task {
+	
+	/**
+	 * The player.
+	 */
 	private Player player;
 	
+	/**
+	 * Creates an update task.
+	 * @param player The player.
+	 */
 	public PlayerUpdateTask(Player player) {
 		this.player = player;
 	}
-	
-	@Override
-	public boolean cancelWhen() {
-		return !player.getSession().isConnected();
-	}
 
 	@Override
-	public void run() {
+	public void execute(GameEngine context) {
 		/*
 		 * If the map region changed send the new one.
 		 * We do this immediately as the client can begin loading it before the

@@ -1,7 +1,10 @@
 package org.hyperion.rs2.packet;
 
+import java.util.logging.Logger;
+
 import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.action.impl.AttackAction;
 import org.hyperion.rs2.content.shops.ShopLoader;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.NPCDefinition;
@@ -39,6 +42,7 @@ public class NPCInteractPacketHandler implements PacketHandler {
 	public void handle(Player player, Packet packet) {
 		switch (packet.getOpcode()) {
 		case ATTACK:
+			handleAttackOption(player, packet);
 			break;
 		case TALK_TO:
 			break;
@@ -52,6 +56,25 @@ public class NPCInteractPacketHandler implements PacketHandler {
 			ConsoleMessage.info("Unhandled NPC interaction, opcode=" + packet.getOpcode());
 			break;
 		}
+	}
+	
+	/**
+	 * Handles the attacking action on an NPC.
+	 * @param player The player performing the attack.
+	 * @param packet The packet.
+	 */
+	private void handleAttackOption(Player player, Packet packet) {
+		int npcIndex = packet.getLEShort() & 0xFFFF;
+		if (npcIndex < 0 || npcIndex > Constants.MAX_NPCS) {
+			return;
+		}
+		final NPC npc = World.getWorld().getNPC(npcIndex);
+		if (npc == null || npc.isDead()) {
+			return;
+		}
+		
+		Logger.getLogger(this.getClass().getName()).info(player.getName() + " attacked npc: " + npc.getDefinition().getId() + ", at location: " + npc.getLocation().toString());
+		player.getActionQueue().addAction(new AttackAction(player, npc));
 	}
 	
 	/**

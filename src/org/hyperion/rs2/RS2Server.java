@@ -9,7 +9,6 @@ import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.hyperion.Server;
 import org.hyperion.application.ConsoleMessage;
-import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.model.World;
 
 /**

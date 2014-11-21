@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.GameEngine;
 
 /**
  * A task which can execute multiple child tasks simultaneously.

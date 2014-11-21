@@ -1,7 +1,7 @@
 package org.hyperion.rs2.model;
 
+import org.hyperion.rs2.event.impl.GroundItemEvent;
 import org.hyperion.rs2.model.region.Region;
-import org.hyperion.rs2.tickable.impl.GroundItemTick;
 
 /**
  * Represents a ground item.
@@ -49,7 +49,7 @@ public class GroundItem {
 		this.location = location;
 		this.region = region;
 		this.global = global;
-		World.getWorld().submit(new GroundItemTick(this));
+		World.getWorld().submit(new GroundItemEvent(this));
 	}
 	
 	/**

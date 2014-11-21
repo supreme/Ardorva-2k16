@@ -2,7 +2,7 @@ package org.hyperion.rs2.event;
 
 import java.util.concurrent.TimeUnit;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.GameEngine;
 
 /**
  * A class that manages <code>Event</code>s for a specific

@@ -12,13 +12,12 @@ import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.GenericWorldLoader;
 import org.hyperion.rs2.LivingClasses;
 import org.hyperion.rs2.WorldLoader;
 import org.hyperion.rs2.WorldLoader.LoginResult;
 import org.hyperion.rs2.cache.Cache;
-import org.hyperion.rs2.engine.GameEngine;
-import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.event.EventManager;
 import org.hyperion.rs2.event.impl.CleanupEvent;
@@ -27,15 +26,12 @@ import org.hyperion.rs2.event.impl.UpdateEvent;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.npc.SpawnLoader;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.model.region.RegionManager;
 import org.hyperion.rs2.net.PacketBuilder;
 import org.hyperion.rs2.net.PacketManager;
 import org.hyperion.rs2.packet.PacketHandler;
 import org.hyperion.rs2.task.Task;
 import org.hyperion.rs2.task.impl.SessionLoginTask;
-import org.hyperion.rs2.tickable.Tickable;
-import org.hyperion.rs2.tickable.TickableManager;
 import org.hyperion.rs2.util.ConfigurationParser;
 import org.hyperion.rs2.util.EntityList;
 import org.hyperion.rs2.util.NameUtils;
@@ -80,11 +76,6 @@ public class World {
 	 * The event manager.
 	 */
 	private EventManager eventManager;
-	
-	/**
-	 * The tickable manager.
-	 */
-	private TickableManager tickableManager;
 	
 	/**
 	 * The current loader implementation.
@@ -186,7 +177,6 @@ public class World {
 		} else {
 			this.engine = engine;
 			this.eventManager = new EventManager(engine);
-			this.tickableManager = new TickableManager();
 			this.registerGlobalEvents();
 			this.loadConfiguration();
 		}
@@ -238,7 +228,7 @@ public class World {
 	 * Registers global events such as updating.
 	 */
 	private void registerGlobalEvents() {
-		//submit(new UpdateEvent());
+		submit(new UpdateEvent());
 		submit(new CleanupEvent());
 		submit(new ControlPanelUpdationEvent());
 	}
@@ -257,14 +247,6 @@ public class World {
 	 */
 	public void submit(Task task) {
 		this.engine.pushTask(task);
-	}
-	
-	/**
-	 * Submits a new tickable.
-	 * @param tickable The tickable to submit.
-	 */
-	public void submit(Tickable tickable) {
-		this.tickableManager.submit(tickable);
 	}
 	
 	/**
@@ -384,14 +366,6 @@ public class World {
 	}
 	
 	/**
-	 * Gets the tickable manager.
-	 * @return The tickable manager.
-	 */
-	public TickableManager getTickableManager() {
-		return tickableManager;
-	}
-	
-	/**
 	 * Checks if a player is online.
 	 * @param name The player's name.
 	 * @return <code>true</code> if they are online, <code>false</code> if not.
@@ -437,6 +411,15 @@ public class World {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Gets an NPC based on their index.
+	 * @param index The index.
+	 * @return The NPC.
+	 */
+	public NPC getNPC(int index) {
+		return (NPC) npcs.get(index);
 	}
 
 	/**

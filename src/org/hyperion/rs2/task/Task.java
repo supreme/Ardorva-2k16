@@ -1,6 +1,6 @@
 package org.hyperion.rs2.task;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.GameEngine;
 
 /**
  * A task is a class which carries out a unit of work.

@@ -4,7 +4,6 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.hyperion.rs2.engine.GameEngine;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.RS2CodecFactory;

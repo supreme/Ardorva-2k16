@@ -38,6 +38,7 @@ public class Bank {
 		player.getInventory().getContainerInterface().setInterfaceId(15);
 		player.getInventory().getContainerInterface().setChildId(0);
 		player.getInventory().getContainerInterface().setType(93);
+		player.getActionSender().sendString(BANK_INTERFACE, 8, "The Bank of Derithium");
 		player.getActionSender().sendInventoryInterface(BANK_INVENTORY_INTERFACE);
 		player.getActionSender().displayInterface(BANK_INTERFACE);
 		player.getPlayerVariables().setBanking(true);

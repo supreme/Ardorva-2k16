@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Graphic;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.tickable.Tickable;
 
 /**
  * Handles the teleporting actions.
@@ -208,7 +208,7 @@ public class Teleport {
 		player.setTeleporting(true);
 		
 		//Delay the graphic
-		World.getWorld().submit(new Tickable(3) {
+		World.getWorld().submit(new Event(1200) {
 
 			@Override
 			public void execute() {
@@ -219,7 +219,7 @@ public class Teleport {
 		});
 		
 		//Begin the actual teleporting action
-		World.getWorld().submit(new Tickable(6) {
+		World.getWorld().submit(new Event(1800) {
 
 			@Override
 			public void execute() {

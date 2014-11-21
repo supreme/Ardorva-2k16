@@ -2,7 +2,7 @@ package org.hyperion.rs2.task.impl;
 
 import java.util.Iterator;
 
-import org.hyperion.rs2.engine.GameEngine;
+import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.UpdateFlags;

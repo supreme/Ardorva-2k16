@@ -1,4 +1,4 @@
-package org.hyperion.rs2.engine;
+package org.hyperion.rs2;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -9,15 +9,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.hyperion.rs2.engine.task.TaskManager;
 import org.hyperion.rs2.model.World;
-import org.hyperion.rs2.model.npc.NPC;
-import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.task.Task;
-import org.hyperion.rs2.task.impl.NPCResetTask;
-import org.hyperion.rs2.task.impl.PlayerResetTask;
-import org.hyperion.rs2.task.impl.PlayerTickTask;
-import org.hyperion.rs2.task.impl.PlayerUpdateTask;
 import org.hyperion.util.BlockingExecutorService;
 
 /**
@@ -99,34 +92,24 @@ public class GameEngine implements Runnable {
 		thread.interrupt();
 	}
 	
+	private long last;
 	@Override
 	public void run() {
 		try {
 			while(running) {
-				long currentTime = System.currentTimeMillis();
-				TaskManager.tick();
-			
 				try {
 					final Task task = tasks.take();
 					submitLogic(new Runnable() {
 						@Override
 						public void run() {
+							//System.out.println("[KERNAL] Cycle time: " + (System.currentTimeMillis() - last));
+							//last = System.currentTimeMillis();
 							task.execute(GameEngine.this);
 						}
 					});
 				} catch(InterruptedException e) {
 					continue;
 				}
-				
-				long sleepTime = 600 + currentTime - System.currentTimeMillis();
-				System.out.println("[KERNAL] Sleep time: " + sleepTime);
-				if (sleepTime <= 0)
-					continue;
-			    try {
-			    	Thread.sleep(sleepTime);
-			    } catch (InterruptedException e) {
-			    	e.printStackTrace();
-			    }
 			}
 		} finally {
 			logicService.shutdown();

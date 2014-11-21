@@ -1,28 +1,27 @@
-package org.hyperion.rs2.tickable.impl;
+package org.hyperion.rs2.event.impl;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.tickable.Tickable;
 
 /**
- * Handles the properties of a ground item.
+ * Handles the ground items in the game world.
  * @author Stephen Andrews
  */
-public class GroundItemTick extends Tickable {
+public class GroundItemEvent extends Event {
 
 	/**
-	 * The amount of ticks before a ground item becomes globally visible.
+	 * The amount of ms before a ground item becomes globally visible.
 	 */
-	private static final int GLOBAL_DELAY = 120;
+	private static final int GLOBAL_DELAY = 72000;
 	
 	/**
-	 * The amount of ticks before a ground item is removed from the region after it has
+	 * The amount of ms before a ground item is removed from the region after it has
 	 * become globally visible.
 	 */
-	private static final int REMOVAL_DELAY = 120;
+	private static final int REMOVAL_DELAY = 72000;
 	
 	/**
 	 * The ground item that has been created.
@@ -30,9 +29,10 @@ public class GroundItemTick extends Tickable {
 	private GroundItem groundItem;
 	
 	/**
-	 * Constructs a ground item tick.
+	 * Constructs a ground item event.
+	 * @param groundItem The ground item belonging to the event.
 	 */
-	public GroundItemTick(GroundItem groundItem) {
+	public GroundItemEvent(GroundItem groundItem) {
 		super(GLOBAL_DELAY);
 		this.groundItem = groundItem;
 	}
@@ -50,7 +50,7 @@ public class GroundItemTick extends Tickable {
 			player.getActionSender().sendGroundItem(groundItem);
 		}
 		
-		World.getWorld().submit(new Tickable(REMOVAL_DELAY) {
+		World.getWorld().submit(new Event(REMOVAL_DELAY) {
 
 			@Override
 			public void execute() {
@@ -62,7 +62,7 @@ public class GroundItemTick extends Tickable {
 				owner.getActionSender().clearGroundItem(groundItem);
 				
 				if (Constants.DEV_MODE) {
-					ConsoleMessage.info("Ground item: " + groundItem.getItem().getId() + " has expired.");
+					System.out.println("Ground item: " + groundItem.getItem().getId() + " has expired.");
 				}
 				stop();
 			}
@@ -70,9 +70,9 @@ public class GroundItemTick extends Tickable {
 		});
 		
 		if (Constants.DEV_MODE) {
-			ConsoleMessage.info("Ground item: " + groundItem.getItem().getId() + " has become globally visible.");
+			System.out.println("Ground item: " + groundItem.getItem().getId() + " has become globally visible.");
 		}
-		stop();
+		stop();		
 	}
-	
+
 }
