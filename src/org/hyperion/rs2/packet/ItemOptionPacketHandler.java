@@ -1,14 +1,11 @@
 package org.hyperion.rs2.packet;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
 
@@ -219,7 +216,7 @@ public class ItemOptionPacketHandler implements PacketHandler {
 		int slot = packet.getLEShort();
 		
 		if (Constants.DEV_MODE) {
-			ConsoleMessage.info(player.getName() + " dropped a ground item. Id: " + id);
+			System.out.println(player.getName() + " dropped a ground item. Id: " + id);
 		}
 		
 		Item item = player.getInventory().get(slot);
@@ -242,7 +239,7 @@ public class ItemOptionPacketHandler implements PacketHandler {
 		int xPos = packet.getLEShortA();
 		
 		if (Constants.DEV_MODE) {
-			ConsoleMessage.info(player.getName() + " attempted ground item pickup. Id: " + id + " [" + xPos + ", " + yPos + "]");
+			System.out.println(player.getName() + " attempted ground item pickup. Id: " + id + " [" + xPos + ", " + yPos + "]");
 		}
 		
 		Location loc = Location.create(xPos, yPos, player.getLocation().getZ());

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.GenericWorldLoader;
@@ -21,7 +20,6 @@ import org.hyperion.rs2.cache.Cache;
 import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.event.EventManager;
 import org.hyperion.rs2.event.impl.CleanupEvent;
-import org.hyperion.rs2.event.impl.ControlPanelUpdationEvent;
 import org.hyperion.rs2.event.impl.UpdateEvent;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.npc.SpawnLoader;
@@ -230,7 +228,6 @@ public class World {
 	private void registerGlobalEvents() {
 		submit(new UpdateEvent());
 		submit(new CleanupEvent());
-		submit(new ControlPanelUpdationEvent());
 	}
 	
 	/**
@@ -345,7 +342,7 @@ public class World {
 			}
 		});
 		if(returnCode == 2) {
-			ConsoleMessage.info("Registered player : " + player + " [online=" + players.size() + "]");
+			System.out.println("Registered player : " + player + " [online=" + players.size() + "]");
 		}
 	}
 	

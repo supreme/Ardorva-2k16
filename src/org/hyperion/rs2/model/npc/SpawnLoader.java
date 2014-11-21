@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.NPCDefinition;
@@ -81,7 +80,7 @@ public class SpawnLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(SPAWN_FILE))) {
             Gson gson = new GsonBuilder().create();
             spawns = gson.fromJson(reader, Spawn[].class);
-            ConsoleMessage.info("Loaded " + spawns.length + " NPC spawns...");
+            System.out.println("Loaded " + spawns.length + " NPC spawns...");
     		populateWorld();
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

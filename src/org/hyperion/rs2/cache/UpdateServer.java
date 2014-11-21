@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.PacketBuilder;
 
@@ -94,7 +93,7 @@ public class UpdateServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ConsoleMessage.info("Generating CRC refrence table...");
+		System.out.println("Generating CRC refrence table...");
 		byte[] data = new byte[4048];
 		ByteBuffer crcPacketGen = ByteBuffer.wrap(data);
 		crcPacketGen.put((byte) 0).putInt(cacheLength(255) * 8);

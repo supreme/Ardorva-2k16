@@ -2,7 +2,6 @@ package org.hyperion.rs2.packet;
 
 import java.util.logging.Logger;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.action.impl.AttackAction;
 import org.hyperion.rs2.content.shops.ShopLoader;
@@ -53,7 +52,7 @@ public class NPCInteractPacketHandler implements PacketHandler {
 			handleExamineOption(player, packet);
 			break;
 		default:
-			ConsoleMessage.info("Unhandled NPC interaction, opcode=" + packet.getOpcode());
+			System.out.println("Unhandled NPC interaction, opcode=" + packet.getOpcode());
 			break;
 		}
 	}

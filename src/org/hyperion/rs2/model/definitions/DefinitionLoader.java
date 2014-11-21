@@ -5,8 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import org.hyperion.application.ConsoleMessage;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -38,7 +36,7 @@ public class DefinitionLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(DEFINITIONS_DIRECTORY + "itemdef.json"))) {
             Gson gson = new GsonBuilder().create();
             itemDefinitions = gson.fromJson(reader, ItemDefinition[].class);
-            ConsoleMessage.info("Loaded " + itemDefinitions.length + " item definitions...");
+            System.out.println("Loaded " + itemDefinitions.length + " item definitions...");
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -53,7 +51,7 @@ public class DefinitionLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(DEFINITIONS_DIRECTORY + "npcdef.json"))) {
             Gson gson = new GsonBuilder().create();
             npcDefinitions = gson.fromJson(reader, NPCDefinition[].class);
-            ConsoleMessage.info("Loaded " + npcDefinitions.length + " NPC definitions...");
+            System.out.println("Loaded " + npcDefinitions.length + " NPC definitions...");
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

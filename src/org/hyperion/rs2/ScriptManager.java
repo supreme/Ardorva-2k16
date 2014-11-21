@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.script.Invocable;
@@ -12,7 +11,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.util.Language;
 
 /**
@@ -56,7 +54,7 @@ public class ScriptManager {
 	private ScriptManager() {
 		mgr = new ScriptEngineManager();
 		jsEngine = mgr.getEngineByName("JavaScript");
-		ConsoleMessage.info("Loading scripts...");
+		System.out.println("Loading scripts...");
 	}
 
 	/**
@@ -69,9 +67,9 @@ public class ScriptManager {
 		try {
 			invEngine.invokeFunction(identifier, args);
 		} catch (NoSuchMethodException ex) {
-			ConsoleMessage.warning("No such method: " + identifier + Language.NEW_LINE + ex);
+			System.err.println("No such method: " + identifier + Language.NEW_LINE + ex);
 		} catch (ScriptException ex) {
-			ConsoleMessage.warning("ScriptException thrown!" + Language.NEW_LINE + ex);
+			System.err.println("ScriptException thrown!" + Language.NEW_LINE + ex);
 		}
 	}
 
@@ -91,9 +89,9 @@ public class ScriptManager {
 						jsEngine.eval(new InputStreamReader(
 								new FileInputStream(child)));
 					} catch (ScriptException ex) {
-						ConsoleMessage.error("Unable to load script!" + Language.NEW_LINE + ex);
+						System.err.println("Unable to load script!" + Language.NEW_LINE + ex);
 					} catch (FileNotFoundException ex) {
-						ConsoleMessage.error("Unable to find script!" + Language.NEW_LINE + ex);
+						System.err.println("Unable to find script!" + Language.NEW_LINE + ex);
 					}
 				else if (child.isDirectory())
 					loadScripts(child.getPath());

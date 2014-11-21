@@ -13,7 +13,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.model.Location;
 
 import com.google.gson.Gson;
@@ -42,7 +41,7 @@ public class ObjectManager {
 		try (BufferedReader reader = new BufferedReader(new FileReader(OBJECT_FILE))) {
             Gson gson = new GsonBuilder().create();
             objects = gson.fromJson(reader, GameObject[].class);
-            ConsoleMessage.info("Loaded " + objects.length + " game objects...");
+            System.out.println("Loaded " + objects.length + " game objects...");
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

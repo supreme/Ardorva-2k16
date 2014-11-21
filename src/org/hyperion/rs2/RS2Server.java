@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.hyperion.Server;
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.model.World;
 
 /**
@@ -59,7 +57,7 @@ public class RS2Server {
 	 * @throws IOException
 	 */
 	public RS2Server bind(int port) throws IOException {
-		ConsoleMessage.info("Binding to port: " + port + "...");
+		System.out.println("Binding to port: " + port + "...");
 		acceptor.bind(new InetSocketAddress(port));
 		return this;
 	}
@@ -71,12 +69,12 @@ public class RS2Server {
 	public void start() throws ExecutionException {
 		ScriptManager.getScriptManager().loadScripts(Constants.SCRIPTS_DIRECTORY);
 		if(World.getWorld().getBackgroundLoader().getPendingTaskAmount() > 0) {
-			ConsoleMessage.info("Waiting for pending background loading tasks...");
+			System.out.println("Waiting for pending background loading tasks...");
 			World.getWorld().getBackgroundLoader().waitForPendingTasks();
 		}
 		World.getWorld().getBackgroundLoader().shutdown();
 		engine.start();
-		ConsoleMessage.success("Ready");
+		System.out.println("Ready");
 	}
 
 	/**

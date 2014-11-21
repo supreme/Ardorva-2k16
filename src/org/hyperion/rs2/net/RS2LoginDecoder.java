@@ -11,7 +11,6 @@ import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.hyperion.Server;
-import org.hyperion.application.ConsoleMessage;
 import org.hyperion.rs2.cache.Request;
 import org.hyperion.rs2.cache.UpdateServer;
 import org.hyperion.rs2.model.PlayerDetails;
@@ -304,7 +303,7 @@ public class RS2LoginDecoder extends CumulativeProtocolDecoder {
 				 */
 				String name = NameUtils.formatName(IoBufferUtils.getRS2String(rsaBuffer));
 				String pass = IoBufferUtils.getRS2String(rsaBuffer);
-				ConsoleMessage.info("Login request: username=" + name + " password=" + pass);
+				System.out.println("Login request: username=" + name + " password=" + pass);
 				
 				/*
 				 * And setup the ISAAC cipher which is used to encrypt and
