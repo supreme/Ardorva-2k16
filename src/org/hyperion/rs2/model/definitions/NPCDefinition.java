@@ -3,10 +3,7 @@ package org.hyperion.rs2.model.definitions;
 import org.hyperion.rs2.LivingClasses;
 
 /**
- * Provides a structure for JSON serialization.
- * 
- * All the instance variables have to be strings cause I couldn't get a better way
- * to convert the definitions from XML to JSON without them :S.
+ * Provides a structure for JSON serialization of NPC definitions.
  * @author Stephen Andrews
  */
 public class NPCDefinition {
@@ -202,5 +199,85 @@ public class NPCDefinition {
 	 */
 	public int getRespawn() {
 		return respawn;
+	}
+	
+	/**
+	 * Gets the max hit of the NPC.
+	 * @return The max hit.
+	 */
+	public int getMaxHit() {
+		return maxHit;
+	}
+	
+	/**
+	 * Gets the NPC's hitpoints.
+	 * @return The hitpoints.
+	 */
+	public int getHitpoints() {
+		return hitpoints;
+	}
+	
+	/**
+	 * Gets the attack speed of the NPC.
+	 * @return The attack speed.
+	 */
+	public int getAttackSpeed() {
+		return attackSpeed;
+	}
+	
+	/**
+	 * Gets the NPC's attack animation.
+	 * @return The attack animation.
+	 */
+	public int getAttackAnimation() {
+		return attackAnim;
+	}
+	
+	/**
+	 * Gets the NPC's defence animation.
+	 * @return The defense animation.
+	 */
+	public int getDefenceAnimation() {
+		return defenceAnim;
+	}
+	
+	/**
+	 * Gets the NPC's death animation.
+	 * @return The death animation.
+	 */
+	public int getDeathAnimation() {
+		return deathAnim;
+	}
+	
+	/**
+	 * Gets the NPC's attack bonus.
+	 * @return The attack bonus.
+	 */
+	public int getAttackBonus() {
+		return attackBonus;
+	}
+	
+	/**
+	 * Gets the NPC's melee defence bonus.
+	 * @return The melee defence bonus.
+	 */
+	public int getDefenceMelee() {
+		return defenceMelee;
+	}
+	
+	/**
+	 * Gets the NPC's range defence bonus.
+	 * @return The range defence bonus.
+	 */
+	public int getDefenceRange() {
+		return defenceRange;
+	}
+	
+	/**
+	 * Gets the NPC's mage defence bonus.
+	 * @return The mage defence bonus.
+	 */
+	public int getDefenceMage() {
+		return defenceMage;
 	}
 }

@@ -3,11 +3,8 @@ package org.hyperion.rs2.model.container;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hyperion.rs2.LivingClasses;
 import org.hyperion.rs2.model.Item;
-import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.net.Packet;
 
 /**
  * Contains equipment utility methods.
@@ -78,7 +75,7 @@ public class Equipment {
 		4955, 4976, 4977, 4978, 4979, 4732, 4753, 4611, 6188, 6182, 4511,
 		4056, 4071, 4724, 2639, 2641, 2643, 2665, 6109, 5525, 5527, 5529,
 		5531, 5533, 5535, 5537, 5539, 5541, 5543, 5545, 5547, 5549, 5551,
-		74, 579, 656, 658, 660, 662, 664, 740, 1017, 1037, 1038, 1040, 1042,
+		74, 579, 656, 658, 660, 662, 664, 740, 1017, 1037, 1040, 1042,
 		1044, 1046, 1048, 1050, 1053, 1055, 1057, 1137, 1139, 1141, 1143,
 		1145, 1147, 1149, 1151, 1153, 1155, 1157, 1159, 1161, 1163, 1165,
 		1506, 1949, 2422, 2581, 2587, 2595, 2605, 2613, 2619, 2627, 2631,
@@ -166,7 +163,7 @@ public class Equipment {
 		4712, 6107, 2661, 3140, 1115, 1117, 1119, 1121, 1123, 1125, 1127,
 		2583, 2591, 2599, 2607, 2615, 6322, 2623, 2653, 2669, 3481, 4720,
 		4728, 4749, 2661, 6129, 6916, 4091, 6654, 6133, 75, 7399, 7390,
-		5575, 6341, 6351, 3387, 5030, 5032, 5034, 7392 };
+		5575, 6341, 6351, 3387, 5030, 5032, 5034, 7392, 10551 };
 
 	/**
 	 * Items which are classified as full helmets.
@@ -243,7 +240,7 @@ public class Equipment {
 	/**
 	 * Equipment type map.
 	 */
-	private static final Map<Integer, EquipmentType> equipmentTypes = new HashMap<Integer, EquipmentType>();
+	private static Map<Integer, EquipmentType> equipmentTypes = new HashMap<Integer, EquipmentType>();
 
 	/**
 	 * Equipment interface id.
@@ -370,6 +367,53 @@ public class Equipment {
 	}
 	
 	/**
+	 * Gets an equipment type for the specified slot along with item name for correct equipping.
+	 * @param name The name of the item, used for platebodys etc.
+	 * @param slot The item slot.
+	 * @return The equipment type.
+	 */
+	public static EquipmentType forSlot(String name, int slot) {
+		if ((name.contains("robe") || name.contains("torso") || name.contains("plate")) && slot == SLOT_CHEST) {
+			return EquipmentType.PLATEBODY;
+		}
+		
+		if ((name.contains("full") || name.contains("hood")) && slot == SLOT_HELM) {
+			return EquipmentType.FULL_HELM;
+		}
+		
+		for(EquipmentType type : EquipmentType.values()) {
+			if (type.slot == slot) {
+				return type;
+			}
+		}
+		
+		return EquipmentType.WEAPON;
+	}
+	
+	/**
+	 * Gets an equipment type for the specified slot.
+	 * @param slot The item slot.
+	 * @return The equipment type.
+	 */
+	public static EquipmentType forSlot(int slot) {
+		for(EquipmentType type : EquipmentType.values()) {
+			if (type.slot == slot) {
+				return type;
+			}
+		}
+		
+		return EquipmentType.WEAPON;
+	}
+	
+	/**
+	 * Gets the equipment types map.
+	 * @return The equipment types map.
+	 */
+	public static Map<Integer, EquipmentType> getEquipmentTypes() {
+		return equipmentTypes;
+	}
+	
+	/**
 	 * Checks if an item is of a specific type.
 	 * @param type The type.
 	 * @param item The item.
@@ -393,6 +437,7 @@ public class Equipment {
 				if (player.getInventory().hasRoomFor(item)) {
 					player.getInventory().add(item);
 					player.getEquipment().set(slot, null);
+					player.getBonuses().refresh();
 				} else {
 					player.getActionSender().sendMessage("You do not have any room in your inventory.");
 				}

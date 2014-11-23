@@ -13,7 +13,7 @@ public class MaxSkills implements Command {
 
 	@Override
 	public void invoke(Player player, String[] args) {
-		for(int i = 0; i <= Skills.SKILL_COUNT; i++) {
+		for(int i = 0; i <= Skills.SKILL_COUNT - 1; i++) {
 			player.getSkills().setLevel(i, 99);
 			player.getSkills().setExperience(i, 14000000);
 		}

@@ -1,9 +1,18 @@
 package org.hyperion.rs2.model.definitions;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
+import java.util.HashMap;
+
+import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.container.Equipment;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +37,67 @@ public class DefinitionLoader {
 	 * An array of NPC definitions.
 	 */
 	private NPCDefinition[] npcDefinitions;
-		
+	
+	/**
+	 * A map of item bonuses.
+	 */
+	private static HashMap<Integer, int[]> itemBonuses;
+
+	/**
+	 * Gets an item from the item bonuses map based on the item id.
+	 * @param itemId The id of the item.
+	 * @return The bonuses for the item.
+	 */
+	public final int[] getBonuses(int itemId) {
+		return itemBonuses.get(itemId);
+	}
+	
+	/**
+	 * Gets the bonuses map.
+	 * @return The bonuses map.
+	 */
+	public HashMap<Integer, int[]> getBonuses() {
+		return itemBonuses;
+	}
+	
+	/**
+	 * Sets the bonuses map.
+	 * @param bonuses The item bonuses.
+	 */
+	public void setBonuses(HashMap<Integer, int[]> bonuses) {
+		itemBonuses = bonuses;
+	}
+	
+	/**
+	 * Loads the item bonuses.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void loadBonusDefinitions() throws FileNotFoundException, IOException {
+		final String PACKED_PATH = "data/world/items/bonuses.ib";
+		try {
+			RandomAccessFile in = new RandomAccessFile(PACKED_PATH, "r");
+			FileChannel channel = in.getChannel();
+			ByteBuffer buffer = channel.map(MapMode.READ_ONLY, 0,channel.size());
+			setBonuses(new HashMap<Integer, int[]>(buffer.remaining() / 26));
+			int loaded = 0;
+			while (buffer.hasRemaining()) {
+				int itemId = buffer.getShort() & 0xffff;
+				int[] bonuses = new int[12];
+				for (int index = 0; index < bonuses.length; index++) {
+					bonuses[index] = buffer.getShort();
+				}
+				getBonuses().put(itemId, bonuses);
+				loaded++;
+			}
+			channel.close();
+			in.close();
+			System.out.println("Loaded " + loaded + " item bonuses.");
+		} catch (Throwable e) {
+			World.getWorld().handleError(e);
+		}
+	}
+	
 	/**
 	 * Loads the item definitions.
 	 */
@@ -36,6 +105,12 @@ public class DefinitionLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(DEFINITIONS_DIRECTORY + "itemdef.json"))) {
             Gson gson = new GsonBuilder().create();
             itemDefinitions = gson.fromJson(reader, ItemDefinition[].class);
+            for (ItemDefinition def : itemDefinitions) {
+            	String itemName = def.getName();
+            	if (def.getEquipmentDefinition() != null && itemName != null) {
+            		Equipment.getEquipmentTypes().put(def.getId(), Equipment.forSlot(itemName, def.getEquipmentDefinition().getSlot()));
+            	}
+            }
             System.out.println("Loaded " + itemDefinitions.length + " item definitions...");
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

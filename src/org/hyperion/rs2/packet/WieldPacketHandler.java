@@ -70,6 +70,8 @@ public class WieldPacketHandler implements PacketHandler {
 				}
 			}
 		}
+		
+		player.getBonuses().refresh();
 	}
 	
 	/**

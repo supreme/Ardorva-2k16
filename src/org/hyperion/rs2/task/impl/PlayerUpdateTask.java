@@ -557,6 +557,7 @@ public class PlayerUpdateTask implements Task {
 		playerProps.put((byte) app.getFeetColour()); // feetc
 		playerProps.put((byte) app.getSkinColour()); // skinc
 		
+		//TODO: Switch this to variables in combat utility - Stephen
 		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // stand
 		playerProps.putShort((short) WeaponAnimations.getStandAnim(player)); // stand turn
 		playerProps.putShort((short) WeaponAnimations.getWalkAnim(player)); // walk

@@ -6,18 +6,14 @@ import java.util.Queue;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
-import org.hyperion.rs2.action.ActionQueue;
-import org.hyperion.rs2.action.impl.AttackAction;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
 import org.hyperion.rs2.model.Damage.Hit;
-import org.hyperion.rs2.model.Damage.HitType;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.InterfaceState;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.PlayerDetails;
 import org.hyperion.rs2.model.RequestManager;
 import org.hyperion.rs2.model.Settings;
 import org.hyperion.rs2.model.Skills;
@@ -25,9 +21,9 @@ import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Container;
-import org.hyperion.rs2.model.container.ContainerInterface;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Inventory;
+import org.hyperion.rs2.model.item.Bonuses;
 import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.net.ActionSender;
 import org.hyperion.rs2.net.ISAACCipher;
@@ -131,11 +127,6 @@ public class Player extends Entity implements Persistable {
 	private final Queue<ChatMessage> chatMessages = new LinkedList<ChatMessage>();
 	
 	/**
-	 * A queue of actions.
-	 */
-	private final ActionQueue actionQueue = new ActionQueue();
-	
-	/**
 	 * The current chat message.
 	 */
 	private ChatMessage currentChatMessage;
@@ -160,6 +151,11 @@ public class Player extends Entity implements Persistable {
 	 * The request manager which manages trading and duelling requests.
 	 */
 	private final RequestManager requestManager = new RequestManager(this);
+	
+	/**
+	 * The player's configuration.
+	 */
+	private PlayerConfiguration playerConfiguration;
 	
 	/*
 	 * Core login details.
@@ -217,12 +213,12 @@ public class Player extends Entity implements Persistable {
 	/**
 	 * The player's inventory.
 	 */
-	private final Container inventory = new Container(this, Container.Type.STANDARD, Inventory.SIZE, new ContainerInterface(149, 0, 93));
+	private final Container inventory = new Container(Container.Type.STANDARD, Inventory.SIZE);
 	
 	/**
 	 * The player's bank.
 	 */
-	private final Container bank = new Container(this, Container.Type.ALWAYS_STACK, Bank.SIZE, new ContainerInterface(12, 7, -1));
+	private final Container bank = new Container(Container.Type.ALWAYS_STACK, Bank.SIZE);
 	
 	/**
 	 * The player's settings.
@@ -230,9 +226,24 @@ public class Player extends Entity implements Persistable {
 	private final Settings settings = new Settings();
 	
 	/**
-	 * The player's variables.
+	 * The player's extra variables.
 	 */
-	private final PlayerVariables playerVariables = new PlayerVariables();
+	private final PlayerVariables playerVariables = new PlayerVariables(this);
+	
+	/**
+	 * Whether or not a player can walk.
+	 */
+	private boolean canWalk = true;
+	
+	/**
+	 * Whether or not a player is skulled;
+	 */
+	private boolean skulled = false;
+	
+	/**
+	 * The player's bonuses.
+	 */
+	private Bonuses bonuses = new Bonuses(this);
 	
 	/*
 	 * Cached details.
@@ -244,19 +255,20 @@ public class Player extends Entity implements Persistable {
 	
 	/**
 	 * Creates a player based on the details object.
-	 * @param details The details object.
+	 * @param pd The details object.
 	 */
-	public Player(PlayerDetails details) {
+	public Player(org.hyperion.rs2.model.PlayerDetails pd) {
 		super();
-		this.session = details.getSession();
-		this.inCipher = details.getInCipher();
-		this.outCipher = details.getOutCipher();
-		this.name = details.getName();
+		this.session = pd.getSession();
+		this.inCipher = pd.getInCipher();
+		this.outCipher = pd.getOutCipher();
+		this.name = pd.getName();
 		this.nameLong = NameUtils.nameToLong(this.name);
-		this.password = details.getPassword();
-		this.uid = details.getUID();
+		this.password = pd.getPassword();
+		this.uid = pd.getUID();
 		this.getUpdateFlags().flag(UpdateFlag.APPEARANCE);
 		this.setTeleporting(true);
+		this.playerConfiguration = PlayerConfiguration.deserialize(this);
 	}
 	
 	/**
@@ -265,6 +277,14 @@ public class Player extends Entity implements Persistable {
 	 */
 	public RequestManager getRequestManager() {
 		return requestManager;
+	}
+	
+	/**
+	 * Gets the player's configuration.
+	 * @return The player's configuration.
+	 */
+	public PlayerConfiguration getPlayerConfiguration() {
+		return playerConfiguration;
 	}
 	
 	/**
@@ -281,14 +301,6 @@ public class Player extends Entity implements Persistable {
 	 */
 	public Settings getSettings() {
 		return settings;
-	}
-	
-	/**
-	 * Gets the player's variables.
-	 * @return The player's variables.
-	 */
-	public PlayerVariables getPlayerVariables() {
-		return playerVariables;
 	}
 	
 	/**
@@ -403,6 +415,14 @@ public class Player extends Entity implements Persistable {
 	 */
 	public Skills getSkills() {
 		return skills;
+	}
+	
+	/**
+	 * Gets the player's bonuses.
+	 * @return The player's bonuses.
+	 */
+	public Bonuses getBonuses() {
+		return bonuses;
 	}
 	
 	/**
@@ -525,14 +545,6 @@ public class Player extends Entity implements Persistable {
 			return active;
 		}
 	}
-	
-	/**
-	 * Gets the action queue.
-	 * @return The action queue.
-	 */
-	public ActionQueue getActionQueue() {
-		return actionQueue;
-	}
 
 	/**
 	 * Gets the inventory.
@@ -540,6 +552,38 @@ public class Player extends Entity implements Persistable {
 	 */
 	public Container getInventory() {
 		return inventory;
+	}
+	
+	/**
+	 * Sets the can walk flag.
+	 * @param flag The new state of the flag.
+	 */
+	public void setCanWalk(boolean flag) {
+		canWalk = flag;
+	}
+	
+	/**
+	 * Whether or not a player can walk.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public boolean canWalk() {
+		return canWalk;
+	}
+	
+	/**
+	 * Sets the skulled flag.
+	 * @param flag The new state of the flag.
+	 */
+	public void setSkulled(boolean flag) {
+		skulled = flag;
+	}
+	
+	/**
+	 * Whether or not a player is skulled.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public boolean isSkulled() {
+		return skulled;
 	}
 	
 	/**
@@ -552,6 +596,14 @@ public class Player extends Entity implements Persistable {
 		} else {
 			
 		}
+	}
+	
+	/**
+	 * Gets a player's variables.
+	 * @return The player's variables.
+	 */
+	public PlayerVariables getPlayerVariables() {
+		return playerVariables;
 	}
 	
 	/**
@@ -574,7 +626,7 @@ public class Player extends Entity implements Persistable {
 			this.setAggressorState(false);
 			if(this.isAutoRetaliating()) {
 				this.face(source.getLocation());
-				this.getActionQueue().addAction(new AttackAction(this, source));
+				//this.getActionQueue().addAction(new AttackAction(this, source));
 			}
 		}
 		if(skills.getLevel(Skills.HITPOINTS) <= 0) {
@@ -695,7 +747,7 @@ public class Player extends Entity implements Persistable {
 	}
 
 	@Override
-	public void inflictDamage(int damage, HitType type) {
+	public void inflictDamage(Entity source, Hit hit) {
 		// TODO Auto-generated method stub
 		
 	}

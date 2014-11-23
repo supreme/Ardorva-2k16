@@ -124,6 +124,7 @@ public class World {
 				try {
 					LivingClasses.definitionLoader.loadItemDefinitions();
 					LivingClasses.definitionLoader.loadNPCDefinitions();
+					LivingClasses.definitionLoader.loadBonusDefinitions();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

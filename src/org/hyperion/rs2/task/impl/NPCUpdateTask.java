@@ -3,13 +3,14 @@ package org.hyperion.rs2.task.impl;
 import java.util.Iterator;
 
 import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.UpdateFlags;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
+import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.PacketBuilder;
 import org.hyperion.rs2.task.Task;
@@ -294,28 +295,28 @@ public class NPCUpdateTask implements Task {
 		final UpdateFlags flags = npc.getUpdateFlags();
 		
 		if(flags.get(UpdateFlag.ANIMATION)) {
-			mask |= 0x10;
+			mask |= 0x40;
 		}
 		if(flags.get(UpdateFlag.HIT)) {
-			mask |= 0x8;
+			mask |= 0x10;
 		}
 		if(flags.get(UpdateFlag.GRAPHICS)) {
 			mask |= 0x80;
 		}
 		if(flags.get(UpdateFlag.FACE_ENTITY)) {
-			mask |= 0x20;
+			mask |= 0x4;
 		}
 		if(flags.get(UpdateFlag.FORCED_CHAT)) {
-			mask |= 0x1;
+			mask |= 0x80;
 		}
 		if(flags.get(UpdateFlag.HIT_2)) {
-			mask |= 0x40;
+			mask |= 0x20;
 		}
 		if(flags.get(UpdateFlag.TRANSFORM)) {
 			mask |= 0x2;
 		}
 		if(flags.get(UpdateFlag.FACE_COORDINATE)) {
-			mask |= 0x4;
+			mask |= 0x1;
 		}
 		
 		/*
@@ -324,11 +325,11 @@ public class NPCUpdateTask implements Task {
 		packet.put((byte) mask);
 		
 		if(flags.get(UpdateFlag.ANIMATION)) {
-			packet.putLEShort(npc.getCurrentAnimation().getId());
-			packet.put((byte) npc.getCurrentAnimation().getDelay());
+			packet.putShortA(npc.getCurrentAnimation().getId());
+			packet.putByteA((byte) npc.getCurrentAnimation().getDelay());
 		}
 		if(flags.get(UpdateFlag.HIT)) {
-			
+			appendHitUpdate(npc, packet);
 		}
 		if(flags.get(UpdateFlag.GRAPHICS)) {
 			packet.putShort(npc.getCurrentGraphic().getId());
@@ -342,7 +343,7 @@ public class NPCUpdateTask implements Task {
 			
 		}
 		if(flags.get(UpdateFlag.HIT_2)) {
-			
+			appendHit2Update(npc, packet);
 		}
 		if(flags.get(UpdateFlag.TRANSFORM)) {
 			
@@ -358,5 +359,34 @@ public class NPCUpdateTask implements Task {
 			}
 		}
 	}
-
+	
+	private static void appendHitUpdate(NPC npc, PacketBuilder updateBlock) {
+		double max = npc.getDefinition().getHitpoints();
+		double hp = npc.getHealth();
+		double calc = hp / max;
+		int percentage = (int) (calc * 100);
+		if(percentage > 100) {
+			percentage = 100;
+		}
+		Hit hit = npc.getPrimaryHit();
+		updateBlock.putByteS((byte) hit.getDamage());
+		updateBlock.putByteA((byte) hit.getType().getType());
+		updateBlock.putByteA((byte) percentage);
+		updateBlock.putByteS((byte) 100);
+	}
+	
+	private static void appendHit2Update(NPC npc, PacketBuilder updateBlock) {
+		double max = npc.getDefinition().getHitpoints();
+		double hp = npc.getHealth();
+		double calc = hp / max;
+		int percentage = (int) (calc * 100);
+		if(percentage > 100) {
+			percentage = 100;
+		}
+		Hit hit = npc.getSecondaryHit();
+		updateBlock.put((byte) hit.getDamage());
+		updateBlock.putByteA((byte) hit.getType().getType());
+		updateBlock.put((byte) percentage);
+		updateBlock.put((byte) 100);
+	}
 }

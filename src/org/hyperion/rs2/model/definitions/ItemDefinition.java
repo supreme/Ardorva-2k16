@@ -3,7 +3,7 @@ package org.hyperion.rs2.model.definitions;
 import org.hyperion.rs2.LivingClasses;
 
 /**
- * Provides a structure for JSON serialization.
+ * Provides a structure for JSON serialization of item definitions.
  * @author Stephen Andrews
  */
 public class ItemDefinition {
@@ -64,6 +64,33 @@ public class ItemDefinition {
 	 */
 	public static ItemDefinition forId(int id) {
 		return LivingClasses.definitionLoader.getItemDefinitions()[id];
+	}
+	
+	/**
+	 * Gets an item definition for the specified item name.
+	 * @return The item definition.
+	 */
+	public static ItemDefinition forName(String name) {
+		name = name.toLowerCase();
+		ItemDefinition requested = null;
+		String currentName = "";
+		for (ItemDefinition def : LivingClasses.definitionLoader.getItemDefinitions()) {
+			if (def != null && def.getName() != null) 
+				currentName = def.getName().toLowerCase();
+			if (currentName.equals(name)) {
+				requested = def;
+			}
+		}
+		return requested;
+	}
+	
+	/**
+	 * Gets the bonuses of the item.
+	 * @param itemId The item id to get bonuses for.
+	 * @return An array of bonuses.
+	 */
+	public static final int[] getBonuses(int itemId) {
+		return LivingClasses.definitionLoader.getBonuses().get(itemId);
 	}
 	
 	/**
@@ -157,7 +184,7 @@ public class ItemDefinition {
 	 * Structure of the nested object for equipment definitions.
 	 * @author Stephen Andrews
 	 */
-	private class EquipmentDefinition {
+	public class EquipmentDefinition {
 		
 		/**
 		 * The equipment slot of the item.
@@ -338,6 +365,14 @@ public class ItemDefinition {
 		}
 		
 		/**
+		 * Whether or not the item has a special attack.
+		 * @return <code>true</code> if so, <code>false</code> if not.
+		 */
+		public boolean hasSpecialAttack() {
+			return hasSpecialAttack;
+		}
+		
+		/**
 		 * Gets the special attack data.
 		 * @return The special attack data.
 		 */
@@ -358,7 +393,7 @@ public class ItemDefinition {
 	 * Structure of the nested object for attack styles.
 	 * @author Stephen Andrews
 	 */
-	private class AttackStyles {
+	public class AttackStyles {
 		
 		/**
 		 * The accurate animation.
@@ -469,7 +504,7 @@ public class ItemDefinition {
 	 * Structure of the nested object for ranged weapon definitions.
 	 * @author Stephen Andrews
 	 */
-	private class RangedWeaponDefinition {
+	public class RangedWeaponDefinition {
 		
 		/**
 		 * The arrows compatible with the weapon.
@@ -489,7 +524,7 @@ public class ItemDefinition {
 	 * Structure of the nested object for special attack data.
 	 * @author Stephen Andrews
 	 */
-	private class SpecialAttackData {
+	public class SpecialAttackData {
 		
 		/**
 		 * The animation id.

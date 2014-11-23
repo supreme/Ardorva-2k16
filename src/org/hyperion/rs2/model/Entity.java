@@ -3,6 +3,10 @@ package org.hyperion.rs2.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hyperion.rs2.action.ActionQueue;
+import org.hyperion.rs2.content.combat.CombatState;
+import org.hyperion.rs2.content.combat.DamageMap;
+import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
@@ -22,6 +26,21 @@ public abstract class Entity {
 	public static final Location DEFAULT_LOCATION = Location.create(3200, 3200, 0);
 	
 	/**
+	 * The default death animation.
+	 */
+	public static final Animation DEATH_ANIMATION = Animation.create(2304);
+	
+	/**
+	 * A queue of actions.
+	 */
+	private final ActionQueue actionQueue = new ActionQueue();
+	
+	/**
+	 * The entity's attributes.
+	 */
+	public EntityAttributes attributes = new EntityAttributes();
+	
+	/**
 	 * The index in the <code>EntityList</code>.
 	 */
 	private int index;
@@ -32,9 +51,29 @@ public abstract class Entity {
 	private Location location;
 	
 	/**
+	 * The entity's combat state.
+	 */
+	private CombatState combatState = new CombatState();
+	
+	/**
+	 * The entity's damage map.
+	 */
+	private DamageMap damageMap = new DamageMap();
+	
+	/**
 	 * The entity's first stored hit for updates.
 	 */
 	private transient Damage damage = new Damage();
+	
+	/**
+	 * The entity's primary hit.
+	 */
+	private Hit primaryHit;
+	
+	/**
+	 * The entity's secondary hit.
+	 */
+	private Hit secondaryHit;
 	
 	/**
 	 * The entity's state of life.
@@ -140,6 +179,22 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * Gets the action queue.
+	 * @return The action queue.
+	 */
+	public ActionQueue getActionQueue() {
+		return actionQueue;
+	}
+	
+	/**
+	 * Gets the entity's attributes.
+	 * @return The attributes.
+	 */
+	public EntityAttributes getAttributes() {
+		return attributes;
+	}
+	
+	/**
 	 * Set the entity's combat state.
 	 * @param isInCombat This entity's combat state.
 	 */
@@ -184,6 +239,22 @@ public abstract class Entity {
 	 */
 	public boolean isAutoRetaliating() {
 		return isAutoRetaliating;
+	}
+	
+	/**
+	 * Gets the entity's combat state.
+	 * @return The cobat state.
+	 */
+	public CombatState getCombatState() {
+		return combatState;
+	}
+	
+	/**
+	 * Gets the entity's damage map.
+	 * @return The damage map.
+	 */
+	public DamageMap getDamageMap() {
+		return damageMap;
 	}
 
 	/**
@@ -472,10 +543,10 @@ public abstract class Entity {
 	
 	/**
 	 * Deal a hit to the entity.
-	 * @param damage The damage to be done.
-	 * @param type The type of damage we are inflicting.
+	 * @param source The entity dealing the damage.
+	 * @param hit The hit inflicted.
 	 */
-	public abstract void inflictDamage(int damage, Damage.HitType type);
+	public abstract void inflictDamage(Entity source, Hit hit);
 	
 	/**
 	 * Removes this entity from the specified region.
@@ -519,6 +590,38 @@ public abstract class Entity {
 	 */
 	public Damage getDamage() {	
 		return damage;
+	}
+	
+	/**
+	 * Sets the primary hit.
+	 * @param hit The primary hit.
+	 */
+	public void setPrimaryHit(Hit hit) {
+		this.primaryHit = hit;
+	}
+
+	/**
+	 * Sets the secondary hit.
+	 * @param hit The secondary hit.
+	 */
+	public void setSecondaryHit(Hit hit) {
+		this.secondaryHit = hit;
+	}
+	
+	/**
+	 * Gets the primary hit.
+	 * @return The primary hit.
+	 */
+	public Hit getPrimaryHit() {
+		return primaryHit;
+	}
+	
+	/**
+	 * Gets the secondary hit.
+	 * @return The secondary hit.
+	 */
+	public Hit getSecondaryHit() {
+		return secondaryHit;
 	}
 
 	/**

@@ -3,7 +3,7 @@ package org.hyperion.rs2.packet;
 import java.util.logging.Logger;
 
 import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.action.impl.AttackAction;
+import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.content.shops.ShopLoader;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.NPCDefinition;
@@ -73,7 +73,7 @@ public class NPCInteractPacketHandler implements PacketHandler {
 		}
 		
 		Logger.getLogger(this.getClass().getName()).info(player.getName() + " attacked npc: " + npc.getDefinition().getId() + ", at location: " + npc.getLocation().toString());
-		player.getActionQueue().addAction(new AttackAction(player, npc));
+		player.getActionQueue().addAction(new MeleeAction(player, npc));
 	}
 	
 	/**

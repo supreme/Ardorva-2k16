@@ -13,6 +13,7 @@ import org.hyperion.rs2.model.container.impl.EquipmentContainerListener;
 import org.hyperion.rs2.model.container.impl.InterfaceContainerListener;
 import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.player.PlayerConfiguration;
 import org.hyperion.rs2.net.Packet.Type;
 
 /**
@@ -46,11 +47,12 @@ public class ActionSender {
 		sendWindowPane(548);
 		
 		sendMessage("Welcome to " + Constants.SERVER_NAME + ".");
-		sendMessage("We are currently in a pre-alpha state.");
+		
+		player.getPlayerVariables().handleCounter();
 		
 		sendSkills();
-		
 		sendSideBarInterfaces();
+		sendPlayerConfiguration();
 		
 		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93);
 		player.getInventory().addListener(inventoryListener);
@@ -59,7 +61,6 @@ public class ActionSender {
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
-		
 		return this;
 	}
 
@@ -72,6 +73,31 @@ public class ActionSender {
 			sendSkill(i);
 		}
 		return this;
+	}
+	
+	/**
+	 * Sends the player's configuration.
+	 */
+	private void sendPlayerConfiguration() {
+		PlayerConfiguration config = player.getPlayerConfiguration();
+		if (config == null) {
+			player.getActionSender().sendMessage("We're sorry, we were unable to load your previous configuration.");
+			return;
+		}
+		
+		sendString(config.getWeaponTabInterface(), 0, config.getWeaponName());
+		sendTab(86, config.getWeaponTabInterface());
+	}
+	
+	/**
+	 * Saves the player's configuration.
+	 */
+	private void savePlayerConfiguration() {
+		PlayerConfiguration config = player.getPlayerConfiguration();
+		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
+		
+		config.setWeaponName(weapon != null ? weapon.getDefinition().getName() : "Unarmed");
+		//Weapon tab id is set in wield packet handler
 	}
 	
 	/**
@@ -133,9 +159,9 @@ public class ActionSender {
 	}
 	
 	public void sendSideBarInterfaces() {
-		sendTab(77, 137);//chatbox
-		sendTab(86, 92);
-		sendTab(87, 320);
+		sendTab(77, 137); //chatbox
+		sendTab(86, 92); //Weapon tab
+		sendTab(87, 320); //Skills
 		sendTab(88, 274);
 		sendTab(89, 149);
 		sendTab(90, 387);
@@ -146,7 +172,7 @@ public class ActionSender {
 		sendTab(96, 182);
 		sendTab(97, 261);
 		sendTab(98, 464);
-		sendTab(99, 239);
+		sendTab(99, 239); //Music tab
 	}
 	
 	public void sendTab(int tabId, int childId) {
@@ -170,16 +196,6 @@ public class ActionSender {
 	}
 	
 	/**
-	 * Displays an interface.
-	 * @param id The id of the interface to display.
-	 * TODO: The difference between send and display? 2nd param is 62 as opposed to 64.
-	 */
-	public void displayInterface(int id) {
-		player.getInterfaceState().interfaceOpened(id);
-		sendInterface(548, 62, id, false);
-    }
-	
-	/**
 	 * Sends an interface.
 	 * @param windowId The id of the window.
 	 * @param position The position.
@@ -195,6 +211,14 @@ public class ActionSender {
 	}
 	
 	/**
+	 * Displays an interface.
+	 */
+	public void displayInterface(int id) {
+		player.getInterfaceState().interfaceOpened(id);
+		sendInterface(548, 62, id, false);
+    }
+	
+	/**
 	 * Sends the logout packet.
 	 * @return The action sender instance, for chaining.
 	 */
@@ -202,6 +226,8 @@ public class ActionSender {
 		player.getSession().write(new PacketBuilder(167).toPacket()).addListener(new IoFutureListener() {
 			@Override
 			public void operationComplete(IoFuture arg0) {
+				savePlayerConfiguration();
+				PlayerConfiguration.serialize(player, player.getPlayerConfiguration());
 				arg0.getSession().close(false);
 			}
 		});
@@ -394,6 +420,20 @@ public class ActionSender {
 		}
 		bldr.putInt(id);
 		player.write(bldr.toPacket());
+	}
+	
+	public void sendConfig(int id, int value) {
+		if(value < 128 && value > -128) {
+			PacketBuilder bldr = new PacketBuilder(245);
+			bldr.putShortA(id);
+			bldr.put((byte) value);
+			player.getSession().write(bldr.toPacket());
+		} else {
+			PacketBuilder bldr = new PacketBuilder(37);
+			bldr.putShortA(id);
+			bldr.putLEInt(value);
+			player.getSession().write(bldr.toPacket());
+		}
 	}
 	
 }

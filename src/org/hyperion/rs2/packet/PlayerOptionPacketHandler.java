@@ -1,7 +1,6 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.action.impl.AttackAction;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
@@ -44,7 +43,7 @@ public class PlayerOptionPacketHandler implements PacketHandler {
 		}
 		Player victim = (Player) World.getWorld().getPlayers().get(id);
 		if(victim != null && player.getLocation().isWithinInteractionDistance(victim.getLocation())) {
-			player.getActionQueue().addAction(new AttackAction(player, victim));
+			//player.getActionQueue().addAction(new AttackAction(player, victim));
 		}
 	}
 	
