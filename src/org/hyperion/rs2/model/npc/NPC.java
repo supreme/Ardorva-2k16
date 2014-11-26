@@ -1,6 +1,7 @@
 package org.hyperion.rs2.model.npc;
 
 import org.hyperion.rs2.content.combat.EntityDeath;
+import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
@@ -139,6 +140,13 @@ public class NPC extends Entity {
 		}
 		
 		health -= hit.getDamage();
+		/*if((source instanceof Entity) && (source != null)) {
+			this.setInCombat(true);
+			this.setAggressorState(false);
+			this.face(source.getLocation());
+			this.getActionQueue().addAction(new MeleeAction(this, source));
+		}*/
+		
 		if (health <= 0) {
 			health = 0; //Health bar goes back to green if value is negative
 			if (!isDead()) {

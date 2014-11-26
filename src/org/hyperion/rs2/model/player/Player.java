@@ -6,6 +6,7 @@ import java.util.Queue;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
+import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
@@ -611,23 +612,24 @@ public class Player extends Entity implements Persistable {
 	 * Manages updateflags and HP modification when a hit occurs.
 	 * @param source The Entity dealing the blow.
 	 */
-	public void inflictDamage(Hit inc, Entity source) {
+	@Override
+	public void inflictDamage(Entity source, Hit hit) {
 		if(!getUpdateFlags().get(UpdateFlag.HIT)) {
-			getDamage().setHit1(inc);
+			getDamage().setHit1(hit);
 			getUpdateFlags().flag(UpdateFlag.HIT);
 		} else {
 			if(!getUpdateFlags().get(UpdateFlag.HIT_2)) {
-				getDamage().setHit2(inc);
+				getDamage().setHit2(hit);
 				getUpdateFlags().flag(UpdateFlag.HIT_2);
 			}
 		}
-		skills.detractLevel(Skills.HITPOINTS, inc.getDamage());
+		skills.detractLevel(Skills.HITPOINTS, hit.getDamage());
 		if((source instanceof Entity) && (source != null)) {
 			this.setInCombat(true);
 			this.setAggressorState(false);
 			if(this.isAutoRetaliating()) {
 				this.face(source.getLocation());
-				//this.getActionQueue().addAction(new AttackAction(this, source));
+				this.getActionQueue().addAction(new MeleeAction(this, source));
 			}
 		}
 		if(skills.getLevel(Skills.HITPOINTS) <= 0) {
@@ -636,10 +638,6 @@ public class Player extends Entity implements Persistable {
 			}
 			this.setDead(true);
 		}
-	}
-	
-	public void inflictDamage(Hit inc) {
-		this.inflictDamage(inc, null);
 	}
 
 	@Override
@@ -746,11 +744,4 @@ public class Player extends Entity implements Persistable {
 	public int getClientIndex() {
 		return this.getIndex() + 32768;
 	}
-
-	@Override
-	public void inflictDamage(Entity source, Hit hit) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

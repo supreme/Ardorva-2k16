@@ -1,7 +1,7 @@
 package org.hyperion.rs2.action;
 
 import org.hyperion.rs2.event.Event;
-import org.hyperion.rs2.model.npc.NPC;
+import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -57,26 +57,34 @@ public abstract class Action extends Event {
 	}
 
 	/**
-	 * The <code>Player</code> associated with this ActionEvent.
+	 * The <code>Entity</code> associated with this ActionEvent.
 	 */
-	private Player player;
+	private Entity entity;
 	
 	/**
 	 * Creates a new ActionEvent.
-	 * @param player The player.
+	 * @param entity The entity.
 	 * @param delay The initial delay.
 	 */
-	public Action(Player player, long delay) {
+	public Action(Entity entity, long delay) {
 		super(delay);
-		this.player = player;
+		this.entity = entity;
 	}
 
 	/**
-	 * Gets the player.
-	 * @return The player.
+	 * Gets the entity.
+	 * @return The entity.
+	 */
+	public Entity getEntity() {
+		return entity;
+	}
+	
+	/**
+	 * Gets the entity cast to a <code>Player</code> object.
+	 * @return The player object.
 	 */
 	public Player getPlayer() {
-		return player;
+		return (Player) entity;
 	}
 	
 	/**
@@ -94,7 +102,7 @@ public abstract class Action extends Event {
 	@Override
 	public void stop() {
 		super.stop();
-		player.getActionQueue().processNextAction();
+		entity.getActionQueue().processNextAction();
 	}
 
 }

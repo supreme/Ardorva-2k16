@@ -31,7 +31,7 @@ public abstract class CombatAction extends Action {
 	 * @param delay The delay between attacks.
 	 */
 	public CombatAction(Entity aggressor, Entity victim) {
-		super(((Player) aggressor), Server.CYCLE_TIME); //TODO: Convert action system to work with NPCs
+		super(aggressor, Server.CYCLE_TIME); //TODO: Convert action system to work with NPCs
 		this.aggressor = aggressor;
 		this.victim = victim;
 	}

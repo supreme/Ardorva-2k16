@@ -1,5 +1,7 @@
 package org.hyperion.rs2.content.combat.impl;
 
+import java.util.Random;
+
 import org.hyperion.rs2.content.combat.CombatAction;
 import org.hyperion.rs2.content.combat.logic.CombatFormulas;
 import org.hyperion.rs2.content.combat.util.AttackSpeeds;
@@ -8,8 +10,9 @@ import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Damage.HitType;
-import org.hyperion.rs2.model.EntityCooldowns.CooldownFlags;
 import org.hyperion.rs2.model.Entity;
+import org.hyperion.rs2.model.EntityCooldowns.CooldownFlags;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -33,7 +36,15 @@ public class MeleeAction extends CombatAction {
 
 	@Override
 	public void executeAttack(Entity aggressor, Entity victim) {
-		int hit = (int) (CombatFormulas.calculateMeleeRangeMaxHit((Player) aggressor, AttackType.MELEE) * Math.random());
+		int hit; 
+		if (aggressor instanceof Player) {
+			hit = (int) (CombatFormulas.calculateMeleeRangeMaxHit((Player) aggressor, AttackType.MELEE) * Math.random());
+		} else {
+			NPC npc = (NPC) aggressor;
+			Random random = new Random();
+			hit = random.nextInt(npc.getDefinition().getMaxHit());
+		}
+		
 		Hit damage = new Hit(hit, HitType.NORMAL_DAMAGE);
 		aggressor.playAnimation(Animation.create(CombatAnimations.getAttackingAnimation(aggressor)));
 		victim.playAnimation(Animation.create(CombatAnimations.getDefensiveAnimation(victim)));
@@ -54,7 +65,6 @@ public class MeleeAction extends CombatAction {
 	public void execute() {
 		if (!aggressor.getEntityCooldowns().get(CooldownFlags.MELEE_SWING)) {
 			if (!canAttack(aggressor, victim)) {
-				((Player) aggressor).getActionSender().sendMessage("[COMBAT] Stopping attack action, can't attack");
 				this.stop();
 				return;
 			}

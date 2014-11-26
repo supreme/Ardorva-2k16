@@ -51,7 +51,7 @@ public class EntityDeath {
 		/* The effects of dying */
 		player.setCanWalk(false);
 		player.playAnimation(Entity.DEATH_ANIMATION);
-		World.getWorld().submit(new Event(5) {
+		World.getWorld().submit(new Event(3000) {
 
 			@Override
 			public void execute() {
@@ -61,6 +61,7 @@ public class EntityDeath {
 				/* Remove items lost and display loot for killer */
 				removeDeathItems(player);
 				displayLoot(player, player); //TODO
+				player.setDead(false);
 			}
 			
 		});
