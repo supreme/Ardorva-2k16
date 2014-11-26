@@ -3,6 +3,7 @@ package org.hyperion.rs2.model.container;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.player.Player;
 
@@ -438,11 +439,29 @@ public class Equipment {
 					player.getInventory().add(item);
 					player.getEquipment().set(slot, null);
 					player.getBonuses().refresh();
+					CombatUtility.sendWeaponTab(player);
 				} else {
 					player.getActionSender().sendMessage("You do not have any room in your inventory.");
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Displays the equipment screen for a player.
+	 * @param player The player to display the equipment screen to.
+	 */
+	public static void displayEquipmentScreen(Player player) {
+		player.getWalkingQueue().reset();
+		player.getActionSender().clearMapFlag();
+		Object[] opts = new Object[]{"", "", "", "", "", "", "", "", "Wear<col=ff9040>", -1, 0, 7, 4, 98, 22020096};
+		player.getActionSender().displayInterface(465);
+		player.getBonuses().refresh();
+		player.getActionSender().sendInventoryInterface(336);
+		player.getActionSender().sendClientScript(150, opts, "IviiiIsssssssss");
+		player.getActionSender().sendAccessMask(1278, 336, 0, 0, 28);
+		player.getActionSender().sendUpdateItems(-1, 1, 98, player.getInventory().toArray());
+		player.getActionSender().sendUpdateItems(465, 103, 95, player.getEquipment().toArray());
 	}
 
 }

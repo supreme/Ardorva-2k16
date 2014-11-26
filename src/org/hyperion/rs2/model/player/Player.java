@@ -21,6 +21,7 @@ import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Container;
+import org.hyperion.rs2.model.container.ContainerInterface;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.item.Bonuses;
@@ -218,7 +219,7 @@ public class Player extends Entity implements Persistable {
 	/**
 	 * The player's bank.
 	 */
-	private final Container bank = new Container(Container.Type.ALWAYS_STACK, Bank.SIZE);
+	private final Container bank = new Container(this, Container.Type.ALWAYS_STACK, Bank.SIZE, new ContainerInterface(12, 7, -1));
 	
 	/**
 	 * The player's settings.

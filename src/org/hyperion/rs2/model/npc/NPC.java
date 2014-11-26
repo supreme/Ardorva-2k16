@@ -1,9 +1,9 @@
 package org.hyperion.rs2.model.npc;
 
+import org.hyperion.rs2.content.combat.EntityDeath;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
-import org.hyperion.rs2.model.Damage.HitType;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
@@ -140,9 +140,11 @@ public class NPC extends Entity {
 		
 		health -= hit.getDamage();
 		if (health <= 0) {
+			health = 0; //Health bar goes back to green if value is negative
 			if (!isDead()) {
-				playAnimation(Animation.create(definition.getDeathAnimation(), 2));
-				World.getWorld().submit(new DeathEvent(this));
+				EntityDeath.sendDeath(this);
+				//playAnimation(Animation.create(definition.getDeathAnimation(), 2));
+				//World.getWorld().submit(new DeathEvent(this));
 			}
 			setDead(true);
 		}

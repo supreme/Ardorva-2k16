@@ -8,6 +8,7 @@ import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Damage.HitType;
+import org.hyperion.rs2.model.EntityCooldowns.CooldownFlags;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.player.Player;
 
@@ -25,7 +26,7 @@ public class MeleeAction extends CombatAction {
 	 * @param delay The delay between attacks.
 	 */
 	public MeleeAction(Entity aggressor, Entity victim) {
-		super(aggressor, victim, AttackSpeeds.getAttackSpeed(aggressor));
+		super(aggressor, victim);
 		aggressor.setInteractingEntity(victim);
 		victim.setInteractingEntity(aggressor);
 	}
@@ -37,6 +38,7 @@ public class MeleeAction extends CombatAction {
 		aggressor.playAnimation(Animation.create(CombatAnimations.getAttackingAnimation(aggressor)));
 		victim.playAnimation(Animation.create(CombatAnimations.getDefensiveAnimation(victim)));
 		inflictDamage(victim, damage);
+		aggressor.getEntityCooldowns().flag(CooldownFlags.MELEE_SWING, AttackSpeeds.getAttackSpeed(aggressor), aggressor);
 	}
 
 	@Override
@@ -50,11 +52,15 @@ public class MeleeAction extends CombatAction {
 
 	@Override
 	public void execute() {
-		if (!canAttack(aggressor, victim)) {
-			stop();
+		if (!aggressor.getEntityCooldowns().get(CooldownFlags.MELEE_SWING)) {
+			if (!canAttack(aggressor, victim)) {
+				((Player) aggressor).getActionSender().sendMessage("[COMBAT] Stopping attack action, can't attack");
+				this.stop();
+				return;
+			}
+			
+			executeAttack(aggressor, victim);
 		}
-		
-		executeAttack(aggressor, victim);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package org.hyperion.rs2.action;
 
 import org.hyperion.rs2.event.Event;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -59,7 +60,7 @@ public abstract class Action extends Event {
 	 * The <code>Player</code> associated with this ActionEvent.
 	 */
 	private Player player;
-
+	
 	/**
 	 * Creates a new ActionEvent.
 	 * @param player The player.

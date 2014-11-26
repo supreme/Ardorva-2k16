@@ -6,6 +6,7 @@ import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.content.Skillcape;
 import org.hyperion.rs2.content.magic.Teleport;
 import org.hyperion.rs2.model.Animation;
+import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
 
@@ -85,12 +86,17 @@ public class ActionButtonPacketHandler implements PacketHandler {
 				player.playAnimation(Animation.create(Animation.ANIMS[buttonId - 1]));
 			}
 			break;
-		default:
-			if (Constants.DEV_MODE) {
-				player.getActionSender().sendMessage("Unhandled action button | Interface: " + interfaceId + " Button: " + buttonId);
+		case 387: //Equipment tab
+			switch(buttonId) {
+				case 51: //Show equipment
+					Equipment.displayEquipmentScreen(player);
+					break;
 			}
-			
-			logger.info("Unhandled action button: i=" + interfaceId + ",b="+buttonId);
+			break;
+		default:
+			if (Constants.DEV_MODE && interfaceId != 548) {
+				player.getActionSender().sendMessage("Unhandled action button | Interface: " + interfaceId + " Button: " + buttonId);
+			}			
 			break;
 		}
 	}

@@ -1,8 +1,10 @@
 package org.hyperion.rs2.content.combat;
 
+import org.hyperion.Server;
 import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -28,8 +30,8 @@ public abstract class CombatAction extends Action {
 	 * @param victim The entity receiving the attack.
 	 * @param delay The delay between attacks.
 	 */
-	public CombatAction(Entity aggressor, Entity victim, long delay) {
-		super(((Player) aggressor), delay);
+	public CombatAction(Entity aggressor, Entity victim) {
+		super(((Player) aggressor), Server.CYCLE_TIME); //TODO: Convert action system to work with NPCs
 		this.aggressor = aggressor;
 		this.victim = victim;
 	}

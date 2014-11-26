@@ -17,6 +17,11 @@ public class Server {
 	public static final int VERSION = 464;
 	
 	/**
+	 * The cycle time.
+	 */
+	public static final int CYCLE_TIME = 600;
+	
+	/**
 	 * The entry point of the application.
 	 * @param args The command line arguments.
 	 */

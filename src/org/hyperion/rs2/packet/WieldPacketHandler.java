@@ -1,6 +1,7 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Equipment.EquipmentType;
@@ -72,6 +73,7 @@ public class WieldPacketHandler implements PacketHandler {
 		}
 		
 		player.getBonuses().refresh();
+		CombatUtility.sendWeaponTab(player);
 	}
 	
 	/**

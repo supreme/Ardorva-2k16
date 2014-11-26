@@ -3,6 +3,7 @@ package org.hyperion.rs2.net;
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
@@ -45,8 +46,9 @@ public class ActionSender {
 		sendMapRegion();
 		
 		sendWindowPane(548);
+		sendComponentPosition(548, 101, 1000, 1000); //Remove fucking xp orb
 		
-		sendMessage("Welcome to " + Constants.SERVER_NAME + ".");
+		sendMessage("<img=1></img> Welcome to " + Constants.SERVER_NAME + ".");
 		
 		player.getPlayerVariables().handleCounter();
 		
@@ -61,6 +63,9 @@ public class ActionSender {
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
+		
+		player.getBonuses().refresh();
+		CombatUtility.sendWeaponTab(player);
 		return this;
 	}
 
@@ -121,6 +126,19 @@ public class ActionSender {
 	 */
 	public ActionSender sendMessage(String message) {
 		player.write(new PacketBuilder(108, Type.VARIABLE).putRS2String(message).toPacket());
+		return this;
+	}
+	
+	/**
+	 * Moves a component's position.
+	 * @param interfaceId The interface id of the component.
+	 * @param childId The component child id.
+	 * @param x The x position to move to.
+	 * @param y The y position to move to.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendComponentPosition(int interfaceId, int childId, int x, int y) {
+		player.getSession().write(new PacketBuilder(201).putLEInt(interfaceId << 16 | childId).putShortA(y).putShort(x).toPacket());
 		return this;
 	}
 	
@@ -394,10 +412,27 @@ public class ActionSender {
 	}
 	
 	/**
-	 * Submits an action.
+	 * Assuming it clears the red flags on minimap for walking queue?
 	 */
-	public void submitAction() {
-		//
+	public void clearMapFlag() {
+		player.getSession().write(new PacketBuilder(68).toPacket());
+	}
+	
+	/**
+	 * Not sure?
+	 * @param set
+	 * @param interfaceId
+	 * @param window
+	 * @param start
+	 * @param end
+	 */
+	public void sendAccessMask(int set, int interfaceId, int window, int start, int end) {
+		PacketBuilder bldr = new PacketBuilder(254);	
+		bldr.putLEShort(end);
+		bldr.putInt(interfaceId << 16 | window);
+		bldr.putShortA(start);
+		bldr.putInt1(set);
+		player.getSession().write(bldr.toPacket());
 	}
 	
 	public void displayEnterAmount(String text) {
@@ -405,6 +440,12 @@ public class ActionSender {
 		sendClientScript(108, o, "s");
 	}
 	
+	/**
+	 * Invokes a client script.
+	 * @param id The script id.
+	 * @param params
+	 * @param types
+	 */
 	public void sendClientScript(int id, Object[] params, String types) {
 		PacketBuilder bldr = new PacketBuilder(69, Type.VARIABLE_SHORT);
 		bldr.putRS2String(types);

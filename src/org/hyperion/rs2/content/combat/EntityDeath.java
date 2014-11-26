@@ -7,6 +7,7 @@ import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
+import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Container.Type;
@@ -154,16 +155,28 @@ public class EntityDeath {
 	 * @param npc The npc who has died.
 	 */
 	private static void handleNPCDeath(final NPC npc) {
+		Location deathLocation = npc.getLocation(); //TODO: Change this to load from saved spot - Stephen
 		npc.playAnimation(Animation.create(npc.getDefinition().getDeathAnimation()));
 		
-		/* Create a tickable for the duration of the death animation */
-		World.getWorld().submit(new Event(4) {
+		/* Create an event for the duration of the death animation */
+		World.getWorld().submit(new Event(2400) {
 
 			@Override
 			public void execute() {
-				npc.setHealth(npc.getDefinition().getHitpoints());
-				npc.setAggressorState(false);
-				npc.setInteractingEntity(null);
+				
+				//World.getWorld().unregister(npc);
+				//npc.reset();
+				
+				World.getWorld().submit(new Event(3600) {
+
+					@Override
+					public void execute() {
+						npc.playAnimation(Animation.create(-1));
+						npc.setDead(false);
+						npc.setHealth(npc.getDefinition().getHitpoints());
+					}
+					
+				});
 			}
 			
 		});

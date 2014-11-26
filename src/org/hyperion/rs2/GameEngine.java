@@ -92,7 +92,7 @@ public class GameEngine implements Runnable {
 		thread.interrupt();
 	}
 	
-	private long last;
+	//private long last;
 	@Override
 	public void run() {
 		try {

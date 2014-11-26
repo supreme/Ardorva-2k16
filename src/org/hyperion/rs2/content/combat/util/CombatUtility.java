@@ -1,6 +1,7 @@
 package org.hyperion.rs2.content.combat.util;
 
 import org.hyperion.rs2.model.Entity;
+import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.player.Player;
 
@@ -60,6 +61,25 @@ public class CombatUtility {
 					.getDefinition().getWeaponDefinition().getRunAnimation();
 			//attackAnimation = player.getEquipment().get(Equipment.SLOT_WEAPON)
 					//.getDefinition().getWeaponDefinition().getAttackStyles().get
+		}
+	}
+	
+	/**
+	 * Sends the correct weapon tab interface.
+	 * @param player The player to send the interface to.
+	 */
+	public static void sendWeaponTab(Player player) {
+		/* Send the correct weapon interface */
+		Item playerWeapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
+		if (playerWeapon != null && playerWeapon.getDefinition().getWeaponDefinition() != null) {
+			int interfaceId = playerWeapon.getDefinition().getWeaponDefinition().getInterfaceId();
+			player.getActionSender().sendTab(86, interfaceId);
+			player.getActionSender().sendString(interfaceId, 0, playerWeapon.getDefinition().getName());
+			player.getPlayerConfiguration().setWeaponTabInterface(interfaceId);
+		} else {
+			player.getActionSender().sendTab(86, 92);
+			player.getActionSender().sendString(92, 0, "Unarmed");
+			player.getPlayerConfiguration().setWeaponTabInterface(92);
 		}
 	}
 }

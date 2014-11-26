@@ -4,6 +4,7 @@ import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.command.commands.DisplayInterface;
 import org.hyperion.rs2.net.command.commands.EmptyInventory;
+import org.hyperion.rs2.net.command.commands.MaxHit;
 import org.hyperion.rs2.net.command.commands.MaxSkills;
 import org.hyperion.rs2.net.command.commands.OpenBank;
 import org.hyperion.rs2.net.command.commands.PlayAnimation;
@@ -65,6 +66,11 @@ public class CommandManager {
 		 * Sets the player's skills to level 99.
 		 */
 		MAX_SKILLS("max", new MaxSkills()),
+		
+		/**
+		 * Sends a player their max hit information.
+		 */
+		MAX_HIT("maxhit", new MaxHit()),
 		
 		/**
 		 * Empties a player's inventory.
