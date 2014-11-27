@@ -171,6 +171,11 @@ public abstract class Entity {
 	private boolean isAggressor;
 	
 	/**
+	 * Whether or not the entity is visible.
+	 */
+	protected boolean visible = true;
+	
+	/**
 	 * Creates the entity.
 	 */
 	public Entity() {
@@ -630,5 +635,20 @@ public abstract class Entity {
 	 */
 	public abstract int getClientIndex();
 
+	/**
+	 * Determines if the entity is currently visible.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	/**
+	 * Sets the visible flag.
+	 * @param visible The flag to set.
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 
 }

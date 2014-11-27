@@ -27,8 +27,9 @@ public class NPCRespawnEvent extends Event {
 
 	@Override
 	public void execute() {
-		npc.addToRegion(npc.getRegion());
-		World.getWorld().register(npc);		
+		npc.setVisible(true);
+		npc.setDead(false);	
+		this.stop();
 	}
 
 }

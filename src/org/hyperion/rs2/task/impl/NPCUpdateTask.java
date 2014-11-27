@@ -67,7 +67,7 @@ public class NPCUpdateTask implements Task {
 			/*
 			 * If the NPC should still be in our list.
 			 */
-			if(World.getWorld().getNPCs().contains(npc) && !npc.isTeleporting() && npc.getLocation().isWithinDistance(player.getLocation())) {
+			if(World.getWorld().getNPCs().contains(npc) && !npc.isTeleporting() && npc.getLocation().isWithinDistance(player.getLocation()) && npc.isVisible()) {
 				/*
 				 * Update the movement.
 				 */
@@ -112,7 +112,7 @@ public class NPCUpdateTask implements Task {
 			/*
 			 * If they should not be added ignore them.
 			 */
-			if(player.getLocalNPCs().contains(npc)) {
+			if(player.getLocalNPCs().contains(npc) || !npc.isVisible()) {
 				continue;
 			}
 			

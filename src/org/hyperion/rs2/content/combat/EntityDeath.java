@@ -51,6 +51,7 @@ public class EntityDeath {
 		/* The effects of dying */
 		player.setCanWalk(false);
 		player.playAnimation(Entity.DEATH_ANIMATION);
+		
 		World.getWorld().submit(new Event(3000) {
 
 			@Override
@@ -165,21 +166,26 @@ public class EntityDeath {
 			@Override
 			public void execute() {
 				
-				//World.getWorld().unregister(npc);
-				//npc.reset();
+				npc.setVisible(false);
+				npc.setLocation(Location.create(3092, 3536, 0));
 				
-				World.getWorld().submit(new Event(3600) {
+				World.getWorld().submit(new Event(6000) {
 
 					@Override
 					public void execute() {
 						npc.playAnimation(Animation.create(-1));
-						npc.setDead(false);
 						npc.setHealth(npc.getDefinition().getHitpoints());
+						npc.setDead(false);
+						npc.setVisible(true);
+						npc.setAutoRetaliating(true);
+						npc.setLocation(deathLocation);
+						this.stop();
 					}
 					
 				});
+				
+				this.stop();
 			}
-			
 		});
 		
 		/*Random random = new Random();

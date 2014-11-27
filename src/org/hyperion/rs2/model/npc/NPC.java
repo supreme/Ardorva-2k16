@@ -140,19 +140,20 @@ public class NPC extends Entity {
 		}
 		
 		health -= hit.getDamage();
-		/*if((source instanceof Entity) && (source != null)) {
+		if((source instanceof Entity) && (source != null)) {
 			this.setInCombat(true);
 			this.setAggressorState(false);
-			this.face(source.getLocation());
-			this.getActionQueue().addAction(new MeleeAction(this, source));
-		}*/
+			if(this.isAutoRetaliating()) {
+				this.face(source.getLocation());
+				//this.getActionQueue().addAction(new MeleeAction(this, source));
+			}
+		}
 		
 		if (health <= 0) {
 			health = 0; //Health bar goes back to green if value is negative
 			if (!isDead()) {
-				EntityDeath.sendDeath(this);
-				//playAnimation(Animation.create(definition.getDeathAnimation(), 2));
-				//World.getWorld().submit(new DeathEvent(this));
+				playAnimation(Animation.create(definition.getDeathAnimation(), 2));
+				World.getWorld().submit(new DeathEvent(this));
 			}
 			setDead(true);
 		}
