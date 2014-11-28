@@ -1,16 +1,29 @@
 package org.hyperion.rs2.content.combat.logic;
 
+import java.util.HashMap;
+
 import org.hyperion.rs2.content.combat.item.ItemSets;
 import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.content.combat.util.CombatData.Stance;
+import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Skills;
+import org.hyperion.rs2.model.container.Equipment;
+import org.hyperion.rs2.model.definitions.ItemDefinition;
+import org.hyperion.rs2.model.definitions.ItemDefinition.EquipmentDefinition;
 import org.hyperion.rs2.model.item.Bonuses;
 import org.hyperion.rs2.model.player.Player;
 
 /**
- * Contains max hit forumlas for melee, range, and mage. I found a post on the RuneScape wiki
- * containing an article player's put together attempting to recreate RuneScape's max hit
- * formula. All the data can be found here - http://services.runescape.com/m=rswiki/en/Maximum_Hit_Formula.
+ * An attempt to recreate realisitic combat resembling RuneScape. Formula's for max hits,
+ * accuracy, etc can be found in this class.
+ * 
+ * Forumlas for melee, range, and mage -
+ * I found a post on the RuneScape wiki containing an article player's put together attempting 
+ * to recreate RuneScape's max hit formula. All the data for max hit formulas can be found 
+ * here - http://services.runescape.com/m=rswiki/en/Maximum_Hit_Formula.
+ * 
+ * For the accuracy formulas, I found a fairly extensive explanation of how accuracy works.
+ * All of the information used can be found here - http://runescape.wikia.com/wiki/Combat_Stats.
  * @author Stephen Andrews
  */
 public class CombatFormulas {
@@ -87,7 +100,7 @@ public class CombatFormulas {
 		maxHit = 5 + effectiveLevel * (typeBonus + 64) / 64;
 		maxHit = Math.round(maxHit);
 		
-		//TODO: Calculate other bonuses, like special, full dharok.
+		//TODO: Calculate other bonuses, like special, full dharok
 		switch(type) {
 			case MELEE:
 				if (itemSet == ItemSets.DHAROK) {
@@ -99,8 +112,168 @@ public class CombatFormulas {
 					maxHit *= multiplier;
 				}
 				break;
+			default:
+				//Remove warning
+				break;
 		}
 		
 		return maxHit/10; //Divide by 10 because this formula is for x10 damage
 	}
+	
+	/**
+	 * Calculates a player's offensive accuracy.
+	 * @param player The player to calcuate the accuracy for.
+	 * @param type The player's attack type.
+	 * @return The accuracy.
+	 */
+	public static int calculateOffensiveAccuracy(Player player, AttackType type) {
+		double skillAccuracyBonus;
+		double weaponAccuracy;
+		int skillLevel = player.getSkills().getLevel(type.getSkillNumber());
+		
+		//Calculate the accuracy bonus we receive from our skill level
+		skillAccuracyBonus = (Math.pow(skillLevel, 3) / 1250) + (4 * skillLevel) + 40;
+		
+		//Calculate the accuracy of the player's weapon
+		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
+		int requiredWeaponLevel = 1; //Required level to wield the weapon the player has equipped
+		
+		if (weapon != null) { //If player doesn't have a weapon move on, otherwise get the requirement
+			requiredWeaponLevel = weapon.getDefinition().getEquipmentDefinition().getRequirements()[type.getSkillNumber()];
+		}
+		
+		//Calculate the weapon accuracy
+		weaponAccuracy = 2.5 * ((Math.pow(requiredWeaponLevel, 3) + (4 * requiredWeaponLevel) + 40));
+		
+		//Perform the final calculations
+		double finalAccuracy = skillAccuracyBonus + weaponAccuracy;
+		
+		return (int) finalAccuracy;
+	}
+	
+	/**
+	 * Calculates a player's defensive bonus.
+	 * @param player The player to calculate the defensive bonus for.
+	 * @return The defensive bonus.
+	 */
+	public static int calculateDefensiveBonus(Player player) {
+		double totalBonus = 0;
+		HashMap<Integer, Item> armor = new HashMap<Integer, Item>();
+		
+		for (int i = 0; i < player.getEquipment().toArray().length; i++) {
+			if (player.getEquipment().toArray()[i] == null) {
+				continue;
+			}
+			
+			armor.put(i, player.getEquipment().toArray()[i]);
+		}
+		
+		for (int key : armor.keySet()) {
+			EquipmentDefinition def = armor.get(key).getDefinition().getEquipmentDefinition();
+			totalBonus += runDefensiveFormula(def.getRequirements()[Skills.DEFENCE], key);
+		}
+
+		return (int) totalBonus;
+	}
+	
+	/**
+	 * Calculates the defensive bonus of a piece of equipment.
+	 * @param tier The tier of the equipment.
+	 * @param type The type of the equipment (helm, body, etc).
+	 * @return The defensive bonus.
+	 */
+	private static int runDefensiveFormula(int tier, int type) {
+		double bonus;
+		
+		bonus = 2.5 * ((Math.pow(tier, 3) + (4*tier) + 40));
+		switch(type) {
+		case Equipment.SLOT_HELM:
+			bonus = bonus * 0.2;
+			break;
+		case Equipment.SLOT_CHEST:
+			bonus = bonus * 0.23;
+			break;
+		case Equipment.SLOT_BOTTOMS:
+			bonus = bonus * 0.22;
+			break;
+		case Equipment.SLOT_SHIELD:
+			bonus = bonus * 0.2;
+			break;
+		case Equipment.SLOT_GLOVES:
+			bonus = bonus * 0.05;
+			break;
+		case Equipment.SLOT_BOOTS:
+			bonus = bonus * 0.05;
+			break;
+		case Equipment.SLOT_CAPE:
+			bonus = bonus * 0.03;
+			break;
+		case Equipment.SLOT_RING:
+			bonus = bonus * 0.02;
+			break;
+		}
+		
+		return (int) bonus;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

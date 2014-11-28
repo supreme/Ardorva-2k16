@@ -20,17 +20,39 @@ public class CombatData {
 		/**
 		 * A melee-based attacks.
 		 */
-		MELEE,
+		MELEE(0),
 		
 		/**
 		 * A projectile-based attacks.
 		 */
-		RANGED,
+		RANGED(4),
 		
 		/**
 		 * A magic-based attacks.
 		 */
-		MAGIC;
+		MAGIC(6);
+		
+		/**
+		 * The skill id for the attack type.
+		 */
+		private int skillId;
+		
+		/**
+		 * Constructs an attack type.
+		 * @param skillId The skill id.
+		 */
+		AttackType(int skillId) {
+			this.skillId = skillId;
+		}
+		
+		/**
+		 * Gets the corresponding skill number for the attack type.
+		 * @return The skill number.
+		 */
+		public int getSkillNumber() {
+			return skillId;
+		}
+		
 	}
 	
 	/**
