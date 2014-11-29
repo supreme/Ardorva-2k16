@@ -11,6 +11,8 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
 
+import org.hyperion.rs2.content.shops.Shop;
+import org.hyperion.rs2.content.shops.Shop.ShopContents;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Equipment;
 
@@ -29,6 +31,11 @@ public class DefinitionLoader {
 	private final static String DEFINITIONS_DIRECTORY = "./data/world/definitions/";
 	
 	/**
+	 * The location of the shop definitions.
+	 */
+	private final static String SHOP_DIRECTORY = "./data/world/shops/";
+	
+	/**
 	 * An array of item definitions.
 	 */
 	private ItemDefinition[] itemDefinitions;
@@ -37,6 +44,12 @@ public class DefinitionLoader {
 	 * An array of NPC definitions.
 	 */
 	private NPCDefinition[] npcDefinitions;
+	
+	/**
+	 * An array of shops
+	 */
+	
+	private Shop[] shops;
 	
 	/**
 	 * A map of item bonuses.
@@ -135,6 +148,21 @@ public class DefinitionLoader {
 	}
 	
 	/**
+	 * Loads the shops from json file
+	 */
+	public void loadShops() {
+		try (BufferedReader reader = new BufferedReader(new FileReader(SHOP_DIRECTORY + "shops.json"))) {
+            Gson gson = new GsonBuilder().create();
+            shops = gson.fromJson(reader, Shop[].class);
+            System.out.println("Loaded " + shops.length + " shops");
+        } catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Gets the item definitions.
 	 * @return The item definitions.
 	 */
@@ -149,4 +177,13 @@ public class DefinitionLoader {
 	public NPCDefinition[] getNPCDefinitions() {
 		return npcDefinitions;
 	}
+	
+	/**
+	 * Gets the Shops
+	 * @return The shops
+	 */
+	public Shop[] getShops() {
+		return shops;
+	}
+	
 }

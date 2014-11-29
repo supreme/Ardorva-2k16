@@ -8,29 +8,30 @@ import org.hyperion.rs2.model.player.Player;
  * Represents a shop.
  * @author Stephen Andrews
  */
-public abstract class Shop {
+public class Shop {
+	
 	
 	/**
-	 * The interface id for a shop.
+	 * Shop id
 	 */
-	public static final int SHOP_INTERFACE = 300; 
+	private int id;
 	
 	/**
-	 * The action of purchasing an item from a player.
-	 * @param container The container of the shop.
-	 * @param player The player selling the item to the shop.
+	 * Shop name
 	 */
-	public void buyItem(Container container, Player player) {
-		//TODO
-	}
+	private String name;
 	
 	/**
-	 * The action of selling an item to a player.
-	 * @param container The container to sell from.
-	 * @param player The player to sell the item to.
+	 * Shop contents
 	 */
-	public void sellItem(Container container, Player player) {
-		//TODO
+	private ShopContents contents;
+	
+	/**
+	 * Gets the shop id
+	 * @return The shop id
+	 */
+	public int getId() {
+		return id;
 	}
 	
 	/**
@@ -38,7 +39,15 @@ public abstract class Shop {
 	 * @return The name of the shop or <code>null</code> if not overridden.
 	 */
 	public String getName() {
-		return null;
+		return name;
+	}
+	
+	/**
+	 * Gets the shop contents
+	 * @return The ShopContents object
+	 */
+	public ShopContents getContents() {
+		return contents;
 	}
 	
 	/**
@@ -69,6 +78,24 @@ public abstract class Shop {
 	}
 	
 	/**
+	 * The action of purchasing an item from a player.
+	 * @param container The container of the shop.
+	 * @param player The player selling the item to the shop.
+	 */
+	public void buyItem(Container container, Player player) {
+		//TODO
+	}
+	
+	/**
+	 * The action of selling an item to a player.
+	 * @param container The container to sell from.
+	 * @param player The player to sell the item to.
+	 */
+	public void sellItem(Container container, Player player) {
+		//TODO
+	}
+	
+	/**
 	 * Gets the price of an item.
 	 * @param item The item to look at.
 	 * @param current The current quantity the shop has.
@@ -85,5 +112,100 @@ public abstract class Shop {
 		}
 		
 		return price;
+	}
+	
+	/**
+	 * The contents of a shop.
+	 * @author Stephen
+	 */
+	public class ShopContents {
+		
+		/**
+		 * The items in the shop.
+		 */
+		private ShopItem[] items;
+		
+		/**
+		 * Constructs a ShopContents object.
+		 * @param items The items in the shop.
+		 */
+		public ShopContents(ShopItem[] items) {
+			this.items = items;
+		}
+		
+		/**
+		 * Gets the shop items.
+		 * @return The shop items.
+		 */
+		public ShopItem[] getItems() {
+			return items;
+		}
+		
+		/**
+		 * Gets the length of the contents array
+		 * @return Length of contents array
+		 */
+		public int getLength() {
+			return items.length;
+		}
+	}
+	
+	/**
+	 * The structure of a shop item.
+	 * @author Stephen
+	 */
+	public class ShopItem {
+			
+		/**
+		 * The id of the item.
+		 */
+		private int id;
+		
+		/**
+		 * The amount of the item in stock.
+		 */
+		private int stock;
+		
+		/**
+		 * The max amount the shop can have of the item.
+		 */
+		private int max;
+		
+		/**
+		 * Constructs an Item object.
+		 * @param itemId The id of the item.
+		 * @param stock The amount of the item in stock.
+		 * @param cost The cost of the item per unit.
+		 * @param max The max amount the shop can have of the item.
+		 */
+		public ShopItem(int id, int stock, int max) {
+			this.id = id;
+			this.stock = stock;
+			this.max = max;
+		}
+		
+		/**
+		 * Gets the id of the item.
+		 * @return The item id.
+		 */
+		public int getId() {
+			return id;
+		}
+		
+		/**
+		 * Gets the amount of the item in stock.
+		 * @return The stock of the item.
+		 */
+		public int getStock() {
+			return stock;
+		}
+		
+		/**
+		 * Gets the max amount the shop can have of the item.
+		 * @return The max amount the shop can have of the item.
+		 */
+		public int getMaxStock() {
+			return max;
+		}
 	}
 }

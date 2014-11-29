@@ -42,10 +42,10 @@ public class PlayerShop extends Shop {
 		this.shopSize = shopSize;
 	}
 
-	@Override
+/*	@Override
 	public void buyItem(Container container, Player player) {
 		player.getActionSender().sendMessage("You cannot sell items to a player owned shop.");
-	}
+	}*/
 	
 	/**
 	 * Saves a shop to a dat file.

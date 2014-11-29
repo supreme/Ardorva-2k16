@@ -1,5 +1,6 @@
 package org.hyperion.rs2.packet;
 
+import org.hyperion.rs2.content.shops.Shop;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.player.Player;
@@ -69,6 +70,10 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 				if (player.getPlayerVariables().isBanking()) {
 					Bank.deposit(player, slot, itemId, 1);
 				}
+				break;
+				
+			case 300:
+					//Shop.checkItemPrice(player, itemId);
 				break;
 			case 387://Unequip inv
 			case 465://Equip interface - unequip

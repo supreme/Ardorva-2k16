@@ -125,6 +125,7 @@ public class World {
 					LivingClasses.definitionLoader.loadItemDefinitions();
 					LivingClasses.definitionLoader.loadNPCDefinitions();
 					LivingClasses.definitionLoader.loadBonusDefinitions();
+					LivingClasses.definitionLoader.loadShops();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
