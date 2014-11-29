@@ -376,6 +376,14 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * Determines whether or not the entity is currently playing an animation.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public boolean isAnimimation() {
+		return currentAnimation != null;
+	}
+	
+	/**
 	 * Gets the current graphic.
 	 * @return The current graphic.
 	 */

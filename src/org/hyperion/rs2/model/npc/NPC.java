@@ -142,6 +142,9 @@ public class NPC extends Entity {
 		if((source instanceof Entity) && (source != null)) {
 			this.setInCombat(true);
 			this.setAggressorState(false);
+			if (!this.isAnimimation()) {
+				this.playAnimation(Animation.create(getCombatUtility().getBlockAnimation()));
+			}
 			if(this.isAutoRetaliating()) {
 				this.face(source.getLocation());
 				//this.getActionQueue().addAction(new MeleeAction(this, source));

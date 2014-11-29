@@ -11,6 +11,7 @@ import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Damage.HitType;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.EntityCooldowns.CooldownFlags;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -33,18 +34,9 @@ public class MeleeAction extends CombatAction {
 	}
 
 	@Override
-	public void executeAttack(Entity aggressor, Entity victim) {
-		int hit; 
-		if (aggressor instanceof Player) {
-			hit =  (int) (aggressor.getCombatUtility().getMaxHit() * Math.random());
-		} else {
-			Random random = new Random();
-			hit = random.nextInt(aggressor.getCombatUtility().getMaxHit());
-		}
-		
-		Hit damage = new Hit(hit, HitType.NORMAL_DAMAGE);
+	public void executeAttack(Entity aggressor, Entity victim) {	
+		Hit damage = calculateDamage(aggressor, victim);
 		aggressor.playAnimation(Animation.create(aggressor.getCombatUtility().getAttackAnimation()));
-		victim.playAnimation(Animation.create(aggressor.getCombatUtility().getBlockAnimation()));
 		inflictDamage(victim, damage);
 		aggressor.getEntityCooldowns().flag(CooldownFlags.MELEE_SWING, aggressor.getCombatUtility().getAttackSpeed(), aggressor);
 	}
@@ -57,6 +49,29 @@ public class MeleeAction extends CombatAction {
 		
 		return true;
 	}
+	
+	@Override
+	public Hit calculateDamage(Entity aggressor, Entity victim) {
+		if (aggressor instanceof NPC) {
+			//TODO - Stephen
+			int hit = (int) (Math.random() * aggressor.getCombatUtility().getMaxHit());
+			return new Hit(hit, HitType.NORMAL_DAMAGE);
+		}
+		int maxHit = aggressor.getCombatUtility().getMaxHit();
+		double aggressorAccuracy = CombatFormulas.calculateOffensiveAccuracy(getPlayer(), AttackType.MELEE);
+		double victimDefense = CombatFormulas.calculateDefensiveBonus(victim);
+		double hitChance = Math.round((1 - (victimDefense / aggressorAccuracy)) * 100);
+		
+		getPlayer().getActionSender().sendMessage("Max hit: " + maxHit + " | Hit chance: " + hitChance);
+		if (hitChance >= (Math.random()  * 100)) { //TODO: Math.random has 0.0 inclusive - Stephen
+			int hit = (int) (maxHit * Math.random());
+			return new Hit(hit, HitType.NORMAL_DAMAGE);
+		}
+		
+		//TODO: Calculate effectiveness against rangers - Stephen
+		
+		return new Hit(0, HitType.NO_DAMAGE);
+	}
 
 	@Override
 	public void execute() {
@@ -67,15 +82,6 @@ public class MeleeAction extends CombatAction {
 			}
 			
 			executeAttack(aggressor, victim);
-			double accuracy = CombatFormulas.calculateOffensiveAccuracy(getPlayer(), AttackType.MELEE);
-			double defense = CombatFormulas.calculateDefensiveBonus(getPlayer());
-			double chance = (1 - (defense / accuracy)) * 100;
-			DecimalFormat df = new DecimalFormat("#.00");
-			((Player) aggressor).getActionSender().sendMessage("Hit chance: " + df.format(chance) + "%");
-
-			//100 - (Divide defensive bonus by offensive accuracy) to get hit percent change
-			//Some numbers I got with my setup were a 28% chance to hit based on - http://gyazo.com/4975ece55d97fa44bc903db9f57e8533
-			//And all 99 stats, seems pretty good to me :P
 		}
 	}
 

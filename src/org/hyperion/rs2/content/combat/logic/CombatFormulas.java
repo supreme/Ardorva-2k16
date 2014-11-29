@@ -5,11 +5,13 @@ import java.util.HashMap;
 import org.hyperion.rs2.content.combat.item.ItemSets;
 import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.content.combat.util.CombatData.Stance;
+import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.definitions.ItemDefinition.EquipmentDefinition;
 import org.hyperion.rs2.model.item.Bonuses;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -137,6 +139,7 @@ public class CombatFormulas {
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
 		int requiredWeaponLevel = 1; //Required level to wield the weapon the player has equipped
 		
+		//TODO: There's something wrong with this when you remove your weapon - Stephen
 		if (weapon != null) { //If player doesn't have a weapon move on, otherwise get the requirement
 			requiredWeaponLevel = weapon.getDefinition().getEquipmentDefinition().getRequirements()[type.getSkillNumber()];
 		}
@@ -155,21 +158,29 @@ public class CombatFormulas {
 	 * @param player The player to calculate the defensive bonus for.
 	 * @return The defensive bonus.
 	 */
-	public static double calculateDefensiveBonus(Player player) {
+	public static double calculateDefensiveBonus(Entity entity) {
 		double totalBonus = 0;
-		HashMap<Integer, Item> armor = new HashMap<Integer, Item>();
-		
-		for (int i = 0; i < player.getEquipment().toArray().length; i++) {
-			if (player.getEquipment().toArray()[i] == null) {
-				continue;
+		if (entity instanceof Player) {
+			Player player = (Player) entity;
+			HashMap<Integer, Item> armor = new HashMap<Integer, Item>();
+			
+			/* Loop through player's equipment an add it to armor hashmap */
+			for (int i = 0; i < player.getEquipment().toArray().length; i++) {
+				if (player.getEquipment().toArray()[i] == null) {
+					continue;
+				}
+				
+				armor.put(i, player.getEquipment().toArray()[i]);
 			}
 			
-			armor.put(i, player.getEquipment().toArray()[i]);
-		}
-		
-		for (int key : armor.keySet()) {
-			EquipmentDefinition def = armor.get(key).getDefinition().getEquipmentDefinition();
-			totalBonus += runDefensiveFormula(def.getRequirements()[Skills.DEFENCE], key);
+			/* Equate the bonus for each piece of armor */
+			for (int key : armor.keySet()) {
+				EquipmentDefinition def = armor.get(key).getDefinition().getEquipmentDefinition();
+				totalBonus += runDefensiveFormula(def.getRequirements()[Skills.DEFENCE], key);
+			}
+		} else {
+			NPC npc = (NPC) entity;
+			totalBonus = runDefensiveFormula(npc.getDefinition().getDefenceMelee(), -1);
 		}
 
 		return totalBonus;
@@ -184,7 +195,7 @@ public class CombatFormulas {
 	private static double runDefensiveFormula(int tier, int type) {
 		double bonus;
 		
-		bonus = 2.5 * ((Math.pow(tier, 3) + (4*tier) + 40));
+		bonus = 2.5 * ((Math.pow(tier, 3)/1250 + (4*tier) + 40));
 		switch(type) {
 		case Equipment.SLOT_HELM:
 			bonus = bonus * 0.2;
@@ -209,6 +220,9 @@ public class CombatFormulas {
 			break;
 		case Equipment.SLOT_RING:
 			bonus = bonus * 0.02;
+			break;
+		default:
+			//Nothing, assume NPC
 			break;
 		}
 		

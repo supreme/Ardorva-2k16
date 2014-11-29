@@ -4,8 +4,6 @@ import org.hyperion.Server;
 import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
-import org.hyperion.rs2.model.npc.NPC;
-import org.hyperion.rs2.model.player.Player;
 
 /**
  * Represents an abstraction of combat. The different variations of combat
@@ -31,7 +29,7 @@ public abstract class CombatAction extends Action {
 	 * @param delay The delay between attacks.
 	 */
 	public CombatAction(Entity aggressor, Entity victim) {
-		super(aggressor, Server.CYCLE_TIME, true); //TODO: Convert action system to work with NPCs
+		super(aggressor, Server.CYCLE_TIME, true);
 		this.aggressor = aggressor;
 		this.victim = victim;
 	}
@@ -65,6 +63,16 @@ public abstract class CombatAction extends Action {
 	 * @param victim The entity being hit.
 	 */
 	public abstract boolean canAttack(Entity aggressor, Entity victim);
+	
+	/**
+	 * Calculates the amount of damage to be dealt. Individual forms of
+	 * combat should implement this due to the combat triangle. This method
+	 * should take into consideration certain combat styles being more
+	 * effective on others and aggressor's hit chance on the victim.
+	 * @param aggressor The entity performing the attack.
+	 * @param victim The entity being hit.
+	 */
+	public abstract Hit calculateDamage(Entity aggressor, Entity victim);
 	
 	/**
 	 * Inflicts damage to an entity and appends the aggressor's damage to the
