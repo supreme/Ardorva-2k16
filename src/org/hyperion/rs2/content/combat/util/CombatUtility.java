@@ -75,6 +75,8 @@ public class CombatUtility {
 		} else { //TODO: Call this somewhere lol - Stephen (on register for world mebe)
 			NPC npc = (NPC) entity;
 			maxHit = npc.getDefinition().getMaxHit();
+			attackAnimation = CombatAnimations.getAttackingAnimation(npc);
+			blockAnimation = CombatAnimations.getDefensiveAnimation(npc);
 			attackSpeed = AttackSpeeds.getAttackSpeed(npc);
 		}
 	}

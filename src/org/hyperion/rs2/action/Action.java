@@ -71,13 +71,6 @@ public abstract class Action extends Event {
 		super(delay, immediate);
 		this.entity = entity;
 	}
-	
-	/**
-	 * Creates a new ActionEvent which executes immediately.
-	 * @param entity The entity.
-	 * @param delay The delay.
-	 * @param immediate Whether or not to execute the action immediately.
-	 */
 
 	/**
 	 * Gets the entity.

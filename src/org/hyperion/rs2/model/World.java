@@ -301,6 +301,7 @@ public class World {
 	 */
 	public void register(NPC npc) {
 		npcs.add(npc);
+		npc.getCombatUtility().refresh();
 	}
 	
 	/**
