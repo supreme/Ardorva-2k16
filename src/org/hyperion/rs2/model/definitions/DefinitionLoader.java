@@ -11,10 +11,10 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
 
-import org.hyperion.rs2.content.shops.Shop;
-import org.hyperion.rs2.content.shops.Shop.ShopContents;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Equipment;
+import org.hyperion.rs2.model.shops.Shop;
+import org.hyperion.rs2.model.shops.Shop.ShopContents;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

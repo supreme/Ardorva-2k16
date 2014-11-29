@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.shops.Shop;
 
 /**
  * Represents a player owned shop.

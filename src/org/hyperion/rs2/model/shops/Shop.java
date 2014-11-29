@@ -1,12 +1,14 @@
-package org.hyperion.rs2.content.shops;
+package org.hyperion.rs2.model.shops;
 
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Container;
+import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.player.Player;
 
 /**
  * Represents a shop.
  * @author Stephen Andrews
+ * @author Brendan Dodd
  */
 public class Shop {
 	
@@ -102,21 +104,29 @@ public class Shop {
 	 * @param max The max quantity the shop has at one time.
 	 * @return The price of the item.
 	 */
-	public int getItemPrice(Item item, int current, int max) {
-		int price = item.getDefinition().getValue();
-		int difference = max - current;
+	public int getItemPrice(int itemId) {
+		int price = -1;
 		
-		//Increase the price of the item based on the popularity (amount missing)
-		if (difference != 0) {
-			price += price * (difference/1000);
+		for(ShopItem item : this.getContents().getItems()) {
+			if(item.id == itemId) {
+				int maxStock = item.max;
+				int currentStock = item.stock;
+				int difference = maxStock - currentStock;
+				price = ItemDefinition.forId(item.id).getValue();
+				if (difference != 0) {
+					price += price * (difference/1000);
+				}
+				
+				return price;
+			}
 		}
-		
 		return price;
 	}
 	
 	/**
 	 * The contents of a shop.
 	 * @author Stephen
+	 * @author Brendan Dodd
 	 */
 	public class ShopContents {
 		
@@ -153,6 +163,7 @@ public class Shop {
 	/**
 	 * The structure of a shop item.
 	 * @author Stephen
+	 * @author Brendan Dodd
 	 */
 	public class ShopItem {
 			

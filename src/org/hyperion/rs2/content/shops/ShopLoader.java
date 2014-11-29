@@ -3,16 +3,18 @@ package org.hyperion.rs2.content.shops;
 import java.util.logging.Logger;
 
 import org.hyperion.rs2.LivingClasses;
-import org.hyperion.rs2.content.shops.Shop.ShopContents;
-import org.hyperion.rs2.content.shops.Shop.ShopItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Container.Type;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.shops.Shop;
+import org.hyperion.rs2.model.shops.Shop.ShopContents;
+import org.hyperion.rs2.model.shops.Shop.ShopItem;
 
 /**
  * Loads the contents of a shop.
  * @author Stephen Andrews
+ * @author Brendan Dodd
  */
 public class ShopLoader {
 
@@ -60,4 +62,5 @@ public class ShopLoader {
 		}
 		return null;
 	}
+	
 }

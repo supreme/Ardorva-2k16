@@ -1,9 +1,13 @@
 package org.hyperion.rs2.packet;
 
-import org.hyperion.rs2.content.shops.Shop;
+import org.hyperion.rs2.content.shops.ShopLoader;
+import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Equipment;
+import org.hyperion.rs2.model.definitions.ItemDefinition;
+import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.shops.Shop;
 import org.hyperion.rs2.net.Packet;
 
 /**
@@ -73,7 +77,22 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 				break;
 				
 			case 300:
-					//Shop.checkItemPrice(player, itemId);
+					Entity interactingEntity = player.getInteractingEntity();
+					NPC npc = null;
+					if(interactingEntity instanceof NPC)
+						npc = (NPC) interactingEntity;
+
+					if(npc == null)
+						break;
+					
+					Shop shop = ShopLoader.getShopForNpc(npc.getId());
+					ItemDefinition item = ItemDefinition.forId(itemId);
+					if(item != null) {
+						player.getActionSender().sendMessage(item.getName()+": currently costs "+item.getValue()+" coins.");
+					} else {
+						player.getActionSender().sendMessage("error");
+					}
+					
 				break;
 			case 387://Unequip inv
 			case 465://Equip interface - unequip
