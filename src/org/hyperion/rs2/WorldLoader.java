@@ -1,7 +1,7 @@
 package org.hyperion.rs2;
 
-import org.hyperion.rs2.model.PlayerDetails;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.player.PlayerDetails;
 
 /**
  * An interface which describes the methods for loading persistent world

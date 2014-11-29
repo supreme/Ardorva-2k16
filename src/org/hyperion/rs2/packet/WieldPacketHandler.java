@@ -73,7 +73,7 @@ public class WieldPacketHandler implements PacketHandler {
 		}
 		
 		player.getBonuses().refresh();
-		CombatUtility.sendWeaponTab(player);
+		player.getCombatUtility().refresh();
 	}
 	
 	/**

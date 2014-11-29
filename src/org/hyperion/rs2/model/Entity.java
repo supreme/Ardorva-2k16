@@ -6,6 +6,7 @@ import java.util.List;
 import org.hyperion.rs2.action.ActionQueue;
 import org.hyperion.rs2.content.combat.CombatState;
 import org.hyperion.rs2.content.combat.DamageMap;
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.npc.NPC;
@@ -54,6 +55,11 @@ public abstract class Entity {
 	 * The entity's combat state.
 	 */
 	private CombatState combatState = new CombatState();
+	
+	/**
+	 * The entity's combat utility.
+	 */
+	private CombatUtility combatUtility = new CombatUtility(this);
 	
 	/**
 	 * The entity's damage map.
@@ -248,10 +254,18 @@ public abstract class Entity {
 	
 	/**
 	 * Gets the entity's combat state.
-	 * @return The cobat state.
+	 * @return The combat state.
 	 */
 	public CombatState getCombatState() {
 		return combatState;
+	}
+	
+	/**
+	 * Gets the entity's combat utility.
+	 * @return The combat utility.
+	 */
+	public CombatUtility getCombatUtility() {
+		return combatUtility;
 	}
 	
 	/**

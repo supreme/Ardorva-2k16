@@ -1,7 +1,6 @@
 package org.hyperion.rs2.model.npc;
 
-import org.hyperion.rs2.content.combat.EntityDeath;
-import org.hyperion.rs2.content.combat.impl.MeleeAction;
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;

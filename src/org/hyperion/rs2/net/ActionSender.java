@@ -65,7 +65,7 @@ public class ActionSender {
 		player.getEquipment().addListener(new WeaponContainerListener(player));
 		
 		player.getBonuses().refresh();
-		CombatUtility.sendWeaponTab(player);
+		player.getCombatUtility().refresh();
 		return this;
 	}
 

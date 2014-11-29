@@ -10,8 +10,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.mina.core.buffer.IoBuffer;
-import org.hyperion.rs2.model.PlayerDetails;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.util.NameUtils;
 import org.hyperion.util.Streams;
 

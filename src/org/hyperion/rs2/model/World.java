@@ -24,6 +24,7 @@ import org.hyperion.rs2.event.impl.UpdateEvent;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.npc.SpawnLoader;
 import org.hyperion.rs2.model.player.Player;
+import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.model.region.RegionManager;
 import org.hyperion.rs2.net.PacketBuilder;
 import org.hyperion.rs2.net.PacketManager;

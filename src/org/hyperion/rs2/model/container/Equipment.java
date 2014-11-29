@@ -439,7 +439,7 @@ public class Equipment {
 					player.getInventory().add(item);
 					player.getEquipment().set(slot, null);
 					player.getBonuses().refresh();
-					CombatUtility.sendWeaponTab(player);
+					player.getCombatUtility().refresh();
 				} else {
 					player.getActionSender().sendMessage("You do not have any room in your inventory.");
 				}

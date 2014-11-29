@@ -13,8 +13,8 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.hyperion.Server;
 import org.hyperion.rs2.cache.Request;
 import org.hyperion.rs2.cache.UpdateServer;
-import org.hyperion.rs2.model.PlayerDetails;
 import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.util.IoBufferUtils;
 import org.hyperion.rs2.util.NameUtils;
 

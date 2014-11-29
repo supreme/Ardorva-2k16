@@ -7,6 +7,7 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
 import org.hyperion.rs2.content.combat.impl.MeleeAction;
+import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
@@ -259,7 +260,7 @@ public class Player extends Entity implements Persistable {
 	 * Creates a player based on the details object.
 	 * @param pd The details object.
 	 */
-	public Player(org.hyperion.rs2.model.PlayerDetails pd) {
+	public Player(PlayerDetails pd) {
 		super();
 		this.session = pd.getSession();
 		this.inCipher = pd.getInCipher();
