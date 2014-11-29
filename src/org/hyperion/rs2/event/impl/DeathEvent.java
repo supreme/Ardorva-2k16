@@ -52,6 +52,8 @@ public class DeathEvent extends Event {
 			npc.setHealth(npc.getDefinition().getHitpoints());
 			npc.setVisible(false);
 			npc.playAnimation(RESET_ANIMATION);
+			npc.setInteractingEntity(null);
+			npc.getCombatUtility().setInCombat(false);
 			World.getWorld().submit(new NPCRespawnEvent(npc, npc.getDefinition().getRespawn() * 600));
 			this.stop();
 		}

@@ -1,5 +1,6 @@
 package org.hyperion.rs2.content.combat.util;
 
+import org.hyperion.rs2.content.combat.item.ItemSets;
 import org.hyperion.rs2.content.combat.logic.CombatFormulas;
 import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.model.Entity;
@@ -19,6 +20,11 @@ public class CombatUtility {
 	 * The entity the <code>CombatUtility</code> belongs to.
 	 */
 	private Entity entity;
+	
+	/**
+	 * Whether or not this entity is currently engaged in combat.
+	 */
+	private boolean inCombat;
 	
 	/**
 	 * The entity's max hit.
@@ -51,11 +57,17 @@ public class CombatUtility {
 	private int attackSpeed;
 	
 	/**
+	 * The entity's item set.
+	 */
+	private ItemSets itemSet;
+	
+	/**
 	 * Creates a <code>CombatUtility</code> to be assigned to an entity.
 	 * @param entity The entity the <code>CombatUtility</code> belongs to.
 	 */
 	public CombatUtility(Entity entity) {
 		this.entity = entity;
+		inCombat = false;
 	}
 	
 	/**
@@ -72,7 +84,8 @@ public class CombatUtility {
 			attackAnimation = CombatAnimations.getAttackingAnimation(player);
 			blockAnimation = CombatAnimations.getDefensiveAnimation(player);
 			attackSpeed = AttackSpeeds.getAttackSpeed(player);
-		} else { //TODO: Call this somewhere lol - Stephen (on register for world mebe)
+			itemSet = ItemSets.get(player);
+		} else {
 			NPC npc = (NPC) entity;
 			maxHit = npc.getDefinition().getMaxHit();
 			attackAnimation = CombatAnimations.getAttackingAnimation(npc);
@@ -98,6 +111,22 @@ public class CombatUtility {
 			player.getActionSender().sendString(92, 0, "Unarmed");
 			player.getPlayerConfiguration().setWeaponTabInterface(92);
 		}
+	}
+	
+	/**
+	 * Determines whether the entity is currently engaged in combat.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public boolean isInCombat() {
+		return inCombat;
+	}
+	
+	/**
+	 * Sets the entity's <code>inCombat</code> flag.
+	 * @param inCombat The new flag.
+	 */
+	public void setInCombat(boolean inCombat) {
+		this.inCombat = inCombat;
 	}
 	
 	/**
@@ -194,5 +223,13 @@ public class CombatUtility {
 	 */
 	public void setAttackSpeed(int attackSpeed) {
 		this.attackSpeed = attackSpeed;
+	}
+	
+	/**
+	 * Gets the entity's item set.
+	 * @return The entity's item set.
+	 */
+	public ItemSets getItemSet() {
+		return itemSet;
 	}
 }

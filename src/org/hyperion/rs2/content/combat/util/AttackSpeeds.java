@@ -41,7 +41,7 @@ public class AttackSpeeds {
 		
 		/* In the case of a player not wearing a weapon */
 		if (weapon == null) {
-			return attackSpeed;
+			return attackSpeed * Server.CYCLE_TIME;
 		}
 		
 		/* If weapon isn't null, get the proper attack speed */

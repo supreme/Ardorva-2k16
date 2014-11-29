@@ -140,8 +140,8 @@ public class NPC extends Entity {
 		
 		health -= hit.getDamage();
 		if((source instanceof Entity) && (source != null)) {
-			this.setInCombat(true);
-			this.setAggressorState(false);
+			this.getCombatUtility().setInCombat(true);
+			this.setInteractingEntity(source);
 			if (!this.isAnimimation()) {
 				this.playAnimation(Animation.create(getCombatUtility().getBlockAnimation()));
 			}

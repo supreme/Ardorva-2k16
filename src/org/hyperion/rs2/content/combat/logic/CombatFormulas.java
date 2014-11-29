@@ -40,7 +40,7 @@ public class CombatFormulas {
 		int maxHit;
 		int strengthLevel = player.getSkills().getLevel(Skills.STRENGTH);
 		int rangeLevel = player.getSkills().getLevel(Skills.RANGE);
-		ItemSets itemSet = ItemSets.NONE; //ItemSets.get(player);
+		ItemSets itemSet = player.getCombatUtility().getItemSet();
 		
 		/* Calculate the effective level first depending on the combat type */
 		int effectiveLevel = type == AttackType.MELEE ? strengthLevel : rangeLevel;
@@ -105,7 +105,7 @@ public class CombatFormulas {
 		switch(type) {
 			case MELEE:
 				if (itemSet == ItemSets.DHAROK) {
-					System.out.println("Full dharok set bonus");
+					player.getActionSender().sendMessage("Full dharok set bonus");
 					double currentHealth = player.getSkills().getLevel(Skills.HITPOINTS);
 					double maxHealth = player.getSkills().getLevelForExperience(Skills.HITPOINTS);
 					double multiplier = 1 - (currentHealth / maxHealth); //Percentage of health missing
@@ -228,65 +228,4 @@ public class CombatFormulas {
 		
 		return bonus;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

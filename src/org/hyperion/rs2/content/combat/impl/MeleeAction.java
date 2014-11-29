@@ -29,8 +29,6 @@ public class MeleeAction extends CombatAction {
 	 */
 	public MeleeAction(Entity aggressor, Entity victim) {
 		super(aggressor, victim);
-		aggressor.setInteractingEntity(victim);
-		victim.setInteractingEntity(aggressor);
 	}
 
 	@Override
@@ -44,7 +42,23 @@ public class MeleeAction extends CombatAction {
 	@Override
 	public boolean canAttack(Entity aggressor, Entity victim) {
 		if (aggressor.isDead() || victim.isDead()) {
+			aggressor.getCombatUtility().setInCombat(false);
+			aggressor.setInteractingEntity(null);
 			return false;
+		}
+		
+		/*if (victim.getCombatUtility().isInCombat() && aggressor.getInteractingEntity() != victim) {
+			if (aggressor instanceof Player) {
+				getPlayer().getActionSender().sendMessage(
+						victim instanceof Player ? "That player is already under attack!" : "Someone else is already fighting that.");
+			}
+			aggressor.getCombatUtility().setInCombat(false);
+			return false;
+		}*/
+		
+		if (!aggressor.getCombatUtility().isInCombat()) {
+			aggressor.getCombatUtility().setInCombat(true);
+			aggressor.setInteractingEntity(victim);
 		}
 		
 		return true;
@@ -59,12 +73,13 @@ public class MeleeAction extends CombatAction {
 		}
 		int maxHit = aggressor.getCombatUtility().getMaxHit();
 		double aggressorAccuracy = CombatFormulas.calculateOffensiveAccuracy(getPlayer(), AttackType.MELEE);
-		double victimDefense = CombatFormulas.calculateDefensiveBonus(victim);
+		double victimDefense = CombatFormulas.calculateDefensiveBonus(getPlayer());
 		double hitChance = Math.round((1 - (victimDefense / aggressorAccuracy)) * 100);
 		
 		getPlayer().getActionSender().sendMessage("Max hit: " + maxHit + " | Hit chance: " + hitChance);
 		if (hitChance >= (Math.random()  * 100)) { //TODO: Math.random has 0.0 inclusive - Stephen
 			int hit = (int) (maxHit * Math.random());
+			if (hit == 0) hit++; //lol cheaphax
 			return new Hit(hit, HitType.NORMAL_DAMAGE);
 		}
 		
