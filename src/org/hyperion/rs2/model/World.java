@@ -23,6 +23,7 @@ import org.hyperion.rs2.event.impl.CleanupEvent;
 import org.hyperion.rs2.event.impl.UpdateEvent;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.npc.SpawnLoader;
+import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.model.region.RegionManager;
@@ -432,4 +433,11 @@ public class World {
 		t.printStackTrace();
 		System.exit(1);
 	}
+	
+	public static final void spawnObject(GameObject object) {
+		getWorld().getRegionManager().getRegionByLocation(object.getLocation()).spawnObject(object, object.getZ(),
+				object.getLocation().getXInRegion(), object.getLocation().getYInRegion(), false);
+	}
+	
+	
 }

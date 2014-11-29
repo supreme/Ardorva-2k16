@@ -3,7 +3,6 @@ package org.hyperion.rs2.net;
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
@@ -13,6 +12,7 @@ import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.container.impl.EquipmentContainerListener;
 import org.hyperion.rs2.model.container.impl.InterfaceContainerListener;
 import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
+import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerConfiguration;
 import org.hyperion.rs2.net.Packet.Type;
@@ -370,6 +370,33 @@ public class ActionSender {
 	}
 	
 	/**
+	 * Creates an object in the game world.
+	 * @param object The object to create.
+	 */
+	public void createObject(GameObject object) {
+		System.out.println("Create object called");
+		sendArea(object.getLocation());
+		PacketBuilder spb = new PacketBuilder(17);
+		spb.putByteA((byte) 0);
+		spb.putLEShort(object.getId());
+		spb.putByteA((byte)((object.getType() << 2) + (object.getFace() & 3)));
+		player.getSession().write(spb.toPacket());
+	}
+	
+	/**
+	 * Removes an object from the game world.
+	 * @param object The object to remove.
+	 */
+	public void removeObject(GameObject object) {
+		sendArea(object.getLocation());
+		PacketBuilder spb = new PacketBuilder(16);
+		int ot = ((object.getType() << 2) + (object.getFace() & 3));
+		spb.putByteA((byte) ot);
+		spb.putByteA((byte) 0);
+		player.getSession().write(spb.toPacket());
+	}
+	
+	/**
 	 * Sends an area.
 	 * @param location
 	 */
@@ -435,6 +462,10 @@ public class ActionSender {
 		player.getSession().write(bldr.toPacket());
 	}
 	
+	/**
+	 * Displays the enter amount interface in the chatbox.
+	 * @param text The player's inputted text.
+	 */
 	public void displayEnterAmount(String text) {
 		Object[] o = {text};
 		sendClientScript(108, o, "s");

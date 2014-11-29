@@ -139,7 +139,6 @@ public class CombatFormulas {
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
 		int requiredWeaponLevel = 1; //Required level to wield the weapon the player has equipped
 		
-		//TODO: There's something wrong with this when you remove your weapon - Stephen
 		if (weapon != null) { //If player doesn't have a weapon move on, otherwise get the requirement
 			requiredWeaponLevel = weapon.getDefinition().getEquipmentDefinition().getRequirements()[type.getSkillNumber()];
 		}

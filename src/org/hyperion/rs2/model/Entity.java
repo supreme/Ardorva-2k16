@@ -2,6 +2,7 @@ package org.hyperion.rs2.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.hyperion.rs2.action.ActionQueue;
 import org.hyperion.rs2.content.combat.CombatState;
@@ -145,6 +146,11 @@ public abstract class Entity {
 	 * Map region changing flag.
 	 */
 	private boolean mapRegionChanging = false;
+	
+	/**
+	 * The map region ids of the entity.
+	 */
+	private CopyOnWriteArrayList<Integer> mapRegionsIds = new CopyOnWriteArrayList<Integer>();
 	
 	/**
 	 * The current animation.
@@ -455,6 +461,14 @@ public abstract class Entity {
 	 */
 	public void setMapRegionChanging(boolean mapRegionChanging) {
 		this.mapRegionChanging = mapRegionChanging;
+	}
+	
+	/**
+	 * Gets the entity's map region ids.
+	 * @return The map region ids.
+	 */
+	public CopyOnWriteArrayList<Integer> getMapRegionsIds() {
+		return mapRegionsIds;
 	}
 	
 	/**

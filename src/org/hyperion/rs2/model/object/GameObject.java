@@ -89,6 +89,14 @@ public class GameObject {
 	}
 	
 	/**
+	 * Gets the object's z value.
+	 * @return The object's z value.
+	 */
+	public int getZ() {
+		return z;
+	}
+	
+	/**
 	 * Gets the action to perform - deleting existing objects or spawning new ones.
 	 * @return The action or -1 if we can't decipher the action.
 	 */
