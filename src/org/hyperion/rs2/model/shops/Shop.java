@@ -91,12 +91,18 @@ public class Shop {
 		if(shopItem == null || shopItem.getStock() <= 0)
 			return;
 		
+		//Check shop stock levels
 		if(shopItem.getStock() < buyItem.getCount())
 			buyItem = new Item(buyItem.getId(), Math.min(buyItem.getCount(), shopItem.getStock()));
 		
+		//Check players inventory for room
+		if(!player.getInventory().hasRoomFor(buyItem)) {
+			buyItem = new Item(buyItem.getId(), player.getInventory().freeSlots());
+		}
 		
 		Item coinsRequired = new Item(995, shopItem.getValue()*buyItem.getCount());
 		
+		//Adjust buy amount for players coins
 		if(player.getInventory().hasItem(new Item(995, shopItem.getValue()))) {
 			//Player can afford 1 of item
 			if(!player.getInventory().hasItem(coinsRequired)) {
@@ -106,19 +112,17 @@ public class Shop {
 				buyItem = new Item(buyItem.getId(), canAfford);
 				coinsRequired = new Item(995, shopItem.getValue()*buyItem.getCount());
 			}
-		}
-		
-		if(player.getInventory().hasItem(coinsRequired)) { //Player has required coins to purchase item
-			if(shopItem.getStock() >= buyItem.getCount()) {
-				player.getInventory().remove(coinsRequired);
-				player.getInventory().add(buyItem);
-				shopItem.setItem(new Item(shopItem.getItem().getId(), (shopItem.getStock()-buyItem.getCount())));
-				ShopHandler.refreshShop(player, this);
-			} else { //Buy amount larger that stock
-				
-			}
 		} else {
 			player.getActionSender().sendMessage("You don't have enough coins to purchase that item.");
+			return;
+		}
+		
+		//Purchase
+		if(player.getInventory().hasItem(coinsRequired)) { //Player has required coins to purchase item
+			player.getInventory().remove(coinsRequired);
+			player.getInventory().add(buyItem);
+			shopItem.setItem(new Item(shopItem.getItem().getId(), (shopItem.getStock()-buyItem.getCount())));
+			ShopHandler.refreshShop(player, this);
 		}
 	}
 	
@@ -127,8 +131,8 @@ public class Shop {
 	 * @param container The container to sell from.
 	 * @param player The player to sell the item to.
 	 */
-	synchronized public void sellItem(Player player) {
-		//TODO
+	synchronized public void sellItem(Player player, Item sellItem) {
+		
 	}
 	
 	/**

@@ -63,6 +63,9 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 		int slot = packet.getShort();
 		int interfaceId = interfaceSet >> 16;
 		int child = interfaceSet & 0xffff;
+		Entity interactingEntity;
+		NPC npc;
+		Shop shop;
 		
 		switch(interfaceId) {
 			case 12://Banking - withdraw 1
@@ -83,15 +86,15 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 				break;
 				
 			case 300:
-					Entity interactingEntity = player.getInteractingEntity();
-					NPC npc = null;
+					interactingEntity = player.getInteractingEntity();
+					npc = null;
 					if(interactingEntity instanceof NPC)
 						npc = (NPC) interactingEntity;
 
 					if(npc == null)
 						break;
 					
-					Shop shop = ShopHandler.getShopForNpc(npc.getId());
+					shop = ShopHandler.getShopForNpc(npc.getId());
 					ShopItem item = shop.getContents().getShopItem(itemId);
 					if(item != null) {
 						player.getActionSender().sendMessage(item.getItem().getDefinition().getName()+": currently costs "+item.getValue()+" coins.");
@@ -99,6 +102,17 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 						player.getActionSender().sendMessage("error");
 					}
 					
+				break;
+			case 301:
+				interactingEntity = player.getInteractingEntity();
+				npc = null;
+				if(interactingEntity instanceof NPC)
+					npc = (NPC) interactingEntity;
+
+				if(npc == null)
+					break;
+				shop = ShopHandler.getShopForNpc(npc.getId());
+				
 				break;
 			case 387://Unequip inv
 			case 465://Equip interface - unequip
