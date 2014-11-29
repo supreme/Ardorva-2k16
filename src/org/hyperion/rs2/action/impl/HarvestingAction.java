@@ -33,7 +33,7 @@ public abstract class HarvestingAction extends Action {
 	 * @param player The player to create the action for.
 	 */
 	public HarvestingAction(Player player, Location location) {
-		super(player, 0);
+		super(player, 0, false);
 		this.location = location;
 	}
 	

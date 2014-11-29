@@ -33,7 +33,7 @@ public class GroundItemEvent extends Event {
 	 * @param groundItem The ground item belonging to the event.
 	 */
 	public GroundItemEvent(GroundItem groundItem) {
-		super(GLOBAL_DELAY);
+		super(GLOBAL_DELAY, false);
 		this.groundItem = groundItem;
 	}
 
@@ -50,7 +50,7 @@ public class GroundItemEvent extends Event {
 			player.getActionSender().sendGroundItem(groundItem);
 		}
 		
-		World.getWorld().submit(new Event(REMOVAL_DELAY) {
+		World.getWorld().submit(new Event(REMOVAL_DELAY, false) {
 
 			@Override
 			public void execute() {

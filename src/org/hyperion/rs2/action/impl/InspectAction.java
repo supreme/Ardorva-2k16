@@ -17,7 +17,7 @@ public abstract class InspectAction extends Action {
      * @param location
      */
     public InspectAction(Player player, Location location) {
-        super(player, 0);
+        super(player, 0, false);
         this.location = location;
     }
 

@@ -14,7 +14,7 @@ public class Test implements Command {
 
 	@Override
 	public void invoke(Player player, String[] args) {
-		World.getWorld().submit(new Event(1200) {
+		World.getWorld().submit(new Event(1200, false) {
 
 			int i = 3;
 			private long last = System.currentTimeMillis();

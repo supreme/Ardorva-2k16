@@ -18,11 +18,18 @@ public abstract class Event {
 	private boolean running = true;
 	
 	/**
+	 * Whether or not to execute the event immediately.
+	 */
+	private boolean immediate;
+	
+	/**
 	 * Creates an event with the specified delay.
 	 * @param delay The delay.
+	 * @param immediate Whether or not to execute the event immediately.
 	 */
-	public Event(long delay) {
+	public Event(long delay, boolean immediate) {
 		this.delay = delay;
+		this.immediate = immediate;
 	}
 	
 	/**
@@ -51,6 +58,14 @@ public abstract class Event {
 	 */
 	public boolean isRunning() {
 		return running;
+	}
+	
+	/**
+	 * Checks if the event is immediate.
+	 * @return <code>true</code> if the event was immediate, <code>false</code> if not.
+	 */
+	public boolean isImmediate() {
+		return immediate;
 	}
 	
 	/**

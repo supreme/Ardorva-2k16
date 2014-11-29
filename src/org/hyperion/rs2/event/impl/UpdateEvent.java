@@ -34,7 +34,7 @@ public class UpdateEvent extends Event {
 	 * Creates the update event to cycle every 600 milliseconds.
 	 */
 	public UpdateEvent() {
-		super(CYCLE_TIME);
+		super(CYCLE_TIME, false);
 	}
 
 	@Override

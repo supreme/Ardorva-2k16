@@ -22,7 +22,7 @@ public class CooldownEvent extends Event {
 	 * @param duration The length of the cooldown.
 	 */
 	public CooldownEvent(Entity entity, CooldownFlags cooldown, int duration) {
-		super(duration);
+		super(duration, false);
 		this.entity = entity;
 		this.cooldown = cooldown;
 	}

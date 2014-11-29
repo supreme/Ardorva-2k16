@@ -31,7 +31,11 @@ public class EventManager {
 	 * @param event The event to submit.
 	 */
 	public void submit(final Event event) {
-		submit(event, event.getDelay());
+		if (event.isImmediate()) {
+			submit(event, 0);
+		} else {
+			submit(event, event.getDelay());
+		}
 	}
 	
 	/**
@@ -46,6 +50,9 @@ public class EventManager {
 				long start = System.currentTimeMillis();
 				if(event.isRunning()) {
 					event.execute();
+					if (event.isImmediate()) {
+						event.setDelay(event.getDelay());
+					}
 				} else {
 					return;
 				}

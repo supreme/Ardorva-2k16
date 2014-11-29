@@ -21,7 +21,7 @@ public class NPCRespawnEvent extends Event {
 	 * @param delay The delay in ms.
 	 */
 	public NPCRespawnEvent(NPC npc, int delay) {
-		super(delay);
+		super(delay, false);
 		this.npc = npc;
 	}
 

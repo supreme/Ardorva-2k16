@@ -21,7 +21,7 @@ public abstract class DestructionAction extends Action {
 	 * @param player The player to create the action for.
 	 */
 	public DestructionAction(Player player) {
-		super(player, 0);
+		super(player, 0, false);
 	}
 	
 	@Override

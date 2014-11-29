@@ -208,7 +208,7 @@ public class Teleport {
 		player.setTeleporting(true);
 		
 		//Delay the graphic
-		World.getWorld().submit(new Event(1200) {
+		World.getWorld().submit(new Event(1200, false) {
 
 			@Override
 			public void execute() {
@@ -219,7 +219,7 @@ public class Teleport {
 		});
 		
 		//Begin the actual teleporting action
-		World.getWorld().submit(new Event(1800) {
+		World.getWorld().submit(new Event(1800, false) {
 
 			@Override
 			public void execute() {

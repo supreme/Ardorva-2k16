@@ -32,7 +32,7 @@ public class DeathEvent extends Event {
 	 * @param entity The player or npc whose death has just happened.
 	 */
 	public DeathEvent(Entity entity) {
-		super(2400);
+		super(2400, false);
 		this.entity = entity;
 	}
 

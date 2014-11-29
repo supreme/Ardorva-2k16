@@ -21,7 +21,7 @@ public class CleanupEvent extends Event {
 	 * Creates the cleanup event to run every 5 minutes.
 	 */
 	public CleanupEvent() {
-		super(CLEANUP_CYCLE_TIME);
+		super(CLEANUP_CYCLE_TIME, false);
 	}
 
 	@Override

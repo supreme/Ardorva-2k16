@@ -52,7 +52,7 @@ public class EntityDeath {
 		player.setCanWalk(false);
 		player.playAnimation(Entity.DEATH_ANIMATION);
 		
-		World.getWorld().submit(new Event(3000) {
+		World.getWorld().submit(new Event(3000, false) {
 
 			@Override
 			public void execute() {
@@ -161,7 +161,7 @@ public class EntityDeath {
 		npc.playAnimation(Animation.create(npc.getDefinition().getDeathAnimation()));
 		
 		/* Create an event for the duration of the death animation */
-		World.getWorld().submit(new Event(2400) {
+		World.getWorld().submit(new Event(2400, false) {
 
 			@Override
 			public void execute() {
@@ -169,7 +169,7 @@ public class EntityDeath {
 				npc.setVisible(false);
 				npc.setLocation(Location.create(3092, 3536, 0));
 				
-				World.getWorld().submit(new Event(6000) {
+				World.getWorld().submit(new Event(6000, false) {
 
 					@Override
 					public void execute() {
