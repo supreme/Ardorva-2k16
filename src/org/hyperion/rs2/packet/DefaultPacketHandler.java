@@ -19,7 +19,7 @@ public class DefaultPacketHandler implements PacketHandler {
 	
 	@Override
 	public void handle(Player player, Packet packet) {
-		logger.info("Packet : [opcode=" + packet.getOpcode() + " length=" + packet.getLength() + " payload=" + packet.getPayload() + "]");
+		logger.info("Unhandled Packet : [opcode=" + packet.getOpcode() + " length=" + packet.getLength() + " payload=" + packet.getPayload() + "]");
 	}
 
 }

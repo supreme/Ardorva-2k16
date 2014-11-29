@@ -1,7 +1,9 @@
 package org.hyperion.rs2.model.shops;
 
+import org.hyperion.rs2.content.shops.ShopHandler;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Container;
+import org.hyperion.rs2.model.container.Container.Type;
 import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.player.Player;
 
@@ -80,47 +82,53 @@ public class Shop {
 	}
 	
 	/**
-	 * The action of purchasing an item from a player.
+	 * Buy an item from a shop
 	 * @param container The container of the shop.
 	 * @param player The player selling the item to the shop.
 	 */
-	public void buyItem(Container container, Player player) {
-		//TODO
+	synchronized public void buyItem(Player player, Item buyItem) {
+		ShopItem shopItem = getContents().getShopItem(buyItem.getId());
+		if(shopItem == null || shopItem.getStock() <= 0)
+			return;
+		
+		if(shopItem.getStock() < buyItem.getCount())
+			buyItem = new Item(buyItem.getId(), Math.min(buyItem.getCount(), shopItem.getStock()));
+		
+		
+		Item coinsRequired = new Item(995, shopItem.getValue()*buyItem.getCount());
+		
+		if(player.getInventory().hasItem(new Item(995, shopItem.getValue()))) {
+			//Player can afford 1 of item
+			if(!player.getInventory().hasItem(coinsRequired)) {
+				//Player cannot afford all of items requested
+				Item playerCoins = player.getInventory().getById(995);
+				int canAfford = playerCoins.getCount() / shopItem.getValue();
+				buyItem = new Item(buyItem.getId(), canAfford);
+				coinsRequired = new Item(995, shopItem.getValue()*buyItem.getCount());
+			}
+		}
+		
+		if(player.getInventory().hasItem(coinsRequired)) { //Player has required coins to purchase item
+			if(shopItem.getStock() >= buyItem.getCount()) {
+				player.getInventory().remove(coinsRequired);
+				player.getInventory().add(buyItem);
+				shopItem.setItem(new Item(shopItem.getItem().getId(), (shopItem.getStock()-buyItem.getCount())));
+				ShopHandler.refreshShop(player, this);
+			} else { //Buy amount larger that stock
+				
+			}
+		} else {
+			player.getActionSender().sendMessage("You don't have enough coins to purchase that item.");
+		}
 	}
 	
 	/**
-	 * The action of selling an item to a player.
+	 * Sell an item to a shop
 	 * @param container The container to sell from.
 	 * @param player The player to sell the item to.
 	 */
-	public void sellItem(Container container, Player player) {
+	synchronized public void sellItem(Player player) {
 		//TODO
-	}
-	
-	/**
-	 * Gets the price of an item.
-	 * @param item The item to look at.
-	 * @param current The current quantity the shop has.
-	 * @param max The max quantity the shop has at one time.
-	 * @return The price of the item.
-	 */
-	public int getItemPrice(int itemId) {
-		int price = -1;
-		
-		for(ShopItem item : this.getContents().getItems()) {
-			if(item.id == itemId) {
-				int maxStock = item.max;
-				int currentStock = item.stock;
-				int difference = maxStock - currentStock;
-				price = ItemDefinition.forId(item.id).getValue();
-				if (difference != 0) {
-					price += price * (difference/1000);
-				}
-				
-				return price;
-			}
-		}
-		return price;
 	}
 	
 	/**
@@ -158,6 +166,29 @@ public class Shop {
 		public int getLength() {
 			return items.length;
 		}
+		
+		public ShopItem getShopItem(int itemId) {
+			try {
+				for(ShopItem shopItem : items) {
+					if(shopItem.getItem().getId() == itemId) {
+						return shopItem;
+					}
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			return null;
+		}
+		
+		public ShopItem getShopItem(Item item) {
+			for(ShopItem shopItem : items) {
+				if(shopItem.getItem().getId() == item.getId()) {
+					return shopItem;
+				}
+			}
+			return null;
+		}
 	}
 	
 	/**
@@ -168,55 +199,69 @@ public class Shop {
 	public class ShopItem {
 			
 		/**
-		 * The id of the item.
+		 * The item
 		 */
-		private int id;
-		
-		/**
-		 * The amount of the item in stock.
-		 */
-		private int stock;
+		private Item item;
 		
 		/**
 		 * The max amount the shop can have of the item.
 		 */
-		private int max;
+		private int defaultItemQuantity;
 		
 		/**
 		 * Constructs an Item object.
-		 * @param itemId The id of the item.
-		 * @param stock The amount of the item in stock.
-		 * @param cost The cost of the item per unit.
-		 * @param max The max amount the shop can have of the item.
+		 * @param Item - item object
+		 * @param Int - Default max item quantity of shop item
 		 */
-		public ShopItem(int id, int stock, int max) {
-			this.id = id;
-			this.stock = stock;
-			this.max = max;
+		public ShopItem(Item item, int defaultItemQuantity) {
+			this.item = item;
+			this.defaultItemQuantity = defaultItemQuantity;
 		}
 		
 		/**
-		 * Gets the id of the item.
-		 * @return The item id.
+		 * Gets the child Item object
+		 * @return The item.
 		 */
-		public int getId() {
-			return id;
+		public Item getItem() {
+			return item;
 		}
 		
 		/**
-		 * Gets the amount of the item in stock.
-		 * @return The stock of the item.
+		 * Sets the child Item object
+		 */
+		public void setItem(Item item) {
+			this.item = item;
+		}
+		
+		/**
+		 * Gets default quantity of item when shop is new
+		 * @return The quantity of the item
+		 */
+		public int getDefaultItemQuantity() {
+			return defaultItemQuantity;
+		}
+		
+		/**
+		 * Gets current stock levels of item
+		 * @return Current item quantity
 		 */
 		public int getStock() {
-			return stock;
+			return item.getCount();
 		}
 		
 		/**
-		 * Gets the max amount the shop can have of the item.
-		 * @return The max amount the shop can have of the item.
+		 * Gets calculated value of Item in respect to stock levels
+		 * @return Calculated value of Item
 		 */
-		public int getMaxStock() {
-			return max;
+		public int getValue() {
+			float difference = defaultItemQuantity - item.getCount();
+			int price = item.getDefinition().getValue();
+			if (difference != 0) {
+				price += (price * (difference/1000));
+			}
+			
+			return price;
 		}
+		
 	}
 }

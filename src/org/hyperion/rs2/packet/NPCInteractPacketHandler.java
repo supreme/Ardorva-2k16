@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.content.combat.impl.MeleeAction;
-import org.hyperion.rs2.content.shops.ShopLoader;
+import org.hyperion.rs2.content.shops.ShopHandler;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.NPCDefinition;
 import org.hyperion.rs2.model.npc.NPC;
@@ -104,9 +104,9 @@ public class NPCInteractPacketHandler implements PacketHandler {
 		final NPC npc = World.getWorld().getNPC(npcIndex);
 		player.setInteractingEntity(npc);
 		
-		Shop shop = ShopLoader.getShopForNpc(npc.getId());
+		Shop shop = ShopHandler.getShopForNpc(npc.getId());
 		if(shop != null) {
-			ShopLoader.displayShop(player, shop);
+			ShopHandler.displayShop(player, shop);
 		}
 	}
 	

@@ -16,7 +16,7 @@ import org.hyperion.rs2.model.shops.Shop.ShopItem;
  * @author Stephen Andrews
  * @author Brendan Dodd
  */
-public class ShopLoader {
+public class ShopHandler {
 
 	
 	/**
@@ -27,7 +27,7 @@ public class ShopLoader {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger logger = Logger.getLogger(ShopLoader.class.getName());
+	private static Logger logger = Logger.getLogger(ShopHandler.class.getName());
 	
 	/**
 	 * Displays the shop to the player.
@@ -35,7 +35,7 @@ public class ShopLoader {
 	public static void displayShop(Player player, Shop shop) {
 		Container shopContents = new Container(Type.ALWAYS_STACK, shop.getContents().getLength());
 		for (ShopItem item : shop.getContents().getItems()) {
-			shopContents.add(new Item(item.getId(), item.getStock()));
+			shopContents.add(item.getItem());
 		}
 		player.getActionSender().sendUpdateItems(SHOP_INTERFACE, 75, 93, shopContents.toArray());
 		player.getActionSender().sendUpdateItems(301, 0, 93, player.getInventory().toArray());
@@ -43,6 +43,15 @@ public class ShopLoader {
 		player.getInterfaceState().interfaceOpened(300);
 		player.getActionSender().sendInventoryInterface(301);
 		player.getActionSender().sendString(300, 76, shop.getName());
+	}
+	
+	public static void refreshShop(Player player, Shop shop) {
+		Container shopContents = new Container(Type.ALWAYS_STACK, shop.getContents().getLength());
+		for (ShopItem item : shop.getContents().getItems()) {
+			shopContents.add(item.getItem());
+		}
+		player.getActionSender().sendUpdateItems(SHOP_INTERFACE, 75, 93, shopContents.toArray());
+		player.getActionSender().sendUpdateItems(301, 0, 93, player.getInventory().toArray());
 	}
 	
 	/**

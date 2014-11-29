@@ -1,18 +1,22 @@
 package org.hyperion.rs2.packet;
 
-import org.hyperion.rs2.content.shops.ShopLoader;
+import java.util.logging.Logger;
+
+import org.hyperion.rs2.content.shops.ShopHandler;
 import org.hyperion.rs2.model.Entity;
+import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.shops.Shop;
+import org.hyperion.rs2.model.shops.Shop.ShopItem;
 import org.hyperion.rs2.net.Packet;
 
 /**
  * Handles player clicking on interfaces.
  * @author Stephen Andrews
+ * @author Brendan Dodd
  */
 public class InterfaceOptionPacketHandler implements PacketHandler {
 
@@ -27,6 +31,8 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 	private static final int CLICK_7 = 166;
 	private static final int CLICK_8 = 64; 
 	private static final int CLICK_9 = 53;
+	
+	private static final Logger logger = Logger.getLogger(InterfaceOptionPacketHandler.class.getName());
 	
 	@Override
 	public void handle(Player player, Packet packet) {
@@ -85,10 +91,10 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 					if(npc == null)
 						break;
 					
-					Shop shop = ShopLoader.getShopForNpc(npc.getId());
-					ItemDefinition item = ItemDefinition.forId(itemId);
+					Shop shop = ShopHandler.getShopForNpc(npc.getId());
+					ShopItem item = shop.getContents().getShopItem(itemId);
 					if(item != null) {
-						player.getActionSender().sendMessage(item.getName()+": currently costs "+item.getValue()+" coins.");
+						player.getActionSender().sendMessage(item.getItem().getDefinition().getName()+": currently costs "+item.getValue()+" coins.");
 					} else {
 						player.getActionSender().sendMessage("error");
 					}
@@ -102,7 +108,7 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 				Equipment.unequipItem(player, itemId, slot);
 				break;
 			default:
-				player.getActionSender().sendMessage("Unhandled interface ID | Interface Option 1, interface ID: " + interfaceId);
+				logger.info("Unhandled interface ID | Interface Option 1, interface ID: " + interfaceId);
 				break;
 		}
 	}
@@ -136,8 +142,20 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 					Bank.deposit(player, slot, itemId, 5);
 				}
 				break;
+			case 300://Shops - buy 1
+				Entity interactingEntity = player.getInteractingEntity();
+				NPC npc = null;
+				if(interactingEntity instanceof NPC)
+					npc = (NPC) interactingEntity;
+
+				if(npc == null)
+					break;
+				
+				Shop shop = ShopHandler.getShopForNpc(npc.getId());
+				shop.buyItem(player, new Item(itemId, 1));
+				break;
 			default:
-				player.getActionSender().sendMessage("Unhandled interface ID | Interface Option 2, interface ID: " + interfaceId);
+				logger.info("Unhandled interface ID | Interface Option 2, interface ID: " + interfaceId);
 				break;
 		}
 	}
@@ -171,8 +189,20 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 					Bank.deposit(player, slot, itemId, 10);
 				}
 				break;
+			case 300://Shops - buy 5
+				Entity interactingEntity = player.getInteractingEntity();
+				NPC npc = null;
+				if(interactingEntity instanceof NPC)
+					npc = (NPC) interactingEntity;
+
+				if(npc == null)
+					break;
+				
+				Shop shop = ShopHandler.getShopForNpc(npc.getId());
+				shop.buyItem(player, new Item(itemId, 5));
+				break;
 			default:
-				player.getActionSender().sendMessage("Unhandled interface ID | Interface Option 3, interface ID: " + interfaceId);
+				logger.info("Unhandled interface ID | Interface Option 3, interface ID: " + interfaceId);
 				break;
 		}
 	}
@@ -206,8 +236,20 @@ public class InterfaceOptionPacketHandler implements PacketHandler {
 					Bank.deposit(player, slot, itemId, player.getInventory().getCount(itemId));
 				}
 				break;
+			case 300://Shops - buy 10
+				Entity interactingEntity = player.getInteractingEntity();
+				NPC npc = null;
+				if(interactingEntity instanceof NPC)
+					npc = (NPC) interactingEntity;
+
+				if(npc == null)
+					break;
+				
+				Shop shop = ShopHandler.getShopForNpc(npc.getId());
+				shop.buyItem(player, new Item(itemId, 10));
+				break;
 			default:
-				player.getActionSender().sendMessage("Unhandled interface ID | Interface Option 4, interface ID: " + interfaceId);
+				logger.info("Unhandled interface ID | Interface Option 4, interface ID: " + interfaceId);
 				break;
 		}
 	}
