@@ -8,7 +8,6 @@ import org.hyperion.rs2.content.combat.util.CombatData.Stance;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.definitions.ItemDefinition.EquipmentDefinition;
 import org.hyperion.rs2.model.item.Bonuses;
 import org.hyperion.rs2.model.player.Player;
@@ -126,7 +125,7 @@ public class CombatFormulas {
 	 * @param type The player's attack type.
 	 * @return The accuracy.
 	 */
-	public static int calculateOffensiveAccuracy(Player player, AttackType type) {
+	public static double calculateOffensiveAccuracy(Player player, AttackType type) {
 		double skillAccuracyBonus;
 		double weaponAccuracy;
 		int skillLevel = player.getSkills().getLevel(type.getSkillNumber());
@@ -148,7 +147,7 @@ public class CombatFormulas {
 		//Perform the final calculations
 		double finalAccuracy = skillAccuracyBonus + weaponAccuracy;
 		
-		return (int) finalAccuracy;
+		return finalAccuracy;
 	}
 	
 	/**
@@ -156,7 +155,7 @@ public class CombatFormulas {
 	 * @param player The player to calculate the defensive bonus for.
 	 * @return The defensive bonus.
 	 */
-	public static int calculateDefensiveBonus(Player player) {
+	public static double calculateDefensiveBonus(Player player) {
 		double totalBonus = 0;
 		HashMap<Integer, Item> armor = new HashMap<Integer, Item>();
 		
@@ -173,7 +172,7 @@ public class CombatFormulas {
 			totalBonus += runDefensiveFormula(def.getRequirements()[Skills.DEFENCE], key);
 		}
 
-		return (int) totalBonus;
+		return totalBonus;
 	}
 	
 	/**
@@ -182,7 +181,7 @@ public class CombatFormulas {
 	 * @param type The type of the equipment (helm, body, etc).
 	 * @return The defensive bonus.
 	 */
-	private static int runDefensiveFormula(int tier, int type) {
+	private static double runDefensiveFormula(int tier, int type) {
 		double bonus;
 		
 		bonus = 2.5 * ((Math.pow(tier, 3) + (4*tier) + 40));
@@ -213,7 +212,7 @@ public class CombatFormulas {
 			break;
 		}
 		
-		return (int) bonus;
+		return bonus;
 	}
 	
 	

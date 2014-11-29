@@ -2,7 +2,7 @@ package org.hyperion.rs2.content.combat.util;
 
 import java.util.logging.Logger;
 
-import org.hyperion.rs2.Constants;
+import org.hyperion.Server;
 import org.hyperion.rs2.content.combat.util.CombatData.Stance;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Item;
@@ -13,7 +13,7 @@ import org.hyperion.rs2.model.player.Player;
 
 /**
  * Gets the attack speeds for different weapons.
- * @author Stephen
+ * @author Stephen Andrews
  */
 public class AttackSpeeds {
 
@@ -62,10 +62,6 @@ public class AttackSpeeds {
 				break;
 		}
 		
-		if (Constants.DEV_MODE) {
-			logger.info(player.getName() + " has an attack speed of " + attackSpeed + ", with weapon " + definition.getName());
-		}
-		
-		return attackSpeed * 600;
+		return attackSpeed * Server.CYCLE_TIME;
 	}
 }

@@ -197,6 +197,11 @@ public class ItemDefinition {
 		private int[] requirements;
 		
 		/**
+		 * The shield definition of the equipment.
+		 */
+		private ShieldDefinition shieldDefinition;
+		
+		/**
 		 * Gets the equipment slot.
 		 * @return The equipment slot.
 		 */
@@ -210,6 +215,34 @@ public class ItemDefinition {
 		 */
 		public int[] getRequirements() {
 			return requirements;
+		}
+		
+		/**
+		 * Gets the shield definition.
+		 * @return The shield definition.
+		 */
+		public ShieldDefinition getShieldDefinition() {
+			return shieldDefinition;
+		}
+	}
+	
+	/**
+	 * Structure of the nested object for shield definitions.
+	 * @author Stephen Andrews
+	 */
+	public class ShieldDefinition {
+		
+		/**
+		 * The blocking animation for the shield.
+		 */
+		private int animationId;
+		
+		/**
+		 * Gets the blocking animation for the shield.
+		 * @return The blocking animation.
+		 */
+		public int getBlockAnimation() {
+			return animationId;
 		}
 	}
 	

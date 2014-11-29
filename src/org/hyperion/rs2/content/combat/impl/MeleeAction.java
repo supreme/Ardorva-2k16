@@ -1,5 +1,6 @@
 package org.hyperion.rs2.content.combat.impl;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import org.hyperion.rs2.content.combat.CombatAction;
@@ -70,9 +71,13 @@ public class MeleeAction extends CombatAction {
 			}
 			
 			executeAttack(aggressor, victim);
-			((Player) aggressor).getActionSender().sendMessage("Offensive accuracy: " + CombatFormulas.calculateOffensiveAccuracy(getPlayer(), AttackType.MELEE));
-			((Player) aggressor).getActionSender().sendMessage("Defensive bonus: " + CombatFormulas.calculateDefensiveBonus(getPlayer()));
-			//Divide defensive bonus by offensive accuracy to get hit percent change.
+			double accuracy = CombatFormulas.calculateOffensiveAccuracy(getPlayer(), AttackType.MELEE);
+			double defense = CombatFormulas.calculateDefensiveBonus(getPlayer());
+			double chance = (1 - (defense / accuracy)) * 100;
+			DecimalFormat df = new DecimalFormat("#.00");
+			//chance = Math.round(chance * 1000) / 1000;
+			((Player) aggressor).getActionSender().sendMessage("Hit chance: " + df.format(chance) + "%");
+			//100 - (Divide defensive bonus by offensive accuracy) to get hit percent change
 			//Some numbers I got with my setup were a 28% chance to hit based on - http://gyazo.com/4975ece55d97fa44bc903db9f57e8533
 			//And all 99 stats, seems pretty good to me :P
 		}

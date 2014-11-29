@@ -2,18 +2,18 @@ package org.hyperion.rs2.content.combat.util;
 
 import java.util.logging.Logger;
 
-import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.content.combat.util.CombatData.Stance;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.definitions.ItemDefinition;
+import org.hyperion.rs2.model.definitions.ItemDefinition.ShieldDefinition;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 
 /**
- * Gets the combat animation for a player based on their weapon and attack stance.
- * @author Stephen
+ * Gets the combat animations for a player based on their weapon/shield and attack stance.
+ * @author Stephen Andrews
  */
 public class CombatAnimations {
 
@@ -75,10 +75,6 @@ public class CombatAnimations {
 				break;
 		}
 		
-		if (Constants.DEV_MODE) {
-			logger.info(player.getName() + " has a combat animation of " + animation + ", with attack stance " + stance.toString());
-		}
-		
 		return animation;
 	}
 	
@@ -96,17 +92,19 @@ public class CombatAnimations {
 		
 		/* Handle case for a player type entity */
 		Player player = (Player) entity;
-		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
+		Item shield = player.getEquipment().get(Equipment.SLOT_SHIELD);
 		int animation = 424;
 		
-		/* In the case of a player not wearing a weapon */
-		if (weapon == null) { //TODO: Shield
+		/* In the case of a player not wearing a shield */
+		if (shield == null) {
 			return animation;
 		}
 				
-		/* If weapon isn't null, get the proper animation */
-		ItemDefinition definition = ItemDefinition.forId(weapon.getId());
-		animation = definition.getWeaponDefinition().getBlockAnimation();
+		/* If shield isn't null, get the proper animation */
+		ShieldDefinition definition = ItemDefinition.forId(shield.getId()).getEquipmentDefinition().getShieldDefinition();
+		if (definition != null) { //Sometimes there's a null for the shield definition even though it's a shield
+			animation = definition.getBlockAnimation();
+		}
 		
 		return animation;
 	}
