@@ -1,5 +1,6 @@
 package org.hyperion.rs2.packet;
 
+import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.content.skills.woodcutting.Tree;
 import org.hyperion.rs2.content.skills.woodcutting.WoodcuttingAction;
 import org.hyperion.rs2.model.Location;
@@ -44,20 +45,40 @@ public class ObjectOptionPacketHandler implements PacketHandler {
 		Location loc = Location.create(x, y, player.getLocation().getZ());
 		System.out.println("First click object ID: "+id+", x: "+x+", y: "+y);
 		
-		switch(id) {
-			case 26972:
-				Bank.open(player);
-				break;
-			case 1276:
-					Tree tree = Tree.forId(id);
-					WoodcuttingAction wc = new WoodcuttingAction(player, loc, tree);
-					wc.init();
-					wc.execute();
-				break;
-			default:
-				player.getActionSender().sendMessage("Unhandled object first click | Id: " + id);
-				break;
-		}
+		/* Create the interaction action */
+		Action objectInteract1 = new Action(player, 0, true) {
+
+			@Override
+			public QueuePolicy getQueuePolicy() {
+				return QueuePolicy.NEVER;
+			}
+
+			@Override
+			public WalkablePolicy getWalkablePolicy() {
+				return WalkablePolicy.WALKABLE;
+			}
+
+			@Override
+			public void execute() {
+				switch(id) {
+				case 26972:
+					Bank.open(player);
+					break;
+				case 1276:
+						Tree tree = Tree.forId(id);
+						WoodcuttingAction wc = new WoodcuttingAction(player, loc, tree);
+						wc.init();
+						wc.execute();
+					break;
+				default:
+					player.getActionSender().sendMessage("Unhandled object first click | Id: " + id);
+					break;
+			}	
+			
+			this.stop();
+		}};
+		
+		player.addInteractAction(loc, objectInteract1);
 	}
 	
     /**

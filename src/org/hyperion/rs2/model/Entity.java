@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.action.ActionQueue;
 import org.hyperion.rs2.content.combat.CombatState;
 import org.hyperion.rs2.content.combat.DamageMap;

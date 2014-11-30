@@ -6,8 +6,9 @@ import java.util.Queue;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
+import org.hyperion.rs2.action.Action;
+import org.hyperion.rs2.action.impl.DistancedAction;
 import org.hyperion.rs2.content.combat.impl.MeleeAction;
-import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
@@ -744,5 +745,21 @@ public class Player extends Entity implements Persistable {
 	@Override
 	public int getClientIndex() {
 		return this.getIndex() + 32768;
+	}
+	
+	/**
+	 * Adds an action to the player's <code>ActionQueue</code>
+	 * while taking into account that the player might not
+	 * be within the required distance to complete the action.
+	 * @param target The location the entity wishes to reach.
+	 * @param action The action to be executed.
+	 */
+	public void addInteractAction(Location target, Action action) {
+		this.getActionQueue().cancelQueuedActions();
+		if (this.getLocation().isWithinInteractionDistance(target)) {
+			this.getActionQueue().addAction(action);
+		} else {
+			this.getActionQueue().addAction(new DistancedAction(this, target, action));
+		}
 	}
 }
