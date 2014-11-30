@@ -33,13 +33,13 @@ public abstract class HarvestingAction extends Action {
 	 * @param player The player to create the action for.
 	 */
 	public HarvestingAction(Player player, Location location) {
-		super(player, 0, false);
+		super(player, 0, false); //Get rid of 0 and convert to new action system
 		this.location = location;
 	}
 	
 	@Override
 	public QueuePolicy getQueuePolicy() {
-		return QueuePolicy.NEVER;
+		return QueuePolicy.ALWAYS;
 	}
 	
 	@Override
@@ -71,6 +71,18 @@ public abstract class HarvestingAction extends Action {
 	public abstract double getFactor();
 	
 	/**
+	 * Gets the replacement object id.
+	 * @return The object.
+	 */
+	public abstract int getReplacementObject();
+	
+	/**
+	 * Gets the respawn time of the object.
+	 * @return The object.
+	 */
+	public abstract int getRespawnTime();
+	
+	/**
 	 * Gets the harvested item.
 	 * @return The harvested item.
 	 */
@@ -93,6 +105,18 @@ public abstract class HarvestingAction extends Action {
 	 * @return The animation.
 	 */
 	public abstract Animation getAnimation();
+	
+	/**
+	 * Gets the object's id.
+	 * @return The object id.
+	 */
+	public abstract int getObjectId();
+	
+	/**
+	 * Gets replacement object.
+	 * @return <code>true/false</code> Whether objects need to be replaced during the action.
+	 */
+	public abstract boolean requiresReplacementObject();
 	
 	/**
 	 * Gets reward type.
@@ -138,7 +162,8 @@ public abstract class HarvestingAction extends Action {
 			cycles--;
 			Item item = getHarvestedItem();
 			if(player.getInventory().hasRoomFor(item)) {
-				if(totalCycles == 1 || Math.random() > getFactor()) {
+				double random = Math.random();
+				if(totalCycles == 1 || random > getFactor()) {
 					if(getPeriodicRewards() ) {
 						giveRewards(player, item);
 					}
@@ -149,7 +174,10 @@ public abstract class HarvestingAction extends Action {
 				return;
 			}
 			if(cycles == 0) {
-				// TODO replace with expired object!
+				if (requiresReplacementObject()) {
+					//GameObject obj = new GameObject(getReplacementObject(), location.getX(), location.getY(), getObjectId(), getRespawnTime());
+					//player.getActionSender().sendObject(obj);
+				}
 				if(!getPeriodicRewards()) {
 					giveRewards(player, item);
 				}
@@ -160,5 +188,4 @@ public abstract class HarvestingAction extends Action {
 			}
 		}
 	}
-
 }

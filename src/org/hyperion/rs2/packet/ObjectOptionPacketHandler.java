@@ -1,10 +1,5 @@
 package org.hyperion.rs2.packet;
 
-import org.hyperion.rs2.action.impl.MiningAction;
-import org.hyperion.rs2.action.impl.MiningAction.Node;
-import org.hyperion.rs2.action.impl.ProspectingAction;
-import org.hyperion.rs2.action.impl.WoodcuttingAction;
-import org.hyperion.rs2.action.impl.WoodcuttingAction.Tree;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.player.Player;
@@ -65,11 +60,11 @@ public class ObjectOptionPacketHandler implements PacketHandler {
         int y = packet.getLEShort() & 0xFFFF;
         int x = packet.getShortA() & 0xFFFF;
         Location loc = Location.create(x, y, player.getLocation().getZ());
-        Node node = Node.forId(id);
+        /*Node node = Node.forId(id);
         if(node != null && player.getLocation().isWithinInteractionDistance(loc)) {
             player.getActionQueue().addAction(new ProspectingAction(player, loc, node));
             return;
-        }
+        }*/
     }
 
 
