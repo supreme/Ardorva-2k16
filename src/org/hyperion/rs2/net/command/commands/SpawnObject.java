@@ -12,11 +12,12 @@ import org.hyperion.rs2.net.command.Command;
  * Used for various testing applications.
  * @author Stephen Andrews
  */
-public class Test implements Command {
+public class SpawnObject implements Command {
 
 	@Override
 	public void invoke(Player player, String[] args) {
-		player.getSkills().addExperience(8, 8483343);
+		int id = Integer.parseInt(args[0]);
+		player.getActionSender().sendObject(new GameObject(id, player.getLocation(), 0, 10));
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package org.hyperion.rs2.packet;
 
+import org.hyperion.rs2.content.skills.woodcutting.Tree;
+import org.hyperion.rs2.content.skills.woodcutting.WoodcuttingAction;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.player.Player;
@@ -8,6 +10,7 @@ import org.hyperion.rs2.net.Packet;
 /**
  * Object option packet handler.
  * @author Graham Edgecombe
+ * @author Brendan Dodd
  *
  */
 public class ObjectOptionPacketHandler implements PacketHandler {
@@ -35,14 +38,21 @@ public class ObjectOptionPacketHandler implements PacketHandler {
 	 * @param packet The packet.
 	 */
 	private void handleOption1(Player player, Packet packet) {
-		int x = packet.getLEShortA() & 0xFFFF;
-		int id = packet.getShort() & 0xFFFF;
-		int y = packet.getShortA() & 0xFFFF;
+		int id = packet.getLEShort() & 0xFFFF;
+		int x = packet.getShort() & 0xFFFF;
+		int y = packet.getLEShort() & 0xFFFF;
 		Location loc = Location.create(x, y, player.getLocation().getZ());
+		System.out.println("First click object ID: "+id+", x: "+x+", y: "+y);
 		
 		switch(id) {
-			case 3095:
+			case 26972:
 				Bank.open(player);
+				break;
+			case 1276:
+					Tree tree = Tree.forId(id);
+					WoodcuttingAction wc = new WoodcuttingAction(player, loc, tree);
+					wc.init();
+					wc.execute();
 				break;
 			default:
 				player.getActionSender().sendMessage("Unhandled object first click | Id: " + id);
@@ -56,9 +66,9 @@ public class ObjectOptionPacketHandler implements PacketHandler {
      * @param packet The packet.
      */
     private void handleOption2(Player player, Packet packet) {        
-        int id = packet.getLEShortA() & 0xFFFF;
-        int y = packet.getLEShort() & 0xFFFF;
-        int x = packet.getShortA() & 0xFFFF;
+		int id = packet.getLEShort() & 0xFFFF;
+		int x = packet.getShort() & 0xFFFF;
+		int y = packet.getLEShort() & 0xFFFF;
         Location loc = Location.create(x, y, player.getLocation().getZ());
         /*Node node = Node.forId(id);
         if(node != null && player.getLocation().isWithinInteractionDistance(loc)) {
