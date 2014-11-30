@@ -164,4 +164,30 @@ public class Region {
 			}
 		}
 	}
+	
+	/**
+	 * Adds a new <code>GameObject</code> to the region.
+	 * @param object The object to add.
+	 */
+	public void addGameObject(GameObject object) {
+		synchronized(this) {
+			objects.add(object);
+			for (Player player : players) {
+				player.getActionSender().sendObject(object);
+			}
+		}
+	}
+	
+	/**
+	 * Removes a <code>GameObject</code> from the region.
+	 * @param object The object to remove.
+	 */
+	public void removeGameObject(GameObject object) {
+		synchronized(this) {
+			objects.remove(object);
+			for (Player player : players) {
+				player.getActionSender().removeObject(object);
+			}
+		}
+	}
 }

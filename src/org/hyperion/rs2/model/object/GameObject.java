@@ -9,6 +9,11 @@ import org.hyperion.rs2.model.Location;
 public class GameObject {
 	
 	/**
+	 * The action variables.
+	 */
+	public static int REMOVE = 0, ADD = 1;
+	
+	/**
 	 * The id of the object.
 	 */
 	private int id;

@@ -3,8 +3,6 @@ package org.hyperion.rs2.model.shops;
 import org.hyperion.rs2.content.shops.ShopHandler;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Container;
-import org.hyperion.rs2.model.container.Container.Type;
-import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.player.Player;
 
 /**

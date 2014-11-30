@@ -139,6 +139,7 @@ public class World {
 			public Object call() {
 				try {
 					SpawnLoader.loadSpawns();
+					livingClasses.getObjectManager().loadObjects();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -365,6 +366,14 @@ public class World {
 	 */
 	public EntityList<NPC> getNPCs() {
 		return npcs;
+	}
+	
+	/**
+	 * Gets the living classes instance.
+	 * @return The living classes instance.
+	 */
+	public LivingClasses getLivingClasses() {
+		return livingClasses;
 	}
 	
 	/**
