@@ -433,11 +433,4 @@ public class World {
 		t.printStackTrace();
 		System.exit(1);
 	}
-	
-	public static final void spawnObject(GameObject object) {
-		getWorld().getRegionManager().getRegionByLocation(object.getLocation()).spawnObject(object, object.getZ(),
-				object.getLocation().getXInRegion(), object.getLocation().getYInRegion(), false);
-	}
-	
-	
 }
