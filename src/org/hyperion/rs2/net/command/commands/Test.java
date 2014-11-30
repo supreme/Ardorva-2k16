@@ -17,7 +17,7 @@ public class Test implements Command {
 	@Override
 	public void invoke(Player player, String[] args) {
 		System.out.println(args[0]);
-		World.getWorld().spawnObject(new GameObject(Integer.valueOf(args[0]), player.getLocation(), 0, 0));
+		player.getActionSender().createObject(new GameObject(Integer.valueOf(args[0]), player.getLocation(), 0, 2));
 	}
 
 	@Override

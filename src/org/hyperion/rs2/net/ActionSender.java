@@ -173,6 +173,7 @@ public class ActionSender {
 				sendGroundItem(item);
 			}
 		}
+		
 		return this;
 	}
 	
@@ -374,7 +375,6 @@ public class ActionSender {
 	 * @param object The object to create.
 	 */
 	public void createObject(GameObject object) {
-		System.out.println("Create object called");
 		sendArea(object.getLocation());
 		PacketBuilder spb = new PacketBuilder(17);
 		spb.putByteA((byte) 0);
