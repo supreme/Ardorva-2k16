@@ -216,7 +216,7 @@ public class Player extends Entity implements Persistable {
 	/**
 	 * The player's inventory.
 	 */
-	private final Container inventory = new Container(Container.Type.STANDARD, Inventory.SIZE);
+	private final Container inventory = new Container(this, Container.Type.STANDARD, Inventory.SIZE, new ContainerInterface(149, 0, 93));
 	
 	/**
 	 * The player's bank.
