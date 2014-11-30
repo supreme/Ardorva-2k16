@@ -7,6 +7,7 @@ import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.Skills;
+import org.hyperion.rs2.model.Sound;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Inventory;
@@ -16,6 +17,7 @@ import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
 import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerConfiguration;
+import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.net.Packet.Type;
 
 /**
@@ -50,6 +52,11 @@ public class ActionSender {
 		sendComponentPosition(548, 101, 1000, 1000); //Remove fucking xp orb
 		
 		sendMessage("<img=1></img> Welcome to " + Constants.SERVER_NAME + ".");
+		
+		sendInteractionOption("null", 1, true); // null or attack
+		sendInteractionOption("null", 2, false); // challenge = duel arena only
+		sendInteractionOption("Follow", 3, false);
+		sendInteractionOption("Trade with", 4, false);
 		
 		player.getPlayerVariables().handleCounter();
 		
@@ -172,27 +179,29 @@ public class ActionSender {
 		pb.putShort(player.getLocation().getLocalY());
 		player.getSession().write(pb.toPacket());
 		
+		/* Send all the ground items in the region */
 		for (GroundItem item : player.getRegion().getGroundItems()) {
 			if (item.isGlobal() || item.getOwner().equals(player)) {
 				sendGroundItem(item);
 			}
 		}
 		
-		for (GameObject object : World.getWorld().getLivingClasses().getObjectManager().getObjects()) {
-			System.out.println("Player region: " + player.getLocation().getRegionId() 
-					+ "  Object " + object.getId() + " region: " + object.getLocation().getRegionId());
-			if (player.getLocation().getRegionId() == object.getLocation().getRegionId()) {
-				if (object.getAction() == GameObject.ADD) {
-					sendObject(object);
-				} else if (object.getAction() == GameObject.REMOVE) {
-					removeObject(object);
-				}
+		/* Send all the objects in the region */
+		for (GameObject object : player.getRegion().getGameObjects()) {
+			if (object.getAction() == GameObject.ADD) {
+				sendObject(object);
+			} else if (object.getAction() == GameObject.REMOVE) {
+				removeObject(object);
 			}
 		}
 		
 		return this;
 	}
 	
+	/**
+	 * Sends all the sidebar interfaces.
+	 * @return The action sender instance, for chaining.
+	 */
 	public ActionSender sendSideBarInterfaces() {
 		sendTab(77, 137); //chatbox
 		sendTab(86, 92); //Weapon tab
@@ -364,6 +373,169 @@ public class ActionSender {
 	}
 
 	/**
+	 * Sends the enter amount interface.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendEnterAmountInterface() {
+		player.getActionSender().sendRunScript(Constants.NUMERICAL_INPUT_INTERFACE, new Object[] { "Enter amount:" }, "s");
+		return this;
+	}
+
+	/**
+	 * Sends the enter amount interface.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendEnterTextInterface(String question) {
+		player.getActionSender().sendRunScript(Constants.ALPHA_NUMERICAL_INPUT_INTERFACE, new Object[] { question }, "s");
+		return this;
+	}
+	
+	/**
+	 * Sends a clientscript to the client.
+	 * @param id The id.
+	 * @param params Any parameters in the scrips.
+	 * @param types The script types
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendRunScript(int id, Object[] params, String types) {
+		PacketBuilder bldr = new PacketBuilder(69, Type.VARIABLE_SHORT);
+		bldr.putRS2String(types);
+		if(params.length > 0) {
+			int j = 0;
+			for (int i = types.length() - 1; i >= 0; i--, j++) {
+				if (types.charAt(i) == 115) {
+					bldr.putRS2String((String) params[j]);
+				} else {
+					bldr.putInt((Integer) params[j]);
+				}
+			}
+		}
+		bldr.putInt(id);
+		player.write(bldr.toPacket());
+		return this;
+	}
+	
+	/**
+	 * Not sure why this one is needed as well...
+	 * @param scriptId
+	 * @param params
+	 */
+	public void sendRunScript(int scriptId, Object[] params) {
+		PacketBuilder bldr = new PacketBuilder(69, Type.VARIABLE_SHORT);
+		String parameterTypes = "";
+		for(int count = params.length-1; count >= 0; count--) {
+			if(params[count] instanceof String)
+				parameterTypes += "s"; //string
+			else
+				parameterTypes += "i"; //integer
+		}
+		bldr.putRS2String(parameterTypes);
+		int index = 0;
+		for (int count = parameterTypes.length() - 1;count >= 0;count--) {
+			if (parameterTypes.charAt(count) == 's') 
+				bldr.putRS2String((String) params[index++]);
+			else
+				bldr.putInt((Integer) params[index++]);
+		}
+		bldr.putInt(scriptId);
+		player.write(bldr.toPacket());
+	}
+	
+	/**
+	 * Sends a system update.
+	 * @param time The time until the update.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendSystemUpdate(int time) {
+		player.getSession().write(new PacketBuilder(30).putShortA(time).toPacket());
+		return this;
+	}
+	
+	/**
+	 * Sends an animation of an interface.
+	 * @param emoteId The emote id.
+	 * @param interfaceId The interface id.
+	 * @param childId The child id.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendInterfaceAnimation(int emoteId, int interfaceId, int childId) {
+		player.getSession().write(new PacketBuilder(63).putInt2(interfaceId <<  16 | childId).putLEShort(emoteId).toPacket());
+		return this;
+	}
+
+	/**
+	 * Sends the player's head onto an interface.
+	 * @param interfaceId The interface id.
+	 * @param childId The child id.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendPlayerHead(int interfaceId, int childId) {
+		player.getSession().write(new PacketBuilder(8).putLEInt(interfaceId << 16 | childId).toPacket());
+		return this;
+	}
+
+	/**
+	 * Sends an NPC's head onto an interface.
+	 * @param npcId The NPC's id.
+	 * @param interfaceId The interface id.
+	 * @param childId The child id.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendNPCHead(int npcId, int interfaceId, int childId) {
+		player.getSession().write(new PacketBuilder(207).putLEShortA(npcId).putInt(interfaceId << 16 | childId).toPacket());
+		return this;
+	}
+	
+	/**
+	 * Sends a projectile to a location.
+	 * @param start The starting location.
+	 * @param finish The finishing location.
+	 * @param id The graphic id.
+	 * @param delay The delay before showing the projectile.
+	 * @param angle The angle the projectile is coming from.
+	 * @param speed The speed the projectile travels at.
+	 * @param startHeight The starting height of the projectile.
+	 * @param endHeight The ending height of the projectile.
+	 * @param lockon The lockon index of the projectile, so it follows them if they move.
+	 * @param slope The slope at which the projectile moves.
+	 * @param radius The radius from the centre of the tile to display the projectile from.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendProjectile(Location start, Location finish, int id,
+			int delay, int angle, int speed, int startHeight, int endHeight,
+			int lockon, int slope, int radius) {
+				
+		int offsetX = (start.getX() - finish.getX()) * -1;
+		int offsetY = (start.getY() - finish.getY()) * -1;
+		sendArea(start, -3, -2);
+		
+		PacketBuilder bldr = new PacketBuilder(218);
+		bldr.put((byte) angle);
+		bldr.put((byte) offsetX);
+		bldr.put((byte) offsetY);
+		bldr.putShort(lockon);
+		bldr.putShort(id);
+		bldr.put((byte) startHeight);
+		bldr.put((byte) endHeight);
+		bldr.putShort(delay);
+		bldr.putShort(speed);
+		bldr.put((byte) slope);
+		bldr.put((byte) radius);
+		player.getSession().write(bldr.toPacket());	
+		return this;
+	}
+	
+	/**
+	 * Removes the chatbox interface.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender removeChatboxInterface() {
+		player.getSession().write(new PacketBuilder(137).putInt(Constants.MAIN_WINDOW << 16 | Constants.CHAT_BOX).toPacket()); //chat box screen
+		player.getActionSender().sendRunScript(Constants.REMOVE_INPUT_INTERFACE, new Object[] { "" }, "");
+		return this;
+	}
+	
+	/**
 	 * Sends the player an option.
 	 * @param slot The slot to place the option in the menu.
 	 * @param top Flag which indicates the item should be placed at the top.
@@ -435,6 +607,20 @@ public class ActionSender {
 	}
 	
 	/**
+	 * Sends your location to the client.
+	 * @param location The location.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendArea(Location location, int xOffset, int yOffset) {
+		PacketBuilder bldr = new PacketBuilder(132);
+		int regionX = player.getLastKnownRegion().getRegionX(), regionY = player.getLastKnownRegion().getRegionY();
+		bldr.put((byte) ((location.getY() - ((regionY-6) * 8)) + yOffset));
+		bldr.put((byte) ((location.getX() - ((regionX-6) * 8)) + xOffset));
+		player.write(bldr.toPacket());
+		return this;
+	}
+	
+	/**
 	 * Removes a ground item from the world.
 	 * @param item The item to remove.
 	 */
@@ -470,6 +656,38 @@ public class ActionSender {
 	 */
 	public ActionSender clearMapFlag() {
 		player.getSession().write(new PacketBuilder(68).toPacket());
+		return this;
+	}
+	
+	/**
+	 * Sends a sound to the client.
+	 * @param sound The sound to play.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender playSound(Sound sound) {		
+		PacketBuilder bldr = new PacketBuilder(40);
+		bldr.putShort(sound.getId()).put(sound.getVolume()).putShort(sound.getDelay());
+		player.getSession().write(bldr.toPacket());
+		return this;
+	}
+	
+	public ActionSender turnCameraLocation(int localX, int localY, int height, int constantSpeed, int variableSpeed) {
+		PacketBuilder bldr = new PacketBuilder(82);
+		bldr.put((byte)localX);
+		bldr.put((byte)localY);
+		bldr.putShort(height);
+		bldr.put((byte)constantSpeed);
+		bldr.put((byte)variableSpeed);
+		return this;
+	}
+	
+	public ActionSender moveCameraLocation(int localX, int localY, int height, int constantSpeed, int variableSpeed) {
+		PacketBuilder bldr = new PacketBuilder(113);
+		bldr.put((byte)localX);
+		bldr.put((byte)localY);
+		bldr.putShort(height);
+		bldr.put((byte)constantSpeed);
+		bldr.put((byte)variableSpeed);
 		return this;
 	}
 	

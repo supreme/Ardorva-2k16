@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.hyperion.rs2.model.World;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,6 +33,9 @@ public class ObjectManager {
 		try (BufferedReader reader = new BufferedReader(new FileReader(OBJECT_FILE))) {
             Gson gson = new GsonBuilder().create();
             objects = gson.fromJson(reader, GameObject[].class);
+            for (GameObject object : objects) {
+            	World.getWorld().getRegionManager().getRegionByLocation(object.getLocation()).addGameObject(object);
+            }
             System.out.println("Loaded " + objects.length + " game objects...");
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

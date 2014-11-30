@@ -15,12 +15,48 @@ public class Constants {
 	/**
 	 * Whether or not the server is in dev mode.
 	 */
-	public static boolean DEV_MODE = true;
+	public static final boolean DEV_MODE = true;
 	
 	/**
 	 * Whether or not runes are required to cast magic spells.
 	 */
-	public static boolean REQUIRE_RUNES = false;
+	public static final boolean REQUIRE_RUNES = false;
+	
+	/**
+	 * The main screen window pane.
+	 */
+	public static final int MAIN_WINDOW = 548;
+	
+	/**
+	 * The game window area.
+	 */
+	public static final int GAME_WINDOW = 64;
+	
+	/**
+	 * The chat box area.
+	 */
+	public static final int CHAT_BOX = 79;
+	
+	/**
+	 * The login screen window pane.
+	 */
+	public static final int LOGIN_SCREEN = 549;
+	
+	/**
+	 * The interface sent in a run script for numerical input.
+	 */
+	public static final int NUMERICAL_INPUT_INTERFACE = 108;
+	
+	/**
+	 * The interface sent in a run script for alphabetical & numerical input.
+	 */
+	public static final int ALPHA_NUMERICAL_INPUT_INTERFACE = 110;
+	
+	/**
+	 * The interface sent to remove chat box interface input.
+	 */
+	public static final int REMOVE_INPUT_INTERFACE = 101;
+
 	
 	/**
 	 * The directory for the engine scripts.
