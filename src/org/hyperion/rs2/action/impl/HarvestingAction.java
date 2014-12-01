@@ -5,6 +5,7 @@ import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.definitions.ItemDefinition;
+import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -162,8 +163,7 @@ public abstract class HarvestingAction extends Action {
 			cycles--;
 			Item item = getHarvestedItem();
 			if(player.getInventory().hasRoomFor(item)) {
-				double random = Math.random();
-				if(totalCycles == 1 || random > getFactor()) {
+				if(totalCycles == 1 || Math.random() > getFactor()) {
 					if(getPeriodicRewards() ) {
 						giveRewards(player, item);
 					}
@@ -174,10 +174,7 @@ public abstract class HarvestingAction extends Action {
 				return;
 			}
 			if(cycles == 0) {
-				if (requiresReplacementObject()) {
-					//GameObject obj = new GameObject(getReplacementObject(), location.getX(), location.getY(), getObjectId(), getRespawnTime());
-					//player.getActionSender().sendObject(obj);
-				}
+				// TODO replace with expired object!
 				if(!getPeriodicRewards()) {
 					giveRewards(player, item);
 				}

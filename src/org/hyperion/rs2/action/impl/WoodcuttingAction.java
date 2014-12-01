@@ -1,8 +1,9 @@
-package org.hyperion.rs2.content.skills.woodcutting;
+package org.hyperion.rs2.action.impl;
 
 import java.util.Random;
 
-import org.hyperion.rs2.action.impl.HarvestingAction;
+import org.hyperion.rs2.content.skills.Woodcutting.Axe;
+import org.hyperion.rs2.content.skills.Woodcutting.Tree;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
@@ -48,6 +49,7 @@ public class WoodcuttingAction extends HarvestingAction {
 	/**
 	 * Creates the <code>WoodcuttingAction</code>.
 	 * @param player The player performing the action.
+	 * @param location The Location of the tree.
 	 * @param tree The tree.
 	 */
 	public WoodcuttingAction(Player player, Location location, Tree tree) {
@@ -124,7 +126,7 @@ public class WoodcuttingAction extends HarvestingAction {
 
 	@Override
 	public Animation getAnimation() {
-		return Animation.create(axe.getAnimation());
+		return Animation.create(879);//Animation.create(axe.getAnimation());
 	}
 
 	@Override
