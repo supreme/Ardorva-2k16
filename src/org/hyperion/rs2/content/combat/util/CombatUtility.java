@@ -84,7 +84,7 @@ public class CombatUtility {
 			attackAnimation = CombatAnimations.getAttackingAnimation(player);
 			blockAnimation = CombatAnimations.getDefensiveAnimation(player);
 			attackSpeed = AttackSpeeds.getAttackSpeed(player);
-			itemSet = ItemSets.get(player);
+			itemSet = ItemSets.NONE; //ItemSets.get(player);
 		} else {
 			NPC npc = (NPC) entity;
 			maxHit = npc.getDefinition().getMaxHit();

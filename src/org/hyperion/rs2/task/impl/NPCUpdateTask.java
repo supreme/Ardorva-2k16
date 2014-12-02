@@ -301,7 +301,7 @@ public class NPCUpdateTask implements Task {
 			mask |= 0x10;
 		}
 		if(flags.get(UpdateFlag.GRAPHICS)) {
-			mask |= 0x80;
+			mask |= 0x8;
 		}
 		if(flags.get(UpdateFlag.FACE_ENTITY)) {
 			mask |= 0x4;
@@ -340,7 +340,8 @@ public class NPCUpdateTask implements Task {
 			packet.putShort(entity == null ? -1 : entity.getClientIndex());
 		}
 		if(flags.get(UpdateFlag.FORCED_CHAT)) {
-			
+			packet.putRS2String(npc.getForcedChatMessage());
+
 		}
 		if(flags.get(UpdateFlag.HIT_2)) {
 			appendHit2Update(npc, packet);
@@ -351,11 +352,11 @@ public class NPCUpdateTask implements Task {
 		if(flags.get(UpdateFlag.FACE_COORDINATE)) {
 			Location loc = npc.getFaceLocation();
 			if(loc == null) {
-				packet.putLEShort(0);
-				packet.putLEShort(0);
+				packet.putShortA(0);
+				packet.putShort(0);
 			} else {
-				packet.putLEShort(loc.getX() * 2 + 1);
-				packet.putLEShort(loc.getY() * 2 + 1);
+				packet.putShortA(loc.getX() * 2 + 1);
+				packet.putShort(loc.getY() * 2 + 1);
 			}
 		}
 	}

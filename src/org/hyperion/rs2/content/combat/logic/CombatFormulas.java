@@ -24,7 +24,7 @@ import org.hyperion.rs2.model.player.Player;
  * here - http://services.runescape.com/m=rswiki/en/Maximum_Hit_Formula.
  * 
  * For the accuracy formulas, I found a fairly extensive explanation of how accuracy works.
- * All of the information used can be found here - http://runescape.wikia.com/wiki/Combat_Stats.
+ * All of the information used can be found here - http://runescape.wikia.com/wiki/Hit_chance.
  * @author Stephen Andrews
  */
 public class CombatFormulas {
@@ -120,6 +120,39 @@ public class CombatFormulas {
 		
 		return maxHit/10; //Divide by 10 because this formula is for x10 damage
 	}
+	
+	/**
+	 * Runs the specified level through the accuracy function.
+	 * @param level The level to run.
+	 * @return The accuracy function output.
+	 */
+	private static double runAccuracyFunction(int level) {
+		return (.0008 * Math.pow(level, 3)) + (4 * level) + 40;
+	}
+	
+	/**
+	 * 
+	 */
+	private static double calculateEntityAccuracy(Entity entity, AttackType type) {
+		if (entity instanceof NPC) {
+			//TODO
+			return -1;
+		} else {
+			Player player = (Player) entity;
+			double accuracy = 0;
+			int skillLevel = player.getSkills().getLevel(type.getSkillNumber());
+			Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
+			int requiredWeaponLevel = 1; //Required level to wield the weapon the player has equipped
+			
+			if (weapon != null) { //If player doesn't have a weapon move on, otherwise get the requirement
+				requiredWeaponLevel = weapon.getDefinition().getEquipmentDefinition().getRequirements()[type.getSkillNumber()];
+			}
+			
+			accuracy = runAccuracyFunction(skillLevel) + (2.5 * runAccuracyFunction(requiredWeaponLevel));
+			return accuracy;
+		}
+	}
+	
 	
 	/**
 	 * Calculates a player's offensive accuracy.

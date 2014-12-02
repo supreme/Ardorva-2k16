@@ -1,6 +1,6 @@
 package org.hyperion.rs2.model.npc;
 
-import org.hyperion.rs2.content.combat.util.CombatUtility;
+import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
@@ -38,6 +38,11 @@ public class NPC extends Entity {
 	private int ticksUntilSpawn;
 	
 	/**
+	 * The forced chat message.
+	 */
+	private String forcedChat;
+	
+	/**
 	 * Creates the NPC from the specified definition.
 	 * @param definition The definition.
 	 */
@@ -47,6 +52,7 @@ public class NPC extends Entity {
 		this.definition = definition;
 		this.health = definition.getHitpoints();
 		this.ticksUntilSpawn = definition.getRespawn();
+		setAutoRetaliating(true);
 	}
 	
 	/**
@@ -59,6 +65,7 @@ public class NPC extends Entity {
 		this.definition = NPCDefinition.forId(id);
 		this.health = definition.getHitpoints();
 		this.ticksUntilSpawn = definition.getRespawn();
+		setAutoRetaliating(true);
 	}
 	
 	/**
@@ -107,6 +114,34 @@ public class NPC extends Entity {
 	 */
 	public void setTicksUntilSpawn(int ticks) {
 		this.ticksUntilSpawn = ticks;
+	}
+	
+	/**
+	 * Creates the force chat mask.
+	 * 
+	 * @param message
+	 */
+	public void forceChat(String message) {
+		forcedChat = message;
+		getUpdateFlags().flag(UpdateFlag.FORCED_CHAT);
+	}
+
+	/**
+	 * Creates the force chat mask.
+	 * 
+	 * @param message
+	 */
+	public void setForceChat(String message) {
+		forcedChat = message;
+	}
+
+	/**
+	 * Gets the message to display with the force chat mask.
+	 * 
+	 * @return The message to display with the force chat mask.
+	 */
+	public String getForcedChatMessage() {
+		return forcedChat;
 	}
 
 	@Override

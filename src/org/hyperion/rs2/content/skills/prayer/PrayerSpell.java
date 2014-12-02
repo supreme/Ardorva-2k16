@@ -1,0 +1,36 @@
+package org.hyperion.rs2.content.skills.prayer;
+
+/**
+ * Enumeration of all the prayer spells that can be activated.
+ * @author Stephen Andrews
+ */
+public enum PrayerSpell {
+
+	THICK_SKIN,
+	BURST_OF_STRENGTH,
+	CLARITY_OF_THOUGHT,
+	SHARP_EYE,
+	MYSTIC_WILL,
+	ROCK_SKIN,
+	SUPERHUMAN_STRENGTH,
+	IMPROVED_REFLEXES,
+	RAPID_RESTORE,
+	RAPID_HEAL,
+	PROTECT_ITEM,
+	HAWK_EYE,
+	MYSTIC_LORE,
+	STEEL_SKIN,
+	ULTIMATE_STRENGTH,
+	INCREDIBLE_REFLEXES,
+	PROTECT_FROM_MAGIC,
+	PROTECT_FROM_MISSILES,
+	PROTECT_FROM_MELEE,
+	EAGLE_EYE,
+	MYSTIC_MIGHT,
+	RETRIBUTION,
+	REDEMPTION,
+	SMITE,
+	CHIVALRY,
+	PIETY;
+	
+}

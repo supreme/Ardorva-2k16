@@ -1,6 +1,8 @@
 package org.hyperion.rs2.model.object;
 
 import org.hyperion.rs2.model.Location;
+import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.region.Region;
 
 /**
  * Represents a game object in the world.
@@ -50,6 +52,11 @@ public class GameObject {
 	private String action;
 	
 	/**
+	 * The region the object is in.
+	 */
+	private Region region;
+	
+	/**
 	 * Constructs a game object.
 	 */
 	public GameObject(int id, Location location, int face, int type) {
@@ -59,6 +66,7 @@ public class GameObject {
 		this.z = location.getZ();
 		this.face = face;
 		this.type = type;
+		this.region = World.getWorld().getRegionManager().getRegionByLocation(location);
 	}
 	
 	/**
@@ -113,5 +121,13 @@ public class GameObject {
 		}
 		
 		return -1;
+	}
+	
+	/**
+	 * Gets the region the object is in.
+	 * @return The region the object is in.
+	 */
+	public Region getRegion() {
+		return region;
 	}
 }
