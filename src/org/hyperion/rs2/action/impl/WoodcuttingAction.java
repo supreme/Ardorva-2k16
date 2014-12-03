@@ -8,6 +8,7 @@ import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.Skills;
+import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 
 /**

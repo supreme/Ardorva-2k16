@@ -1,9 +1,11 @@
 package org.hyperion.rs2.action.impl;
 
 import org.hyperion.rs2.action.Action;
+import org.hyperion.rs2.event.impl.ObjectReplacementEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
+import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.ItemDefinition;
 import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
@@ -175,6 +177,9 @@ public abstract class HarvestingAction extends Action {
 			}
 			if(cycles == 0) {
 				// TODO replace with expired object!
+				GameObject original = new GameObject(getObjectId(), location, 0, 10);
+				GameObject replacement = new GameObject(getReplacementObject(), location, 0, 10);
+				World.getWorld().submit(new ObjectReplacementEvent(original, replacement, getRespawnTime() * 600));
 				if(!getPeriodicRewards()) {
 					giveRewards(player, item);
 				}

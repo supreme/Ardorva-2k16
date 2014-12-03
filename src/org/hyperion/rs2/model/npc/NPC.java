@@ -162,19 +162,17 @@ public class NPC extends Entity {
 	@Override
 	public void inflictDamage(Entity source, Hit hit) {
 		if (!getUpdateFlags().get(UpdateFlag.HIT)) {
-			getDamage().setHit1(hit);
 			setPrimaryHit(hit);
 			getUpdateFlags().flag(UpdateFlag.HIT);
 		} else {
 			if (!getUpdateFlags().get(UpdateFlag.HIT_2)) {
-				getDamage().setHit2(hit);
 				setSecondaryHit(hit);
 				getUpdateFlags().flag(UpdateFlag.HIT_2);
 			}
 		}
 		
 		health -= hit.getDamage();
-		if((source instanceof Entity) && (source != null)) {
+		/*if((source instanceof Entity) && (source != null)) {
 			this.getCombatUtility().setInCombat(true);
 			this.setInteractingEntity(source);
 			if (!this.isAnimimation()) {
@@ -182,8 +180,13 @@ public class NPC extends Entity {
 			}
 			if(this.isAutoRetaliating()) {
 				this.face(source.getLocation());
-				//this.getActionQueue().addAction(new MeleeAction(this, source));
+				this.getActionQueue().addAction(new MeleeAction(this, source));
 			}
+		}*/
+		
+		if(this.isAutoRetaliating()) {
+			this.face(source.getLocation());
+			this.getActionQueue().addAction(new MeleeAction(this, source));
 		}
 		
 		if (health <= 0) {

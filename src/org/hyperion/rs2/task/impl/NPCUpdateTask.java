@@ -6,6 +6,7 @@ import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Location;
+import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
@@ -293,6 +294,13 @@ public class NPCUpdateTask implements Task {
 		 */
 		int mask = 0;
 		final UpdateFlags flags = npc.getUpdateFlags();
+		double max = npc.getDefinition().getHitpoints();
+		double hp = npc.getHealth();
+		double calc = hp / max;
+		int percentage = (int) (calc * 100);
+		if(percentage > 100) {
+			percentage = 100;
+		}
 		
 		if(flags.get(UpdateFlag.ANIMATION)) {
 			mask |= 0x40;
@@ -369,9 +377,10 @@ public class NPCUpdateTask implements Task {
 		if(percentage > 100) {
 			percentage = 100;
 		}
+		
 		Hit hit = npc.getPrimaryHit();
 		updateBlock.putByteS((byte) hit.getDamage());
-		updateBlock.putByteA((byte) hit.getType().getType());
+		updateBlock.putByteA((byte) hit.getType().getId());
 		updateBlock.putByteA((byte) percentage);
 		updateBlock.putByteS((byte) 100);
 	}
@@ -384,9 +393,10 @@ public class NPCUpdateTask implements Task {
 		if(percentage > 100) {
 			percentage = 100;
 		}
+		
 		Hit hit = npc.getSecondaryHit();
 		updateBlock.put((byte) hit.getDamage());
-		updateBlock.putByteA((byte) hit.getType().getType());
+		updateBlock.putByteA((byte) hit.getType().getId());
 		updateBlock.put((byte) percentage);
 		updateBlock.put((byte) 100);
 	}

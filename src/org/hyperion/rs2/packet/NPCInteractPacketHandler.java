@@ -74,7 +74,9 @@ public class NPCInteractPacketHandler implements PacketHandler {
 		}
 		
 		Logger.getLogger(this.getClass().getName()).info(player.getName() + " attacked npc: " + npc.getDefinition().getId() + ", at location: " + npc.getLocation().toString());
-		player.addInteractAction(npc.getLocation(), new MeleeAction(player, npc));
+		//player.addInteractAction(npc.getLocation(), new MeleeAction(player, npc));
+		npc.getActionQueue().addAction(new MeleeAction(npc, player));
+
 	}
 	
 	/**

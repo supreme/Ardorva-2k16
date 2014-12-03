@@ -81,6 +81,7 @@ public abstract class CombatAction extends Action {
 	 * @param damage The damage to inflict.
 	 */
 	public void inflictDamage(Entity entity, Hit damage) {
+		System.out.println("HIT - Damage: " + damage.getDamage() + " Type: " + damage.getType().getId());
 		entity.inflictDamage(aggressor, damage);
 		entity.getDamageMap().appendDamage(aggressor, damage.getDamage());
 	}

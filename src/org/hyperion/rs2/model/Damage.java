@@ -32,7 +32,7 @@ public class Damage {
 		 * Get the damage type.
 		 * @return The damage type, as an <code>int</code>.
 		 */
-		public int getType() {
+		public int getId() {
 			return this.type;
 		}
 	}
@@ -111,16 +111,16 @@ public class Damage {
 	 */
 	public int getHitType1() {
 		if(hit1 == null) {
-			return HitType.NO_DAMAGE.getType();
+			return HitType.NO_DAMAGE.getId();
 		}
-		return hit1.type.getType();
+		return hit1.type.getId();
 	}
 	
 	public int getHitType2() {
 		if(hit2 == null) {
-			return HitType.NO_DAMAGE.getType();
+			return HitType.NO_DAMAGE.getId();
 		}
-		return hit2.type.getType();
+		return hit2.type.getId();
 	}
 	
 	/**

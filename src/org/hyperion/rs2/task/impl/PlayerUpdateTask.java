@@ -5,9 +5,11 @@ import java.util.Iterator;
 import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
+import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
+import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
@@ -281,19 +283,37 @@ public class PlayerUpdateTask implements Task {
 		packet.putBits(5, xPos);
 	}
 	
-    private static void appendHit2Update(final Player p, final PacketBuilder updateBlock) {
-    	updateBlock.putByteA((byte) p.getDamage().getHitDamage2());
-    	updateBlock.putByteS((byte) p.getDamage().getHitType2());
-    	updateBlock.putByteS((byte) p.getSkills().getLevel(3));
-    	updateBlock.putByteS((byte) p.getSkills().getLevelForExperience(3));
-    }
+	/**
+	 * Appends a hit 2 update.
+	 * 
+	 * @param block
+	 *            The update block.
+	 * @param otherPlayer
+	 *            The player.
+	 */
+	private void appendHit2Update(PacketBuilder block, Player otherPlayer) {
+		Hit secondary = player.getSecondaryHit();
+		block.putByteA((byte) secondary.getDamage());
+		block.putByteS((byte) secondary.getType().getId());
+		block.putByteS((byte) player.getSkills().getLevel(Skills.HITPOINTS));
+		block.putByteS((byte) player.getSkills().getLevelForExperience(Skills.HITPOINTS));
+	}
 
-    private static void appendHitUpdate(final Player p, final PacketBuilder updateBlock) {
-    	updateBlock.putByteS((byte) p.getDamage().getHitDamage1());
-    	updateBlock.putByteS((byte) p.getDamage().getHitType1());
-    	updateBlock.putByteA((byte) p.getSkills().getLevel(3));
-    	updateBlock.putByteA((byte) p.getSkills().getLevelForExperience(3));
-    }
+	/**
+	 * Appends a hit update.
+	 * 
+	 * @param block
+	 *            The update block.
+	 * @param otherPlayer
+	 *            The player.
+	 */
+	private void appendHitUpdate(PacketBuilder block, Player otherPlayer) {
+    	Hit primary = player.getPrimaryHit();
+    	block.putByteS((byte) primary.getDamage());
+    	block.putByteS((byte) primary.getType().getId());
+    	block.putByteA((byte) player.getSkills().getLevel(Skills.HITPOINTS));
+    	block.putByteA((byte) player.getSkills().getLevelForExperience(Skills.HITPOINTS));
+	}
 
 	/**
 	 * Updates a player.
@@ -376,14 +396,14 @@ public class PlayerUpdateTask implements Task {
 				/*
 				 * Write it as a byte.
 				 */
-				block.put((byte) (mask));
+				block.put((byte) (mask & 0xFF));
 			}
 			
 			/*
 			 * Append the appropriate updates.
 			 */
 			if(flags.get(UpdateFlag.HIT)) {
-				appendHitUpdate(otherPlayer, block);
+				appendHitUpdate(block, otherPlayer);
 			}
 			if(flags.get(UpdateFlag.GRAPHICS)) {
 				appendGraphicsUpdate(block, otherPlayer);
@@ -415,7 +435,7 @@ public class PlayerUpdateTask implements Task {
 				appendChatUpdate(block, otherPlayer);
 			}
 			if(flags.get(UpdateFlag.HIT_2)) {
-				appendHit2Update(otherPlayer, block);
+				appendHit2Update(block, otherPlayer);
 			}
 			if(flags.get(UpdateFlag.APPEARANCE) || forceAppearance) {
 				appendPlayerAppearanceUpdate(block, otherPlayer);

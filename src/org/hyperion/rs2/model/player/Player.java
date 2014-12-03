@@ -617,23 +617,24 @@ public class Player extends Entity implements Persistable {
 	@Override
 	public void inflictDamage(Entity source, Hit hit) {
 		if(!getUpdateFlags().get(UpdateFlag.HIT)) {
-			getDamage().setHit1(hit);
+			setPrimaryHit(hit);
 			getUpdateFlags().flag(UpdateFlag.HIT);
 		} else {
 			if(!getUpdateFlags().get(UpdateFlag.HIT_2)) {
-				getDamage().setHit2(hit);
+				setSecondaryHit(hit);
 				getUpdateFlags().flag(UpdateFlag.HIT_2);
 			}
 		}
+		
 		skills.detractLevel(Skills.HITPOINTS, hit.getDamage());
-		if((source instanceof Entity) && (source != null)) {
+		/*if((source instanceof Entity) && (source != null)) {
 			this.setInCombat(true);
 			this.setAggressorState(false);
 			if(this.isAutoRetaliating()) {
 				this.face(source.getLocation());
-				this.getActionQueue().addAction(new MeleeAction(this, source));
+				//this.getActionQueue().addAction(new MeleeAction(this, source));
 			}
-		}
+		}*/
 		if(skills.getLevel(Skills.HITPOINTS) <= 0) {
 			if(!this.isDead()) {
 				World.getWorld().submit(new DeathEvent(this));

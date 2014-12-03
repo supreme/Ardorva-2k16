@@ -20,7 +20,8 @@ public class Woodcutting {
 				return false;
 			
 			WoodcuttingAction wcAction = new WoodcuttingAction(player, object.getLocation(), tree);
-			wcAction.execute();
+			player.getActionQueue().addAction(wcAction);
+			//wcAction.execute();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
