@@ -1,7 +1,8 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.action.Action;
-import org.hyperion.rs2.content.skills.Woodcutting;
+import org.hyperion.rs2.content.skills.woodcutting.Tree;
+import org.hyperion.rs2.content.skills.woodcutting.WoodcuttingAction;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.container.Bank;
 import org.hyperion.rs2.model.object.GameObject;
@@ -46,6 +47,13 @@ public class ObjectOptionPacketHandler implements PacketHandler {
 		GameObject object = new GameObject(id, loc, 0, 10);
 		System.out.println("First click object ID: "+id+", x: "+x+", y: "+y);
 		
+		/* Do the skilling actions before interactions, concurrent modifcation otherwise */
+		Tree tree = Tree.forId(id);
+		if (tree != null) {
+			player.addInteractAction(loc, new WoodcuttingAction(player, object, tree));
+			return;
+		}
+		
 		/* Create the interaction action */
 		Action objectInteract1 = new Action(player, 0, true) {
 
@@ -60,13 +68,10 @@ public class ObjectOptionPacketHandler implements PacketHandler {
 			}
 
 			@Override
-			public void execute() {
+			public void execute() {				
 				switch(id) {
 				case 26972:
 					Bank.open(player);
-					break;
-				case 1276:
-					new Woodcutting(player, object).cutTree();
 					break;
 				default:
 					player.getActionSender().sendMessage("Unhandled object first click | Id: " + id);

@@ -7,6 +7,7 @@ import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.Skills;
+import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -96,11 +97,11 @@ public class MiningAction extends HarvestingAction {
 			return;
 		}
 		player.getActionSender().sendMessage("Clicked ore: " + node.getNodeId() + " Exhausted ore: " + getReplacementObject());
-		if(node.getNodeId() == getReplacementObject()) {
+		/*if(node.getNodeId() == getReplacementObject()) {
 			player.getActionSender().sendMessage("This rock's resources have been exhausted.");
 			stop();
 			return;
-		}
+		}*/
 		player.getActionSender().sendMessage("You swing your pick at the rock...");
 		cycleCount = calculateCycles(player, node, pickaxe);
 		factor = factor * factorBoost(player, pickaxe);
@@ -182,22 +183,24 @@ public class MiningAction extends HarvestingAction {
 	}
 
 	@Override
-	public int getReplacementObject() {
-		return node.getReplacementObject();
-	}
-
-	@Override
 	public boolean requiresReplacementObject() {
 		return REPLACEMENT;
 	}
-
-	@Override
-	public int getObjectId() {
-		return node.getNodeId();
-	}
-
+	
 	@Override
 	public int getRespawnTime() {
 		return node.getOreReplacementTime();
+	}
+
+	@Override
+	public GameObject getObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GameObject getReplacementObject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

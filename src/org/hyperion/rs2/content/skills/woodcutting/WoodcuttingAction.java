@@ -1,12 +1,11 @@
-package org.hyperion.rs2.action.impl;
+package org.hyperion.rs2.content.skills.woodcutting;
 
 import java.util.Random;
 
-import org.hyperion.rs2.content.skills.Woodcutting.Axe;
-import org.hyperion.rs2.content.skills.Woodcutting.Tree;
+import org.hyperion.Server;
+import org.hyperion.rs2.action.impl.HarvestingAction;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
-import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
@@ -14,9 +13,10 @@ import org.hyperion.rs2.model.player.Player;
 /**
  * The action taken when woodcutting.
  * @author Graham Edgecomb
- * @author Stephen
+ * @author Stephen Andrews
  */
 public class WoodcuttingAction extends HarvestingAction {
+	
 	/**
 	 * The delay.
 	 */
@@ -43,6 +43,11 @@ public class WoodcuttingAction extends HarvestingAction {
 	private Axe axe;
 	
 	/**
+	 * The object the woodcutting action is being invoked on.
+	 */
+	private GameObject object;
+	
+	/**
 	 * The tree type.
 	 */
 	private Tree tree;
@@ -50,11 +55,12 @@ public class WoodcuttingAction extends HarvestingAction {
 	/**
 	 * Creates the <code>WoodcuttingAction</code>.
 	 * @param player The player performing the action.
-	 * @param location The Location of the tree.
+	 * @param object The tree object being cut.
 	 * @param tree The tree.
 	 */
-	public WoodcuttingAction(Player player, Location location, Tree tree) {
-		super(player, location);
+	public WoodcuttingAction(Player player, GameObject object, Tree tree) {
+		super(player, object.getLocation());
+		this.object = object;
 		this.tree = tree;
 	}
 	
@@ -111,11 +117,6 @@ public class WoodcuttingAction extends HarvestingAction {
 	}
 	
 	@Override
-	public int getReplacementObject() {
-		return tree.getReplacementObject();
-	}
-	
-	@Override
 	public Item getHarvestedItem() {
 		return new Item(tree.getLogId(), 1);
 	}
@@ -136,12 +137,17 @@ public class WoodcuttingAction extends HarvestingAction {
 	}
 	
 	@Override
-	public int getObjectId() {
-		return tree.getTreeId();
-	}
-	
-	@Override
 	public int getRespawnTime() {
-		return tree.getStumpTime();
+		return tree.getStumpTime() * Server.CYCLE_TIME;
+	}
+
+	@Override
+	public GameObject getObject() {
+		return object;
+	}
+
+	@Override
+	public GameObject getReplacementObject() {
+		return new GameObject(tree.getStump(), object.getLocation(), object.getFace(), object.getType());
 	}
 }

@@ -74,10 +74,10 @@ public abstract class HarvestingAction extends Action {
 	public abstract double getFactor();
 	
 	/**
-	 * Gets the replacement object id.
+	 * Gets the replacement object.
 	 * @return The object.
 	 */
-	public abstract int getReplacementObject();
+	public abstract GameObject getReplacementObject();
 	
 	/**
 	 * Gets the respawn time of the object.
@@ -110,10 +110,10 @@ public abstract class HarvestingAction extends Action {
 	public abstract Animation getAnimation();
 	
 	/**
-	 * Gets the object's id.
-	 * @return The object id.
+	 * Gets the object the harvesting action is focusing on.
+	 * @return The object.
 	 */
-	public abstract int getObjectId();
+	public abstract GameObject getObject();
 	
 	/**
 	 * Gets replacement object.
@@ -176,10 +176,9 @@ public abstract class HarvestingAction extends Action {
 				return;
 			}
 			if(cycles == 0) {
-				// TODO replace with expired object!
-				GameObject original = new GameObject(getObjectId(), location, 0, 10);
-				GameObject replacement = new GameObject(getReplacementObject(), location, 0, 10);
-				World.getWorld().submit(new ObjectReplacementEvent(original, replacement, getRespawnTime() * 600));
+				if (requiresReplacementObject()) {
+					World.getWorld().submit(new ObjectReplacementEvent(getObject(), getReplacementObject(), getRespawnTime()));
+				}
 				if(!getPeriodicRewards()) {
 					giveRewards(player, item);
 				}
