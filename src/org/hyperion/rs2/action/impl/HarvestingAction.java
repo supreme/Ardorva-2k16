@@ -42,7 +42,7 @@ public abstract class HarvestingAction extends Action {
 	
 	@Override
 	public QueuePolicy getQueuePolicy() {
-		return QueuePolicy.ALWAYS;
+		return QueuePolicy.NEVER;
 	}
 	
 	@Override

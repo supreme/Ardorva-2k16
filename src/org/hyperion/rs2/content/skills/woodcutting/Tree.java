@@ -26,7 +26,7 @@ public enum Tree {
 		/**
 		 * Oak tree.
 		 */
-		OAK(1521, 1356, 2, 5, 75, new short[] { 1281, 3037 }),
+		OAK(1521, 1356, 15, 15, 75, new short[] { 1281, 3037 }),
 		
 		/**
 		 * Magic tree.

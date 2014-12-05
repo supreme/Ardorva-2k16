@@ -83,10 +83,24 @@ public class WoodcuttingAction extends HarvestingAction {
 	public void init() {
 		final Player player = getPlayer();
 		final int wc = player.getSkills().getLevel(Skills.WOODCUTTING);
+		boolean foundAxe = false;
+		
+		/* If we don't separate these loops, it takes the axe in the 
+		 * inventory instead of prioritizing the player's equipped axe.
+		 */
 		for(Axe axe : Axe.values()) {
-			if((player.getEquipment().contains(axe.getId()) || player.getInventory().contains(axe.getId())) && wc >= axe.getRequiredLevel()) {
+			if(player.getEquipment().contains(axe.getId()) && wc >= axe.getRequiredLevel()) {
 				this.axe = axe;
+				foundAxe = true;
 				break;
+			}
+		}
+		if (!foundAxe) {
+			for (Axe axe: Axe.values()) {
+				if (player.getInventory().contains(axe.getId()) && wc >= axe.getRequiredLevel()) {
+					this.axe = axe;
+					break;
+				}
 			}
 		}
 		if(axe == null) {
@@ -128,7 +142,7 @@ public class WoodcuttingAction extends HarvestingAction {
 
 	@Override
 	public Animation getAnimation() {
-		return Animation.create(879);//Animation.create(axe.getAnimation());
+		return Animation.create(axe.getAnimation());
 	}
 
 	@Override

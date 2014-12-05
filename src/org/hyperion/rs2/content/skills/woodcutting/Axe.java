@@ -10,6 +10,11 @@ import java.util.Map;
 public enum Axe {
 
 		/**
+		 * Dragon axe.
+		 */
+		DRAGON(6739, 61, 2846),
+	
+		/**
 		 * Rune axe.
 		 */
 		RUNE(1359, 41, 867),
