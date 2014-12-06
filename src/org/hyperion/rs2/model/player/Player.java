@@ -8,7 +8,7 @@ import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
 import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.action.impl.DistancedAction;
-import org.hyperion.rs2.content.combat.impl.MeleeAction;
+import org.hyperion.rs2.content.skills.prayer.PrayerManager;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Appearance;
 import org.hyperion.rs2.model.ChatMessage;
@@ -249,6 +249,11 @@ public class Player extends Entity implements Persistable {
 	 */
 	private Bonuses bonuses = new Bonuses(this);
 	
+	/**
+	 * The player's <code>PrayerManager</code> for activating prayer spells.
+	 */
+	private PrayerManager prayerManager = new PrayerManager(this);
+	
 	/*
 	 * Cached details.
 	 */
@@ -427,6 +432,14 @@ public class Player extends Entity implements Persistable {
 	 */
 	public Bonuses getBonuses() {
 		return bonuses;
+	}
+	
+	/**
+	 * Gets the player's prayer manager.
+	 * @return The prayer manager.
+	 */
+	public PrayerManager getPrayerManager() {
+		return prayerManager;
 	}
 	
 	/**

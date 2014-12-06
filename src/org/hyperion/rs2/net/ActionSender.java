@@ -124,7 +124,11 @@ public class ActionSender {
 		PacketBuilder bldr = new PacketBuilder(190);
 		bldr.putByteS((byte) skill);
 		bldr.putLEInt((int) player.getSkills().getExperience(skill));
-		bldr.put((byte) player.getSkills().getLevel(skill));
+		if(skill == Skills.PRAYER) {
+			bldr.put((byte) Math.ceil(player.getSkills().getPrayerPoints()));
+		} else {
+			bldr.put((byte) player.getSkills().getLevel(skill));
+		}
 		player.write(bldr.toPacket());
 		return this;
 	}

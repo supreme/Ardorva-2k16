@@ -57,6 +57,11 @@ public class Skills {
 	private double[] exps = new double[SKILL_COUNT];
 	
 	/**
+	 * The prayer points of the player.
+	 */
+	private int prayerPoints;
+	
+	/**
 	 * Creates a skills object.
 	 * @param player The player whose skills this object represents.
 	 */
@@ -68,6 +73,7 @@ public class Skills {
 		}
 		levels[3] = 10;
 		exps[3] = 1184;
+		prayerPoints = 99; //TODO: Save and load - Stephen
 	}
 	
 	/**
@@ -295,5 +301,12 @@ public class Skills {
 		}
 		player.getActionSender().sendSkill(skill);
 	}
-
+	
+	/**
+	 * Gets the player's prayer points.
+	 * @return The prayer points.
+	 */
+	public int getPrayerPoints() {
+		return prayerPoints;
+	}
 }

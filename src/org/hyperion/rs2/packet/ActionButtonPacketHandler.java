@@ -34,6 +34,9 @@ public class ActionButtonPacketHandler implements PacketHandler {
 			buttonId2 = 0;
 		}
 		switch(interfaceId) {
+		case 271: //Prayer tab
+			player.getPrayerManager().activateSpell(buttonId);
+			break;
 		case 12: //Bank
 			switch(buttonId) {
 			case 10: //Noted items

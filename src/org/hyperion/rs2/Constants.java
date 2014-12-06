@@ -57,6 +57,10 @@ public class Constants {
 	 */
 	public static final int REMOVE_INPUT_INTERFACE = 101;
 
+	/**
+	 * The configuration ids for the 'off'/'on' state.
+	 */
+	public static final int  CONFIG_OFF = 0, CONFIG_ON = 1;
 	
 	/**
 	 * The directory for the engine scripts.
