@@ -78,6 +78,7 @@ public class PrayerManager {
 			activeSpells.remove(spell);
 		} else {
 			/* Remove any conflicting spells */
+			long start = System.currentTimeMillis();
 			for (int i = 0; i < activeSpells.size(); i++)  {
 				PrayerSpell activated = activeSpells.get(i);
 				for (int modifier : spell.getModifiedSkills()) {
@@ -88,6 +89,8 @@ public class PrayerManager {
 					}
 				}
 			}
+			long elapsed = System.currentTimeMillis() - start;
+			player.getActionSender().sendMessage("Took " + elapsed + "ms to toggle prayer spell.");
 			
 			player.getActionSender().sendConfig(configId, Constants.CONFIG_ON);
 			activeSpells.add(spell);
