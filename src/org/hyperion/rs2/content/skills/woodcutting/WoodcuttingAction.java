@@ -20,12 +20,7 @@ public class WoodcuttingAction extends HarvestingAction {
 	/**
 	 * The delay.
 	 */
-	private static final int DELAY = 3000;
-	
-	/**
-	 * The factor.
-	 */
-	private static final double FACTOR = 0.5;
+	private static final int DELAY = 1200;
 	
 	/**
 	 * Whether or not this action requires an object replacement.
@@ -121,13 +116,8 @@ public class WoodcuttingAction extends HarvestingAction {
 		if(tree == Tree.NORMAL) {
 			return 1;
 		} else {
-			return new Random().nextInt(5) + 5; //Not working properly - got 2 logs
+			return new Random().nextInt(50) + 5; //Not working properly - got 2 logs
 		}
-	}
-
-	@Override
-	public double getFactor() {
-		return FACTOR;
 	}
 	
 	@Override
@@ -163,5 +153,24 @@ public class WoodcuttingAction extends HarvestingAction {
 	@Override
 	public GameObject getReplacementObject() {
 		return new GameObject(tree.getStump(), object.getLocation(), object.getFace(), object.getType());
+	}
+
+	@Override
+	public boolean willReceiveReward() {
+		/* 3 modifiers of the woodcutting skill */
+		double axeEfficiency = axe.getRequiredLevel();
+		double treeDifficulty = tree.getRequiredLevel();
+		double skillLevel = getPlayer().getSkills().getLevel(Skills.WOODCUTTING);
+		
+		/* The random chance rolled */
+		double roll = Math.random() * 100;
+		
+		/* Calculate the player's chance */
+		double calculatedEfficiency = (treeDifficulty * 2) * (treeDifficulty / skillLevel) * (1 - (axeEfficiency / 100));
+		double chance = 100.0 - calculatedEfficiency;
+		
+		getPlayer().getActionSender().sendMessage("Chance to receive log: " + chance + " Random roll: " + roll);
+		
+		return chance >= roll;
 	}
 }

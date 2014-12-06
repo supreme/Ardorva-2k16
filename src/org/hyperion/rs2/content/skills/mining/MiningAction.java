@@ -13,7 +13,7 @@ import org.hyperion.rs2.model.player.Player;
 /**
  * An action for mining.
  * @author Graham Edgecombe
- * @author Stephen
+ * @author Stephen Andrews
  */
 public class MiningAction extends HarvestingAction {
 	/**
@@ -158,11 +158,6 @@ public class MiningAction extends HarvestingAction {
 	}
 
 	@Override
-	public double getFactor() {
-		return factor;
-	}
-
-	@Override
 	public Item getHarvestedItem() {
 		return new Item(node.getOreId(), 1);
 	}
@@ -202,5 +197,11 @@ public class MiningAction extends HarvestingAction {
 	public GameObject getReplacementObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean willReceiveReward() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

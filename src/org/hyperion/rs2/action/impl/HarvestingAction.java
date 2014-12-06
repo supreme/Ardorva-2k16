@@ -68,12 +68,6 @@ public abstract class HarvestingAction extends Action {
 	public abstract int getCycles();
 	
 	/**
-	 * Gets the success factor.
-	 * @return The success factor.
-	 */
-	public abstract double getFactor();
-	
-	/**
 	 * Gets the replacement object.
 	 * @return The object.
 	 */
@@ -128,6 +122,15 @@ public abstract class HarvestingAction extends Action {
 	public abstract boolean getPeriodicRewards();
 	
 	/**
+	 * Determines if the reward will be given on that cycle.
+	 * Used for skills such as woodcutting where a better axe and higher
+	 * woodcutting level yields a higher chance of receiving a log on any
+	 * given cycle.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	public abstract boolean willReceiveReward();
+	
+	/**
 	 * The total number of cycles.
 	 */
 	private int totalCycles;
@@ -165,8 +168,8 @@ public abstract class HarvestingAction extends Action {
 			cycles--;
 			Item item = getHarvestedItem();
 			if(player.getInventory().hasRoomFor(item)) {
-				if(totalCycles == 1 || Math.random() > getFactor()) {
-					if(getPeriodicRewards() ) {
+				if(totalCycles == 1 || willReceiveReward()) {
+					if(getPeriodicRewards()) {
 						giveRewards(player, item);
 					}
 				}
