@@ -16,9 +16,8 @@ public class Test implements Command {
 
 	@Override
 	public void invoke(Player player, String[] args) {
-		GameObject original = new GameObject(1278, Location.create(3097, 3537, 0), 0, 10);
-		GameObject replacement = new GameObject(1342, Location.create(3097, 3537, 0), 0, 10);
-		World.getWorld().submit(new ObjectReplacementEvent(original, replacement, 6000));
+		player.getSkills().setLevel(5, 99);
+		//player.getSkills().setPrayerPoints(99);
 	}
 
 	@Override

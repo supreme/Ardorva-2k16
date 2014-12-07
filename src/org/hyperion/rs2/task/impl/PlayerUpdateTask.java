@@ -507,7 +507,7 @@ public class PlayerUpdateTask implements Task {
 		PacketBuilder playerProps = new PacketBuilder();
 		playerProps.put((byte) app.getGender()); // gender
 		playerProps.put((byte) -1); // skull icon
-		playerProps.put((byte) -1); // skull icon
+		playerProps.put((byte) player.getPrayerManager().getHeadIcon()); // skull icon
 		
 		for(int i = 0; i < 4; i++) {
 			if(eq.isSlotUsed(i)) {
