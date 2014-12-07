@@ -73,7 +73,7 @@ public class Skills {
 		}
 		levels[3] = 10;
 		exps[3] = 1184;
-		prayerPoints = 99; //TODO: Save and load - Stephen
+		prayerPoints = 1; //TODO: Save and load - Stephen
 	}
 	
 	/**

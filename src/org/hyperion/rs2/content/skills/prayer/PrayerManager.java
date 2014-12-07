@@ -3,6 +3,7 @@ package org.hyperion.rs2.content.skills.prayer;
 import java.util.ArrayList;
 
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.player.Player;
 
@@ -71,7 +72,22 @@ public class PrayerManager {
 			return;
 		}
 		
-		toggleSpell(spell);
+		/* Check to see if the player can toggle the spell */
+		if (canToggle(spell)) {
+			toggleSpell(spell);
+		}
+	}
+	
+	/**
+	 * Determines whether or not the player can toggle the specified spell.
+	 * @return <code>true</code> if so, <code>false</code> if not.
+	 */
+	private boolean canToggle(PrayerSpell spell) {
+		if (player.getSkills().getLevelForExperience(Skills.PRAYER) < spell.getRequiredLevel()) {
+			player.getActionSender().sendMessage("You need a prayer level of " + spell.getRequiredLevel() + " to activate this spell.");
+		}
+		
+		return true;
 	}
 	
 	/**

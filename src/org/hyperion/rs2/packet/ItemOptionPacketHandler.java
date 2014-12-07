@@ -1,11 +1,13 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.content.skills.prayer.BoneBurying;
 import org.hyperion.rs2.model.GroundItem;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Equipment;
+import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
 
@@ -42,6 +44,12 @@ public class ItemOptionPacketHandler implements PacketHandler {
 	private static final int OPTION_5 = 135;
 	
 	/**
+	 * Click 1 opcode.
+	 */
+	private static final int CLICK_1 = 101;
+
+	
+	/**
 	 * The item dropping opcode.
 	 */
 	private static final int DROP_ITEM = 247;
@@ -68,6 +76,9 @@ public class ItemOptionPacketHandler implements PacketHandler {
 			break;
 		case OPTION_5:
 			handleItemOption5(player, packet);
+			break;
+		case CLICK_1:
+			handleItemOptionClick1(player, packet);
 			break;
 		case DROP_ITEM:
 			handleDropItem(player, packet);
@@ -203,6 +214,34 @@ public class ItemOptionPacketHandler implements PacketHandler {
 			}
 			break;*/
 		}
+	}
+	
+	/**
+	 * Handles the click 1 opcode.
+	 * @param player The player clicking the item.
+	 * @param packet The packet.
+	 */
+	private void handleItemOptionClick1(Player player, Packet packet) {
+		int interfaceId = packet.getInt1() >> 16;
+		int slot = packet.getLEShort();
+		int id = packet.getLEShort();
+		Item item = player.getInventory().get(slot);
+		if (player.isDead()) {
+			return;
+		}
+		
+		player.getActionSender().sendDebugPacket(
+				packet.getOpcode(),
+				"ItemClick1",
+				new Object[] { "ID: " + id,
+						"Interface: " + interfaceId + "Slot:" + slot });
+
+		switch(interfaceId) {
+		case Inventory.INTERFACE:
+			BoneBurying.buryBone(player, slot);
+			break;
+		}
+		
 	}
 	
 	/**

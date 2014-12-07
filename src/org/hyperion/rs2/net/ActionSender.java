@@ -116,6 +116,32 @@ public class ActionSender {
 	}
 	
 	/**
+	 * Sends a debug message.
+	 * @param message The message to send.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendDebugMessage(String message) {
+		return Constants.DEV_MODE ? sendMessage("<col=ff0000>" + message) : this;
+	}
+	
+	/**
+	 * Sends a debug message.
+	 * @param message The message to send.
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendDebugPacket(int opCode, String description, Object[] params) {
+		String paramString = "";
+		for(Object object : params) {
+			paramString += object.toString() + "    ";
+		}
+		return sendDebugMessage("------------------------------------------------------------------------------------------")
+			  .sendDebugMessage("Pkt            " + opCode + "  " + description)
+			  .sendDebugMessage("------------------------------------------------------------------------------------------")
+			  .sendDebugMessage("Params    " + paramString)
+			  .sendDebugMessage("------------------------------------------------------------------------------------------");
+	}
+	
+	/**
 	 * Sends a specific skill.
 	 * @param skill The skill to send.
 	 * @return The action sender instance, for chaining.
