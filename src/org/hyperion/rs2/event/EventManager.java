@@ -3,6 +3,8 @@ package org.hyperion.rs2.event;
 import java.util.concurrent.TimeUnit;
 
 import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.action.Action;
+import org.hyperion.rs2.action.Action.WalkablePolicy;
 
 /**
  * A class that manages <code>Event</code>s for a specific

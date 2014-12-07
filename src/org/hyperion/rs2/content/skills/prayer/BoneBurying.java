@@ -3,13 +3,10 @@ package org.hyperion.rs2.content.skills.prayer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.action.Action;
-import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.Skills;
-import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -127,8 +124,7 @@ public class BoneBurying {
 			 * Frost dragon bones (#614).
 			 */
 			FROST_DRAGON(18830, 180);
-			
-			
+				
 			/**
 			 * The id.
 			 */
@@ -194,6 +190,7 @@ public class BoneBurying {
 		
 		/* Start the animation */
 		player.playAnimation(BURY_ANIMATION);
+		player.getWalkingQueue().reset();
 		
 		/* Execute the burying action */
 		player.getActionQueue().addAction(new Action(player, BURY_TIME, false) {

@@ -261,7 +261,7 @@ public class ItemOptionPacketHandler implements PacketHandler {
 		Item item = player.getInventory().get(slot);
 		if (item != null) {
 			GroundItem groundItem = new GroundItem(item, player, player.getLocation(), player.getRegion(), false);
-			player.getInventory().remove(item);
+			player.getInventory().set(slot, null);
 			player.getActionSender().sendGroundItem(groundItem);
 			player.getRegion().addGroundItem(groundItem);
 		}

@@ -309,6 +309,8 @@ public class PlayerUpdateTask implements Task {
 	 */
 	private void appendHitUpdate(PacketBuilder block, Player otherPlayer) {
     	Hit primary = player.getPrimaryHit();
+    	System.out.println("Player hit update: {" + primary.getDamage() + ", " + primary.getType().getId() 
+    			+ ", " + player.getSkills().getLevel(Skills.HITPOINTS) + ", " + player.getSkills().getLevelForExperience(Skills.HITPOINTS) + "}");
     	block.putByteS((byte) primary.getDamage());
     	block.putByteS((byte) primary.getType().getId());
     	block.putByteA((byte) player.getSkills().getLevel(Skills.HITPOINTS));

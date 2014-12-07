@@ -379,6 +379,8 @@ public class NPCUpdateTask implements Task {
 		}
 		
 		Hit hit = npc.getPrimaryHit();
+		System.out.println("NPC hit update: {" + hit.getDamage() + ", " + hit.getType().getId() 
+    			+ ", " + percentage + "}");
 		updateBlock.putByteS((byte) hit.getDamage());
 		updateBlock.putByteA((byte) hit.getType().getId());
 		updateBlock.putByteA((byte) percentage);
@@ -395,6 +397,8 @@ public class NPCUpdateTask implements Task {
 		}
 		
 		Hit hit = npc.getSecondaryHit();
+		System.out.println("NPC hit 2 update: {" + hit.getDamage() + ", " + hit.getType().getId() 
+    			+ ", " + percentage + "}");
 		updateBlock.put((byte) hit.getDamage());
 		updateBlock.putByteA((byte) hit.getType().getId());
 		updateBlock.put((byte) percentage);
