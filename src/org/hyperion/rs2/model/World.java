@@ -1,29 +1,18 @@
 package org.hyperion.rs2.model;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
 import org.apache.mina.core.future.IoFuture;
 import org.apache.mina.core.future.IoFutureListener;
-import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.GameEngine;
-import org.hyperion.rs2.GenericWorldLoader;
-import org.hyperion.rs2.LivingClasses;
-import org.hyperion.rs2.WorldLoader;
+import org.hyperion.rs2.*;
 import org.hyperion.rs2.WorldLoader.LoginResult;
 import org.hyperion.rs2.cache.Cache;
 import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.event.EventManager;
 import org.hyperion.rs2.event.impl.CleanupEvent;
 import org.hyperion.rs2.event.impl.UpdateEvent;
+import org.hyperion.rs2.model.definitions.DefinitionLoader;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.npc.SpawnLoader;
-import org.hyperion.rs2.model.object.GameObject;
+import org.hyperion.rs2.model.object.ObjectManager;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.model.region.RegionManager;
@@ -36,6 +25,14 @@ import org.hyperion.rs2.util.ConfigurationParser;
 import org.hyperion.rs2.util.EntityList;
 import org.hyperion.rs2.util.NameUtils;
 import org.hyperion.util.BlockingExecutorService;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Holds data global to the game world.
@@ -81,6 +78,11 @@ public class World {
 	 * The current loader implementation.
 	 */
 	private WorldLoader loader;
+
+	/**
+	 * Loads required server definitions. Items, objects, etc...
+	 */
+	private DefinitionLoader definitionLoader = new DefinitionLoader();
 	
 	/**
 	 * A list of connected players.
@@ -96,23 +98,16 @@ public class World {
 	 * The region manager.
 	 */
 	private RegionManager regionManager = new RegionManager();
-	
+
 	/**
-	 * The living classes.
+	 * The object manager.
 	 */
-	private LivingClasses livingClasses;
+	private ObjectManager objectManager = new ObjectManager();
 	
 	/**
 	 * Creates the world and begins background loading tasks.
 	 */
 	public World() {
-		backgroundLoader.submit(new Callable<Object>() {
-			@Override
-			public Object call() throws Exception {
-				livingClasses = new LivingClasses();
-				return null;
-			}
-		});
 		backgroundLoader.submit(new Callable<Object>() {
 			@Override
 			public Object call() throws Exception {
@@ -124,10 +119,10 @@ public class World {
 			@Override
 			public Object call() {
 				try {
-					LivingClasses.definitionLoader.loadItemDefinitions();
-					LivingClasses.definitionLoader.loadNPCDefinitions();
-					LivingClasses.definitionLoader.loadBonusDefinitions();
-					LivingClasses.definitionLoader.loadShops();
+					definitionLoader.loadItemDefinitions();
+					definitionLoader.loadNPCDefinitions();
+					definitionLoader.loadBonusDefinitions();
+					definitionLoader.loadShops();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -139,7 +134,7 @@ public class World {
 			public Object call() {
 				try {
 					SpawnLoader.loadSpawns();
-					livingClasses.getObjectManager().loadObjects();
+					objectManager.loadObjects();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -162,6 +157,14 @@ public class World {
 	 */
 	public RegionManager getRegionManager() {
 		return regionManager;
+	}
+
+	/**
+	 * Gets the object manager.
+	 * @return The object manager.
+	 */
+	public ObjectManager getObjectManager() {
+		return objectManager;
 	}
 	
 	/**
@@ -351,7 +354,15 @@ public class World {
 			System.out.println("Registered player : " + player + " [online=" + players.size() + "]");
 		}
 	}
-	
+
+	/**
+	 * Gets the definition loader.
+	 * @return The definition loader.
+	 */
+	public DefinitionLoader getDefinitionLoader() {
+		return definitionLoader;
+	}
+
 	/** 
 	 * Gets the player list.
 	 * @return The player list.
@@ -366,14 +377,6 @@ public class World {
 	 */
 	public EntityList<NPC> getNPCs() {
 		return npcs;
-	}
-	
-	/**
-	 * Gets the living classes instance.
-	 * @return The living classes instance.
-	 */
-	public LivingClasses getLivingClasses() {
-		return livingClasses;
 	}
 	
 	/**

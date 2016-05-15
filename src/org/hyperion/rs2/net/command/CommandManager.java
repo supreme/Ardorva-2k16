@@ -2,18 +2,7 @@ package org.hyperion.rs2.net.command;
 
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.net.command.commands.DisplayInterface;
-import org.hyperion.rs2.net.command.commands.EmptyInventory;
-import org.hyperion.rs2.net.command.commands.MaxHit;
-import org.hyperion.rs2.net.command.commands.MaxSkills;
-import org.hyperion.rs2.net.command.commands.OpenBank;
-import org.hyperion.rs2.net.command.commands.PlayAnimation;
-import org.hyperion.rs2.net.command.commands.PlayGraphic;
-import org.hyperion.rs2.net.command.commands.Position;
-import org.hyperion.rs2.net.command.commands.SpawnItem;
-import org.hyperion.rs2.net.command.commands.SpawnNPC;
-import org.hyperion.rs2.net.command.commands.Teleport;
-import org.hyperion.rs2.net.command.commands.Test;
+import org.hyperion.rs2.net.command.commands.*;
 
 /**
  * Manages all the commands.
@@ -36,6 +25,11 @@ public class CommandManager {
 		 * Spawns an item into a player's inventory.
 		 */
 		SPAWN_ITEM("item", new SpawnItem()),
+
+		/**
+		 * Spawns an object into the world.
+		 */
+		SPAWN_OBJECT("obj", new SpawnObject()),
 		
 		/**
 		 * Teleports a player to the specified location.

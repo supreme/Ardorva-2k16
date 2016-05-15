@@ -372,19 +372,13 @@ public class NPCUpdateTask implements Task {
 	private static void appendHitUpdate(NPC npc, PacketBuilder updateBlock) {
 		double max = npc.getDefinition().getHitpoints();
 		double hp = npc.getHealth();
-		double calc = hp / max;
-		int percentage = (int) (calc * 100);
-		if(percentage > 100) {
-			percentage = 100;
-		}
-		
+
 		Hit hit = npc.getPrimaryHit();
-		System.out.println("NPC hit update: {" + hit.getDamage() + ", " + hit.getType().getId() 
-    			+ ", " + percentage + "}");
+		System.out.println("NPC hit update: {" + hit.getDamage() + ", " + hit.getType().getId() + "}");
 		updateBlock.putByteS((byte) hit.getDamage());
 		updateBlock.putByteA((byte) hit.getType().getId());
-		updateBlock.putByteA((byte) percentage);
-		updateBlock.putByteS((byte) 100);
+		updateBlock.putByteA((byte) hp);
+		updateBlock.putByteS((byte) max);
 	}
 	
 	private static void appendHit2Update(NPC npc, PacketBuilder updateBlock) {

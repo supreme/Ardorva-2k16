@@ -1,15 +1,13 @@
 package org.hyperion.rs2.content.shops;
 
-import java.util.logging.Logger;
-
-import org.hyperion.rs2.LivingClasses;
-import org.hyperion.rs2.model.Item;
+import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Container;
 import org.hyperion.rs2.model.container.Container.Type;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.shops.Shop;
-import org.hyperion.rs2.model.shops.Shop.ShopContents;
 import org.hyperion.rs2.model.shops.Shop.ShopItem;
+
+import java.util.logging.Logger;
 
 /**
  * Loads the contents of a shop.
@@ -61,7 +59,7 @@ public class ShopHandler {
 	 */
 	public static Shop getShopForNpc(int npcId) {
 		try {
-			for(Shop shop : LivingClasses.definitionLoader.getShops()) {
+			for(Shop shop : World.getWorld().getDefinitionLoader().getShops()) {
 				if(shop.getId() == npcId) {
 					return shop;
 				}

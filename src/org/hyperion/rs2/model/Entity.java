@@ -26,7 +26,7 @@ public abstract class Entity {
 	/**
 	 * The default, i.e. spawn, location.
 	 */
-	public static final Location DEFAULT_LOCATION = Location.create(3200, 3200, 0);
+	public static final Location DEFAULT_LOCATION = Location.create(2606, 3102, 0);
 	
 	/**
 	 * The default death animation.

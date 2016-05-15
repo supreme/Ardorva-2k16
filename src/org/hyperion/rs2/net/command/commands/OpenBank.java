@@ -29,7 +29,7 @@ public class OpenBank implements Command {
 
 	@Override
 	public Rights getAccessLevel() {
-		return Rights.MODERATOR;
+		return Rights.ADMINISTRATOR;
 	}
 
 }

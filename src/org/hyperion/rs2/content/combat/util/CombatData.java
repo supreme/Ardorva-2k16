@@ -2,8 +2,8 @@ package org.hyperion.rs2.content.combat.util;
 
 import java.util.ArrayList;
 
-import org.hyperion.rs2.LivingClasses;
 import org.hyperion.rs2.model.Item;
+import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.Player;
 
 /**
@@ -196,9 +196,9 @@ public class CombatData {
 	public static void calculateBonuses(Player player) {
 		resetBonuses();
 		for (Item item : player.getEquipment().toArray()) {
-			if (item != null && LivingClasses.definitionLoader.getBonuses() != null) {
+			if (item != null && World.getWorld().getDefinitionLoader().getBonuses() != null) {
 				for (int i = 0; i < 13; i++) {
-					setBonus(i, getBonus(i) + new ArrayList<Integer>(LivingClasses.definitionLoader.getBonuses().keySet()).get(i));
+					setBonus(i, getBonus(i) + new ArrayList<Integer>(World.getWorld().getDefinitionLoader().getBonuses().keySet()).get(i));
 				}
 			}
 		}

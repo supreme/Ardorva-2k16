@@ -186,7 +186,7 @@ public class NPC extends Entity {
 		
 		if(this.isAutoRetaliating()) {
 			this.face(source.getLocation());
-			this.getActionQueue().addAction(new MeleeAction(this, source));
+			//this.getActionQueue().addAction(new MeleeAction(this, source));
 		}
 		
 		if (health <= 0) {

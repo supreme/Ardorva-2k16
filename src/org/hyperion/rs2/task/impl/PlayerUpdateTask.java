@@ -312,7 +312,7 @@ public class PlayerUpdateTask implements Task {
     	System.out.println("Player hit update: {" + primary.getDamage() + ", " + primary.getType().getId() 
     			+ ", " + player.getSkills().getLevel(Skills.HITPOINTS) + ", " + player.getSkills().getLevelForExperience(Skills.HITPOINTS) + "}");
     	block.putByteS((byte) primary.getDamage());
-    	block.putByteS((byte) primary.getType().getId());
+    	block.putByteS((byte) 1);
     	block.putByteA((byte) player.getSkills().getLevel(Skills.HITPOINTS));
     	block.putByteA((byte) player.getSkills().getLevelForExperience(Skills.HITPOINTS));
 	}

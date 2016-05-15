@@ -1,6 +1,5 @@
 package org.hyperion.rs2.content.skills.firemaking;
 
-import org.hyperion.rs2.LivingClasses;
 import org.hyperion.rs2.action.impl.DestructionAction;
 import org.hyperion.rs2.content.skills.firemaking.LogData.Log;
 import org.hyperion.rs2.event.Event;
@@ -20,7 +19,7 @@ public class FiremakingAction extends DestructionAction {
 	/**
 	 * An instance of the firemaking class.
 	 */
-	private static Firemaking firemaking = /*LivingClasses.firemaking*/ null;
+	private static Firemaking firemaking = /*TODO*/ null;
 	
 	/**
 	 * The location the player is attempting to light a fire at.
@@ -61,7 +60,7 @@ public class FiremakingAction extends DestructionAction {
 			return false;
 		}
 		
-		/*if (LivingClasses.firemaking.getExistingFires().contains(lightingLocation)) {
+		/*if (getExistingFires().contains(lightingLocation)) {
 			player.getActionSender().sendMessage("You cannot light a fire on an existing fire.");
 			return false;
 		}*/
@@ -82,7 +81,7 @@ public class FiremakingAction extends DestructionAction {
 				@Override
 				public void execute() {
 					//WorldObjectManager.addObject(new WorldObject(2732, lightingLocation.getX(), lightingLocation.getY()));
-					//LivingClasses.firemaking.getExistingFires().add(lightingLocation);
+					//getExistingFires().add(lightingLocation);
 					this.stop();
 				}
 				

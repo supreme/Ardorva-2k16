@@ -1,6 +1,6 @@
 package org.hyperion.rs2.model.definitions;
 
-import org.hyperion.rs2.LivingClasses;
+import org.hyperion.rs2.model.World;
 
 /**
  * Provides a structure for JSON serialization of NPC definitions.
@@ -113,7 +113,7 @@ public class NPCDefinition {
 	 * @return The NPC definition.
 	 */
 	public static NPCDefinition forId(int id) {
-		for (NPCDefinition def : LivingClasses.definitionLoader.getNPCDefinitions()) {
+		for (NPCDefinition def : World.getWorld().getDefinitionLoader().getNPCDefinitions()) {
 			if (def.getId() == id) {
 				return def;
 			}

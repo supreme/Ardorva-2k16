@@ -1,6 +1,6 @@
 package org.hyperion.rs2.model.definitions;
 
-import org.hyperion.rs2.LivingClasses;
+import org.hyperion.rs2.model.World;
 
 /**
  * Provides a structure for JSON serialization of item definitions.
@@ -63,7 +63,7 @@ public class ItemDefinition {
 	 * @return The item definition.
 	 */
 	public static ItemDefinition forId(int id) {
-		return LivingClasses.definitionLoader.getItemDefinitions()[id];
+		return World.getWorld().getDefinitionLoader().getItemDefinitions()[id];
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class ItemDefinition {
 		name = name.toLowerCase();
 		ItemDefinition requested = null;
 		String currentName = "";
-		for (ItemDefinition def : LivingClasses.definitionLoader.getItemDefinitions()) {
+		for (ItemDefinition def : World.getWorld().getDefinitionLoader().getItemDefinitions()) {
 			if (def != null && def.getName() != null) 
 				currentName = def.getName().toLowerCase();
 			if (currentName.equals(name)) {
@@ -90,7 +90,7 @@ public class ItemDefinition {
 	 * @return An array of bonuses.
 	 */
 	public static final int[] getBonuses(int itemId) {
-		return LivingClasses.definitionLoader.getBonuses().get(itemId);
+		return World.getWorld().getDefinitionLoader().getBonuses().get(itemId);
 	}
 	
 	/**

@@ -1,23 +1,16 @@
 package org.hyperion.rs2.model.definitions;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.container.Equipment;
+import org.hyperion.rs2.model.shops.Shop;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
-
-import org.hyperion.rs2.model.World;
-import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.shops.Shop;
-import org.hyperion.rs2.model.shops.Shop.ShopContents;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * Loads definitions for items and NPCs.
@@ -80,7 +73,14 @@ public class DefinitionLoader {
 	public void setBonuses(HashMap<Integer, int[]> bonuses) {
 		itemBonuses = bonuses;
 	}
-	
+
+	/**
+	 * Initializes the definition loader to load all of the required
+	 * external definitions.
+	 */
+	public void init() {
+
+	}
 	/**
 	 * Loads the item bonuses.
 	 * @throws FileNotFoundException
