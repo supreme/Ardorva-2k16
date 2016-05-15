@@ -3,6 +3,7 @@ package org.hyperion.rs2.content.combat;
 import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.content.combat.util.CombatData.Stance;
 import org.hyperion.rs2.content.combat.util.CombatData.Style;
+import org.hyperion.rs2.content.magic.MagicBook;
 
 /**
  * The combat state class should be assigned to entities in order
@@ -26,6 +27,11 @@ public class CombatState {
 	 * The combat stance in use.
 	 */
 	private Stance combatStance;
+
+	/**
+	 * The magic book in use.
+	 */
+	private MagicBook book;
 	
 	/**
 	 * Whether or not the player is currently engaged in combat.
@@ -44,6 +50,7 @@ public class CombatState {
 		attackType = null;
 		combatStyle = null;
 		combatStance = Stance.ACCURATE;
+		book = MagicBook.MODERN;
 		inCombat = false;
 		pendingWeaponChange = false;
 	}

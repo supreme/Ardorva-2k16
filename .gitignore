@@ -1,5 +1,7 @@
 /bin
 /data
 /out
-.idea/*å
+/.idea
 *.iml
+.project
+.classpath

@@ -1,8 +1,5 @@
 package org.hyperion.rs2.model.player;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.hyperion.data.Persistable;
@@ -10,23 +7,10 @@ import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.action.impl.DistancedAction;
 import org.hyperion.rs2.content.skills.prayer.PrayerManager;
 import org.hyperion.rs2.event.impl.DeathEvent;
-import org.hyperion.rs2.model.Appearance;
-import org.hyperion.rs2.model.ChatMessage;
+import org.hyperion.rs2.model.*;
 import org.hyperion.rs2.model.Damage.Hit;
-import org.hyperion.rs2.model.Entity;
-import org.hyperion.rs2.model.InterfaceState;
-import org.hyperion.rs2.model.Item;
-import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.RequestManager;
-import org.hyperion.rs2.model.Settings;
-import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
-import org.hyperion.rs2.model.World;
-import org.hyperion.rs2.model.container.Bank;
-import org.hyperion.rs2.model.container.Container;
-import org.hyperion.rs2.model.container.ContainerInterface;
-import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.container.Inventory;
+import org.hyperion.rs2.model.container.*;
 import org.hyperion.rs2.model.item.Bonuses;
 import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.net.ActionSender;
@@ -34,6 +18,9 @@ import org.hyperion.rs2.net.ISAACCipher;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.util.IoBufferUtils;
 import org.hyperion.rs2.util.NameUtils;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Represents a player-controller character.

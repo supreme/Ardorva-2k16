@@ -1,12 +1,8 @@
 package org.hyperion.rs2.model.player;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import org.hyperion.rs2.content.magic.MagicBook;
+
+import java.io.*;
 
 /**
  * Player configurations are saved on logout and loaded on login. This class
@@ -20,7 +16,12 @@ public class PlayerConfiguration implements Serializable {
 	 * The directory of player configuration files.
 	 */
 	private static final String CONFIG_DIRECTORY = "./data/savedGames/config/";
-	
+
+	/**
+	 * The magic book the player is using.
+	 */
+	private MagicBook magicBook;
+
 	/**
 	 * The name of the equipped weapon.
 	 */
@@ -45,6 +46,7 @@ public class PlayerConfiguration implements Serializable {
 	 * Constructs the default configuration for players.
 	 */
 	public PlayerConfiguration() {
+		magicBook = MagicBook.MODERN;
 		weaponName = "Unarmed";
 		weaponTabInterface = 92;
 		autoRetaliating = true;
@@ -90,7 +92,23 @@ public class PlayerConfiguration implements Serializable {
 		/* Create a new configuration if a player doesn't already have one */
 		return new PlayerConfiguration();
 	}
-	
+
+	/**
+	 * Gets the player's current magic book.
+	 * @return The current magic book.
+     */
+	public MagicBook getMagicBook() {
+		return magicBook;
+	}
+
+	/**
+	 * Sets the player's magic book.
+	 * @param book The magic book to set.
+     */
+	public void setMagicBook(MagicBook book) {
+		this.magicBook = book;
+	}
+
 	/**
 	 * Gets the name of the equipped weapon.
 	 * @return The name of the equipped weapon.

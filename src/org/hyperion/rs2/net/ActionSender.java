@@ -107,7 +107,7 @@ public class ActionSender {
 	private ActionSender savePlayerConfiguration() {
 		PlayerConfiguration config = player.getPlayerConfiguration();
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
-		
+
 		config.setWeaponName(weapon != null ? weapon.getDefinition().getName() : "Unarmed");
 		//Weapon tab id is set in wield packet handler
 		return this;
@@ -237,7 +237,7 @@ public class ActionSender {
 		sendTab(89, 149);
 		sendTab(90, 387);
 		sendTab(91, 271);
-		sendTab(92, 192); //192 Modern   //193 Ancient
+		sendTab(92, player.getPlayerConfiguration().getMagicBook().getInterfaceId());
 		sendTab(94, 550);
 		sendTab(95, 551);
 		sendTab(96, 182);
