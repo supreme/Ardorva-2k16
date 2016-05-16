@@ -60,7 +60,7 @@ public class Constants {
 	/**
 	 * The configuration ids for the 'off'/'on' state.
 	 */
-	public static final int  CONFIG_OFF = 0, CONFIG_ON = 1;
+	public static final int CONFIG_OFF = 0, CONFIG_ON = 1;
 	
 	/**
 	 * The directory for the engine scripts.

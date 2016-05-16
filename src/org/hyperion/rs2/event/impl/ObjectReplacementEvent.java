@@ -12,7 +12,7 @@ import org.hyperion.rs2.model.object.GameObject;
 public class ObjectReplacementEvent extends Event {
 
 	/**
-	 * The original object already exisitng in the game world, to be replaced.
+	 * The original object already existing in the game world, to be replaced.
 	 */
 	private GameObject original;
 	

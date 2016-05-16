@@ -48,7 +48,8 @@ public class DistancedAction extends Action {
 
 	@Override
 	public void execute() {
-		if (getPlayer().getLocation().isWithinInteractionDistance(target)) {
+		if (getPlayer().getLocation().isWithinInteractionDistance(target)
+				&& getPlayer().getWalkingQueue().isEmpty()) {
 			this.stop();
 			getPlayer().getActionQueue().addAction(pendingAction);
 		}	
