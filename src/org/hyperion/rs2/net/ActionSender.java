@@ -294,6 +294,14 @@ public class ActionSender {
 		sendInterface(548, 62, id, false);
 		return this;
     }
+
+	/**
+	 * Sends a chatbox interface.
+	 * @param childId The interface id to send.
+     */
+	public void sendChatboxInterface(int childId) {
+		sendInterface(548, 79, childId, false);
+	}
 	
 	/**
 	 * Sends the logout packet.

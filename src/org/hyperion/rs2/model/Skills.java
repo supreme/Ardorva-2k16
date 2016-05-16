@@ -1,5 +1,6 @@
 package org.hyperion.rs2.model;
 
+import org.hyperion.rs2.content.LevelUpMessage;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.player.Player;
 
@@ -297,6 +298,7 @@ public class Skills {
 		int levelDiff = newLevel - oldLevel;
 		if(levelDiff > 0) {
 			levels[skill] += levelDiff;
+			LevelUpMessage.display(player, skill);
 			player.getUpdateFlags().flag(UpdateFlag.APPEARANCE);
 		}
 		player.getActionSender().sendSkill(skill);
