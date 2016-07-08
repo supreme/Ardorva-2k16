@@ -1,28 +1,28 @@
 package org.hyperion.rs2.cache.util;
 
+import org.hyperion.rs2.cache.stream.Stream;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
-import org.hyperion.rs2.cache.stream.Stream;
-
 public class GZipDecompressor {
 
 	private static final Inflater inflaterInstance = new Inflater(true);
-	
+
 	public static void decompress(int slen, int off, byte[] in, byte[] out) throws IOException {
-        byte in2[] = new byte[slen];
-        System.arraycopy(in, off, in2, 0, slen);
-        DataInputStream ins = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(in2)));
-        try {
-            ins.readFully(out);
-        } finally {
-            ins.close();
-        }
-    }
-	
+		byte in2[] = new byte[slen];
+		System.arraycopy(in, off, in2, 0, slen);
+		DataInputStream ins = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(in2)));
+		try {
+			ins.readFully(out);
+		} finally {
+			ins.close();
+		}
+	}
+
 	public static final boolean decompress(Stream stream, byte data[]) {
 		if(data == null)
 			return false;
@@ -39,11 +39,11 @@ public class GZipDecompressor {
 				return false;
 				//inflaterInstance.reset();
 				//data = null;
-			//	throw new RuntimeException("Invalid GZIP compressed data!");
+				//	throw new RuntimeException("Invalid GZIP compressed data!");
 			}
 			inflaterInstance.reset();
 			return true;
 		}
 	}
-	
+
 }

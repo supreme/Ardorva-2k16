@@ -18,17 +18,17 @@ public class CombatData {
 	public static enum AttackType {
 		
 		/**
-		 * A melee-based attacks.
+		 * A melee-based attack.
 		 */
 		MELEE(0),
 		
 		/**
-		 * A projectile-based attacks.
+		 * A projectile-based attack.
 		 */
 		RANGED(4),
 		
 		/**
-		 * A magic-based attacks.
+		 * A magic-based attack.
 		 */
 		MAGIC(6);
 		

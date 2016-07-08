@@ -1,11 +1,11 @@
 package org.hyperion.rs2.content.skills.prayer;
 
-import java.util.ArrayList;
-
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.player.Player;
+
+import java.util.ArrayList;
 
 /**
  * Manages all aspects of the prayer skill.
@@ -56,7 +56,7 @@ public class PrayerManager {
 	public PrayerManager(Player player) {
 		this.player = player;
 		this.headIcon = -1;
-		this.activeSpells = new ArrayList<PrayerSpell>();
+		this.activeSpells = new ArrayList<>();
 	}
 	
 	/**

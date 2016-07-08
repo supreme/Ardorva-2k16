@@ -1,10 +1,5 @@
 package org.hyperion.rs2.net;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.LinkedList;
-import java.util.logging.Logger;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
@@ -17,6 +12,11 @@ import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.player.PlayerDetails;
 import org.hyperion.rs2.util.IoBufferUtils;
 import org.hyperion.rs2.util.NameUtils;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Login protocol decoding class.

@@ -20,12 +20,12 @@ import org.hyperion.rs2.net.Packet.Type;
  *
  */
 public class ActionSender {
-	
+
 	/**
 	 * The player.
 	 */
 	private Player player;
-	
+
 	/**
 	 * Creates an action sender for the specified player.
 	 * @param player The player to create the action sender for.
@@ -33,7 +33,7 @@ public class ActionSender {
 	public ActionSender(Player player) {
 		this.player = player;
 	}
-	
+
 	/**
 	 * Sends all the login packets.
 	 * @return The action sender instance, for chaining.
@@ -41,31 +41,31 @@ public class ActionSender {
 	public ActionSender sendLogin() {
 		player.setActive(true);
 		sendMapRegion();
-		
+
 		sendWindowPane(548);
 		sendComponentPosition(548, 101, 1000, 1000); //Remove fucking xp orb
-		
+
 		sendMessage("<img=1></img> Welcome to " + Constants.SERVER_NAME + ".");
-		
+
 		sendInteractionOption("null", 1, true); // null or attack
 		sendInteractionOption("null", 2, false); // challenge = duel arena only
 		sendInteractionOption("Follow", 3, false);
 		sendInteractionOption("Trade with", 4, false);
-		
+
 		player.getPlayerVariables().handleCounter();
-		
+
 		sendSkills();
 		sendSideBarInterfaces();
 		sendPlayerConfiguration();
-		
+
 		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93);
 		player.getInventory().addListener(inventoryListener);
-		
+
 		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 28, 94);
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
-		
+
 		player.getBonuses().refresh();
 		player.getCombatUtility().refresh();
 
@@ -85,7 +85,7 @@ public class ActionSender {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sends the player's configuration.
 	 */
@@ -95,12 +95,12 @@ public class ActionSender {
 			player.getActionSender().sendMessage("We're sorry, we were unable to load your previous configuration.");
 			return this;
 		}
-		
+
 		sendString(config.getWeaponTabInterface(), 0, config.getWeaponName());
 		sendTab(86, config.getWeaponTabInterface());
 		return this;
 	}
-	
+
 	/**
 	 * Saves the player's configuration.
 	 */
@@ -112,7 +112,7 @@ public class ActionSender {
 		//Weapon tab id is set in wield packet handler
 		return this;
 	}
-	
+
 	/**
 	 * Sends a debug message.
 	 * @param message The message to send.
@@ -121,7 +121,7 @@ public class ActionSender {
 	public ActionSender sendDebugMessage(String message) {
 		return Constants.DEV_MODE ? sendMessage("<col=ff0000>" + message) : this;
 	}
-	
+
 	/**
 	 * Sends a debug message.
 	 * @return The action sender instance, for chaining.
@@ -132,12 +132,12 @@ public class ActionSender {
 			paramString += object.toString() + "    ";
 		}
 		return sendDebugMessage("------------------------------------------------------------------------------------------")
-			  .sendDebugMessage("Pkt            " + opCode + "  " + description)
-			  .sendDebugMessage("------------------------------------------------------------------------------------------")
-			  .sendDebugMessage("Params    " + paramString)
-			  .sendDebugMessage("------------------------------------------------------------------------------------------");
+				.sendDebugMessage("Pkt            " + opCode + "  " + description)
+				.sendDebugMessage("------------------------------------------------------------------------------------------")
+				.sendDebugMessage("Params    " + paramString)
+				.sendDebugMessage("------------------------------------------------------------------------------------------");
 	}
-	
+
 	/**
 	 * Sends a specific skill.
 	 * @param skill The skill to send.
@@ -165,7 +165,7 @@ public class ActionSender {
 		player.write(new PacketBuilder(108, Type.VARIABLE).putRS2String(message).toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Moves a component's position.
 	 * @param interfaceId The interface id of the component.
@@ -178,12 +178,12 @@ public class ActionSender {
 		player.getSession().write(new PacketBuilder(201).putLEInt(interfaceId << 16 | childId).putShortA(y).putShort(x).toPacket());
 		return this;
 	}
-	
+
 	public ActionSender sendWindowPane(int pane) {
 		player.getSession().write(new PacketBuilder(77).putLEShortA(pane).toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends the map region load command.
 	 * @return The action sender instance, for chaining.
@@ -205,14 +205,14 @@ public class ActionSender {
 		pb.put((byte) player.getLocation().getZ());
 		pb.putShort(player.getLocation().getLocalY());
 		player.getSession().write(pb.toPacket());
-		
+
 		/* Send all the ground items in the region */
 		for (GroundItem item : player.getRegion().getGroundItems()) {
 			if (item.isGlobal() || item.getOwner().equals(player)) {
 				sendGroundItem(item);
 			}
 		}
-		
+
 		/* Send all the objects in the region */
 		for (GameObject object : player.getRegion().getGameObjects()) {
 			if (object.getAction() == GameObject.ADD) {
@@ -221,10 +221,10 @@ public class ActionSender {
 				removeObject(object);
 			}
 		}
-		
+
 		return this;
 	}
-	
+
 	/**
 	 * Sends all the sidebar interfaces.
 	 * @return The action sender instance, for chaining.
@@ -246,12 +246,12 @@ public class ActionSender {
 		sendTab(99, 239); //Music tab
 		return this;
 	}
-	
+
 	public ActionSender sendTab(int tabId, int childId) {
 		sendInterface(548, tabId, childId, true);
 		return this;
 	}
-	
+
 	/**
 	 * Sends an interface to the player's screen.
 	 * @param interfaceId The id of the interface to display.
@@ -260,7 +260,7 @@ public class ActionSender {
 		sendInterface(548, 64, interfaceId, false);
 		return this;
 	}
-	
+
 	/**
 	 * Sends an interface to the player's inventory.
 	 * @param childId The child id of the interface to display.
@@ -269,7 +269,15 @@ public class ActionSender {
 		sendInterface(548, 84, childId, false);
 		return this;
 	}
-	
+
+	/**
+	 * Sends an interface to the player's chat box.
+	 * @param childId The child id of the interface to display.
+     */
+	public void sendChatBoxInterface(int childId) {
+		sendInterface(548, 79, childId, false);
+	}
+
 	/**
 	 * Sends an interface.
 	 * @param windowId The id of the window.
@@ -285,7 +293,7 @@ public class ActionSender {
 		player.getSession().write(pb.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Displays an interface.
 	 */
@@ -293,16 +301,8 @@ public class ActionSender {
 		player.getInterfaceState().interfaceOpened(id);
 		sendInterface(548, 62, id, false);
 		return this;
-    }
-
-	/**
-	 * Sends a chatbox interface.
-	 * @param childId The interface id to send.
-     */
-	public void sendChatboxInterface(int childId) {
-		sendInterface(548, 79, childId, false);
 	}
-	
+
 	/**
 	 * Sends the logout packet.
 	 * @return The action sender instance, for chaining.
@@ -318,7 +318,7 @@ public class ActionSender {
 		});
 		return this;
 	}
-	
+
 	/**
 	 * Sends a packet to update a group of items.
 	 * @param interfaceId The interface id.
@@ -375,7 +375,7 @@ public class ActionSender {
 		player.write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends a packet to update multiple (but not all) items.
 	 * @param interfaceId The interface id.
@@ -424,7 +424,7 @@ public class ActionSender {
 		player.getActionSender().sendRunScript(Constants.ALPHA_NUMERICAL_INPUT_INTERFACE, new Object[] { question }, "s");
 		return this;
 	}
-	
+
 	/**
 	 * Sends a clientscript to the client.
 	 * @param id The id.
@@ -449,7 +449,7 @@ public class ActionSender {
 		player.write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Not sure why this one is needed as well...
 	 * @param scriptId
@@ -467,7 +467,7 @@ public class ActionSender {
 		bldr.putRS2String(parameterTypes);
 		int index = 0;
 		for (int count = parameterTypes.length() - 1;count >= 0;count--) {
-			if (parameterTypes.charAt(count) == 's') 
+			if (parameterTypes.charAt(count) == 's')
 				bldr.putRS2String((String) params[index++]);
 			else
 				bldr.putInt((Integer) params[index++]);
@@ -475,7 +475,7 @@ public class ActionSender {
 		bldr.putInt(scriptId);
 		player.write(bldr.toPacket());
 	}
-	
+
 	/**
 	 * Sends a system update.
 	 * @param time The time until the update.
@@ -485,7 +485,7 @@ public class ActionSender {
 		player.getSession().write(new PacketBuilder(30).putShortA(time).toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends an animation of an interface.
 	 * @param emoteId The emote id.
@@ -520,7 +520,7 @@ public class ActionSender {
 		player.getSession().write(new PacketBuilder(207).putLEShortA(npcId).putInt(interfaceId << 16 | childId).toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends a projectile to a location.
 	 * @param start The starting location.
@@ -537,13 +537,13 @@ public class ActionSender {
 	 * @return The action sender instance, for chaining.
 	 */
 	public ActionSender sendProjectile(Location start, Location finish, int id,
-			int delay, int angle, int speed, int startHeight, int endHeight,
-			int lockon, int slope, int radius) {
-				
+									   int delay, int angle, int speed, int startHeight, int endHeight,
+									   int lockon, int slope, int radius) {
+
 		int offsetX = (start.getX() - finish.getX()) * -1;
 		int offsetY = (start.getY() - finish.getY()) * -1;
 		sendArea(start, -3, -2);
-		
+
 		PacketBuilder bldr = new PacketBuilder(218);
 		bldr.put((byte) angle);
 		bldr.put((byte) offsetX);
@@ -556,10 +556,10 @@ public class ActionSender {
 		bldr.putShort(speed);
 		bldr.put((byte) slope);
 		bldr.put((byte) radius);
-		player.getSession().write(bldr.toPacket());	
+		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Removes the chatbox interface.
 	 * @return The action sender instance, for chaining.
@@ -569,7 +569,7 @@ public class ActionSender {
 		player.getActionSender().sendRunScript(Constants.REMOVE_INPUT_INTERFACE, new Object[] { "" }, "");
 		return this;
 	}
-	
+
 	/**
 	 * Sends the player an option.
 	 * @param slot The slot to place the option in the menu.
@@ -598,7 +598,7 @@ public class ActionSender {
 		player.write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Creates an object in the game world.
 	 * @param object The object to create.
@@ -612,7 +612,7 @@ public class ActionSender {
 		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Removes an object from the game world.
 	 * @param object The object to remove.
@@ -626,7 +626,7 @@ public class ActionSender {
 		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends a location to the client.
 	 * @param location The location to send.
@@ -640,7 +640,7 @@ public class ActionSender {
 		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends your location to the client.
 	 * @param location The location.
@@ -654,7 +654,7 @@ public class ActionSender {
 		player.write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Removes a ground item from the world.
 	 * @param item The item to remove.
@@ -669,7 +669,7 @@ public class ActionSender {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sends a ground item to the world.
 	 * @param item The item to send.
@@ -685,7 +685,7 @@ public class ActionSender {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Assuming it clears the red flags on minimap for walking queue?
 	 */
@@ -693,19 +693,19 @@ public class ActionSender {
 		player.getSession().write(new PacketBuilder(68).toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Sends a sound to the client.
 	 * @param sound The sound to play.
 	 * @return The action sender instance, for chaining.
 	 */
-	public ActionSender playSound(Sound sound) {		
+	public ActionSender playSound(Sound sound) {
 		PacketBuilder bldr = new PacketBuilder(40);
 		bldr.putShort(sound.getId()).put(sound.getVolume()).putShort(sound.getDelay());
 		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	public ActionSender turnCameraLocation(int localX, int localY, int height, int constantSpeed, int variableSpeed) {
 		PacketBuilder bldr = new PacketBuilder(82);
 		bldr.put((byte)localX);
@@ -715,7 +715,7 @@ public class ActionSender {
 		bldr.put((byte)variableSpeed);
 		return this;
 	}
-	
+
 	public ActionSender moveCameraLocation(int localX, int localY, int height, int constantSpeed, int variableSpeed) {
 		PacketBuilder bldr = new PacketBuilder(113);
 		bldr.put((byte)localX);
@@ -725,7 +725,7 @@ public class ActionSender {
 		bldr.put((byte)variableSpeed);
 		return this;
 	}
-	
+
 	/**
 	 * Not sure?
 	 * @param set
@@ -735,7 +735,7 @@ public class ActionSender {
 	 * @param end
 	 */
 	public ActionSender sendAccessMask(int set, int interfaceId, int window, int start, int end) {
-		PacketBuilder bldr = new PacketBuilder(254);	
+		PacketBuilder bldr = new PacketBuilder(254);
 		bldr.putLEShort(end);
 		bldr.putInt(interfaceId << 16 | window);
 		bldr.putShortA(start);
@@ -743,7 +743,7 @@ public class ActionSender {
 		player.getSession().write(bldr.toPacket());
 		return this;
 	}
-	
+
 	/**
 	 * Displays the enter amount interface in the chatbox.
 	 * @param text The player's inputted text.
@@ -753,7 +753,7 @@ public class ActionSender {
 		sendClientScript(108, o, "s");
 		return this;
 	}
-	
+
 	/**
 	 * Invokes a client script.
 	 * @param id The script id.
@@ -777,7 +777,7 @@ public class ActionSender {
 		player.write(bldr.toPacket());
 		return this;
 	}
-	
+
 	public ActionSender sendConfig(int id, int value) {
 		if(value < 128 && value > -128) {
 			PacketBuilder bldr = new PacketBuilder(245);

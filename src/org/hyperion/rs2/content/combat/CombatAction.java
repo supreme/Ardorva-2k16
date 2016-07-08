@@ -26,7 +26,6 @@ public abstract class CombatAction extends Action {
 	 * Constructs a combat action between the aggressor and its victim.
 	 * @param aggressor The entity performing the attack.
 	 * @param victim The entity receiving the attack.
-	 * @param delay The delay between attacks.
 	 */
 	public CombatAction(Entity aggressor, Entity victim) {
 		super(aggressor, Server.CYCLE_TIME, true);
@@ -52,8 +51,8 @@ public abstract class CombatAction extends Action {
 	
 	/**
 	 * Initiates the attack action.
-	 * @param agressor The entity performing the attack.
-	 * @param victom The entity being hit.
+	 * @param aggressor The entity performing the attack.
+	 * @param victim The entity being hit.
 	 */
 	public abstract void executeAttack(Entity aggressor, Entity victim);
 	

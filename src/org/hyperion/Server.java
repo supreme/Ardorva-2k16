@@ -32,7 +32,7 @@ public class Server {
 			new RS2Server().bind(RS2Server.PORT).start();
 		} catch(Exception ex) {
 			System.err.println("Error starting Hyperion" + Language.NEW_LINE + ex);
-			//System.exit(1);
+			System.exit(1);
 		}
 	}
 

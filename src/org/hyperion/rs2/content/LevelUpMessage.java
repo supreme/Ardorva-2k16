@@ -55,7 +55,7 @@ public class LevelUpMessage {
          * Constructs a level up message.
          * @param interfaceId The interface id of the level up message.
          */
-        private LevelUpInterface(int interfaceId) {
+        LevelUpInterface(int interfaceId) {
             this.interfaceId = interfaceId;
         }
 
@@ -86,7 +86,7 @@ public class LevelUpMessage {
         player.playGraphics(LEVEL_UP_GRAPHIC);
         player.getActionSender().sendString(inter.getInterfaceId(), 0, firstLine);
         player.getActionSender().sendString(inter.getInterfaceId(), 1, secondLine);
-        player.getActionSender().sendChatboxInterface(inter.getInterfaceId());
+        player.getActionSender().sendChatBoxInterface(inter.getInterfaceId());
     }
 
 }

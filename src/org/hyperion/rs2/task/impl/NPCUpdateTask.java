@@ -1,12 +1,9 @@
 package org.hyperion.rs2.task.impl;
 
-import java.util.Iterator;
-
 import org.hyperion.rs2.GameEngine;
 import org.hyperion.rs2.model.Damage.Hit;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.Skills;
 import org.hyperion.rs2.model.UpdateFlags;
 import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.World;
@@ -15,6 +12,8 @@ import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
 import org.hyperion.rs2.net.PacketBuilder;
 import org.hyperion.rs2.task.Task;
+
+import java.util.Iterator;
 
 /**
  * A task which creates and sends the NPC update block.
@@ -294,13 +293,6 @@ public class NPCUpdateTask implements Task {
 		 */
 		int mask = 0;
 		final UpdateFlags flags = npc.getUpdateFlags();
-		double max = npc.getDefinition().getHitpoints();
-		double hp = npc.getHealth();
-		double calc = hp / max;
-		int percentage = (int) (calc * 100);
-		if(percentage > 100) {
-			percentage = 100;
-		}
 		
 		if(flags.get(UpdateFlag.ANIMATION)) {
 			mask |= 0x40;
@@ -372,13 +364,16 @@ public class NPCUpdateTask implements Task {
 	private static void appendHitUpdate(NPC npc, PacketBuilder updateBlock) {
 		double max = npc.getDefinition().getHitpoints();
 		double hp = npc.getHealth();
-
+		double calc = hp / max;
+		int percentage = (int) (calc * 100);
+		if(percentage > 100) {
+			percentage = 100;
+		}
 		Hit hit = npc.getPrimaryHit();
-		System.out.println("NPC hit update: {" + hit.getDamage() + ", " + hit.getType().getId() + "}");
 		updateBlock.putByteS((byte) hit.getDamage());
 		updateBlock.putByteA((byte) hit.getType().getId());
-		updateBlock.putByteA((byte) hp);
-		updateBlock.putByteS((byte) max);
+		updateBlock.putByteA((byte) percentage);
+		updateBlock.putByteS((byte) 100);
 	}
 	
 	private static void appendHit2Update(NPC npc, PacketBuilder updateBlock) {

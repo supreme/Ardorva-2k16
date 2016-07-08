@@ -1,7 +1,5 @@
 package org.hyperion.rs2.packet;
 
-import java.util.logging.Logger;
-
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.content.shops.ShopHandler;
@@ -11,6 +9,8 @@ import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.shops.Shop;
 import org.hyperion.rs2.net.Packet;
+
+import java.util.logging.Logger;
 
 /**
  * Handles the interaction between a player and an NPC.
@@ -75,7 +75,7 @@ public class NPCInteractPacketHandler implements PacketHandler {
 		
 		Logger.getLogger(this.getClass().getName()).info(player.getName() + " attacked npc: " + npc.getDefinition().getId() + ", at location: " + npc.getLocation().toString());
 		player.addInteractAction(npc.getLocation(), new MeleeAction(player, npc));
-		//npc.getActionQueue().addAction(new MeleeAction(npc, player)); enabling this bugs the client the fuck out
+		//npc.getActionQueue().addAction(new MeleeAction(npc, player)); //enabling this bugs the client the fuck out
 
 	}
 	

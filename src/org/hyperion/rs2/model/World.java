@@ -1,8 +1,9 @@
 package org.hyperion.rs2.model;
 
-import org.apache.mina.core.future.IoFuture;
-import org.apache.mina.core.future.IoFutureListener;
-import org.hyperion.rs2.*;
+import org.hyperion.rs2.Constants;
+import org.hyperion.rs2.GameEngine;
+import org.hyperion.rs2.GenericWorldLoader;
+import org.hyperion.rs2.WorldLoader;
 import org.hyperion.rs2.WorldLoader.LoginResult;
 import org.hyperion.rs2.cache.Cache;
 import org.hyperion.rs2.event.Event;
@@ -15,6 +16,7 @@ import org.hyperion.rs2.model.npc.SpawnLoader;
 import org.hyperion.rs2.model.object.ObjectManager;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerDetails;
+import org.hyperion.rs2.model.region.Mapdata;
 import org.hyperion.rs2.model.region.RegionManager;
 import org.hyperion.rs2.net.PacketBuilder;
 import org.hyperion.rs2.net.PacketManager;
@@ -30,8 +32,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 /**
@@ -103,44 +105,42 @@ public class World {
 	 * The object manager.
 	 */
 	private ObjectManager objectManager = new ObjectManager();
-	
+
+	/**
+	 * Mapdata instance for XTEAs.
+	 */
+	private Mapdata mapdata;
+
 	/**
 	 * Creates the world and begins background loading tasks.
 	 */
 	public World() {
-		backgroundLoader.submit(new Callable<Object>() {
-			@Override
-			public Object call() throws Exception {
+		backgroundLoader.submit(() -> {
+			try {
 				Cache.init();
-				return null;
+				mapdata = new Mapdata();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		});
-		backgroundLoader.submit(new Callable<Object>() {
-			@Override
-			public Object call() {
-				try {
-					definitionLoader.loadItemDefinitions();
-					definitionLoader.loadNPCDefinitions();
-					definitionLoader.loadBonusDefinitions();
-					definitionLoader.loadShops();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				return null;
-			}
-		});
-		backgroundLoader.submit(new Callable<Object>() {
-			@Override
-			public Object call() {
-				try {
-					SpawnLoader.loadSpawns();
-					objectManager.loadObjects();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				return null;
-			}
-		});
+        });
+		backgroundLoader.submit(() -> {
+            try {
+                definitionLoader.loadItemDefinitions();
+                definitionLoader.loadNPCDefinitions();
+                definitionLoader.loadBonusDefinitions();
+                definitionLoader.loadShops();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+		backgroundLoader.submit(() -> {
+            try {
+                SpawnLoader.loadSpawns();
+                objectManager.loadObjects();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 	}
 	
 	/**
@@ -275,29 +275,22 @@ public class World {
 	 * @param pd The player's details.
 	 */
 	public void load(final PlayerDetails pd) {
-		engine.submitWork(new Runnable() {
-			public void run() {
-				LoginResult lr = loader.checkLogin(pd);
-				int code = lr.getReturnCode();
-				if(!NameUtils.isValidName(pd.getName())) {
-					code = 11;
-				}
-				if(code != 2) {
-					PacketBuilder bldr = new PacketBuilder();
-					bldr.put((byte) code);
-					pd.getSession().write(bldr.toPacket()).addListener(new IoFutureListener<IoFuture>() {
-						@Override
-						public void operationComplete(IoFuture future) {
-							future.getSession().close(false);
-						}
-					});
-				} else {
-					lr.getPlayer().getSession().setAttribute("player", lr.getPlayer());
-					loader.loadPlayer(lr.getPlayer());
-					engine.pushTask(new SessionLoginTask(lr.getPlayer()));
-				}
-			}
-		});
+		engine.submitWork(() -> {
+            LoginResult lr = loader.checkLogin(pd);
+            int code = lr.getReturnCode();
+            if(!NameUtils.isValidName(pd.getName())) {
+                code = 11;
+            }
+            if(code != 2) {
+                PacketBuilder bldr = new PacketBuilder();
+                bldr.put((byte) code);
+                pd.getSession().write(bldr.toPacket()).addListener(future -> future.getSession().close(false));
+            } else {
+                lr.getPlayer().getSession().setAttribute("player", lr.getPlayer());
+                loader.loadPlayer(lr.getPlayer());
+                engine.pushTask(new SessionLoginTask(lr.getPlayer()));
+            }
+        });
 	}
 	
 	/**
@@ -340,16 +333,13 @@ public class World {
 		bldr.put((byte) 0);
 		bldr.putShort(player.getIndex());
 		bldr.put((byte) 1);
-		player.getSession().write(bldr.toPacket()).addListener(new IoFutureListener<IoFuture>() {
-			@Override
-			public void operationComplete(IoFuture future) {
-				if(fReturnCode != 2) {
-					player.getSession().close(false);
-				} else {
-					player.getActionSender().sendLogin();
-				}
-			}
-		});
+		player.getSession().write(bldr.toPacket()).addListener(future -> {
+            if(fReturnCode != 2) {
+                player.getSession().close(false);
+            } else {
+                player.getActionSender().sendLogin();
+            }
+        });
 		if(returnCode == 2) {
 			System.out.println("Registered player : " + player + " [online=" + players.size() + "]");
 		}
@@ -385,13 +375,9 @@ public class World {
 	 * @return <code>true</code> if they are online, <code>false</code> if not.
 	 */
 	public boolean isPlayerOnline(String name) {
-		name = NameUtils.formatName(name);
-		for(Player player : players) {
-			if(player.getName().equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
+		final String formatted = NameUtils.formatName(name);
+		Predicate<Player> matchingName = p -> p.getName().equalsIgnoreCase(formatted);
+		return players.stream().filter(matchingName).count() > 0;
 	}
 
 	/**
@@ -404,11 +390,7 @@ public class World {
 		player.getSession().close(false);
 		players.remove(player);
 		logger.info("Unregistered player : " + player + " [online=" + players.size() + "]");
-		engine.submitWork(new Runnable() {
-			public void run() {
-				loader.savePlayer(player);
-			}
-		});
+		engine.submitWork(() -> loader.savePlayer(player));
 	}
 	
 	/**

@@ -10,7 +10,7 @@ public class Constants {
 	/**
 	 * The name of the server.
 	 */
-	public static final String SERVER_NAME = "Derithium";
+	public static final String SERVER_NAME = "Ardorva";
 	
 	/**
 	 * Whether or not the server is in dev mode.

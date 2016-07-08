@@ -70,7 +70,7 @@ public class EntityDeath {
 	
 	/**
 	 * Removes the items lost in the player's death.
-	 * @param Player The player who has died.
+	 * @param player The player who has died.
 	 */
 	private static void removeDeathItems(Player player) {
 		/* If a player is skulled remove all items and immediately return */

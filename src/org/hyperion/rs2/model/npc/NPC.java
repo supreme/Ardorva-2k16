@@ -1,6 +1,5 @@
 package org.hyperion.rs2.model.npc;
 
-import org.hyperion.rs2.content.combat.impl.MeleeAction;
 import org.hyperion.rs2.event.impl.DeathEvent;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Damage.Hit;
@@ -162,6 +161,7 @@ public class NPC extends Entity {
 	@Override
 	public void inflictDamage(Entity source, Hit hit) {
 		if (!getUpdateFlags().get(UpdateFlag.HIT)) {
+			System.out.println("Setting primary hit: " + hit.getType().getId());
 			setPrimaryHit(hit);
 			getUpdateFlags().flag(UpdateFlag.HIT);
 		} else {
