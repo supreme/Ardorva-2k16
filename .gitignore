@@ -21,8 +21,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-### Example user template template
-### Example user template
 
 # IntelliJ project files
 .idea
@@ -33,6 +31,4 @@ gen
 
 # Server related files
 /data/cache
-/data/logs
 /data/savedgames
-/data/world/objects
