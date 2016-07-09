@@ -119,6 +119,7 @@ public class World {
 			try {
 				Cache.init();
 				mapdata = new Mapdata();
+				//XTEALoader.loadOld(new File("./data/xtea/"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

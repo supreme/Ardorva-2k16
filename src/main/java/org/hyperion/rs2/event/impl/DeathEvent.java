@@ -1,5 +1,6 @@
 package org.hyperion.rs2.event.impl;
 
+import org.hyperion.Server;
 import org.hyperion.rs2.event.Event;
 import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.Entity;
@@ -54,7 +55,7 @@ public class DeathEvent extends Event {
 			npc.playAnimation(RESET_ANIMATION);
 			npc.setInteractingEntity(null);
 			npc.getCombatUtility().setInCombat(false);
-			World.getWorld().submit(new NPCRespawnEvent(npc, npc.getDefinition().getRespawn() * 600));
+			World.getWorld().submit(new NPCRespawnEvent(npc, npc.getDefinition().getRespawn() * Server.CYCLE_TIME));
 			this.stop();
 		}
 	}

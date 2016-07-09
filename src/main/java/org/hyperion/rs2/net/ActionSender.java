@@ -12,6 +12,7 @@ import org.hyperion.rs2.model.container.impl.WeaponContainerListener;
 import org.hyperion.rs2.model.object.GameObject;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.player.PlayerConfiguration;
+import org.hyperion.rs2.model.region.Mapdata;
 import org.hyperion.rs2.net.Packet.Type;
 
 /**
@@ -43,7 +44,6 @@ public class ActionSender {
 		sendMapRegion();
 
 		sendWindowPane(548);
-		sendComponentPosition(548, 101, 1000, 1000); //Remove fucking xp orb
 
 		sendMessage("<img=1></img> Welcome to " + Constants.SERVER_NAME + ".");
 
@@ -52,22 +52,28 @@ public class ActionSender {
 		sendInteractionOption("Follow", 3, false);
 		sendInteractionOption("Trade with", 4, false);
 
-		player.getPlayerVariables().handleCounter();
+//		player.getPlayerVariables().handleCounter(); TODO
 
 		sendSkills();
-		sendSideBarInterfaces();
-		sendPlayerConfiguration();
+		sendSidebarInterfaces();
+		//sendPlayerConfiguration();
 
 		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93);
 		player.getInventory().addListener(inventoryListener);
 
-		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 28, 94);
+		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 0, 94); //-1, 64208
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
 
-		player.getBonuses().refresh();
-		player.getCombatUtility().refresh();
+		//player.getBonuses().refresh();
+		//player.getCombatUtility().refresh();
+		
+		
+		player.getEquipment().set(Equipment.SLOT_CAPE, new Item(6570, 1));
+		player.getEquipment().set(Equipment.SLOT_WEAPON, new Item(4151, 1));
+		//player.getEquipment().set(Equipment.SLOT_CAPE, new Item(6570, 1));
+
 
 		if (player.getName().equals("Stephen")) {
 			player.setRights(Player.Rights.ADMINISTRATOR);
@@ -194,10 +200,13 @@ public class ActionSender {
 		pb.putShortA(player.getLocation().getRegionY());
 		for (int xCalc = (player.getLocation().getRegionX() - 6) / 8; xCalc <= (player.getLocation().getRegionX() + 6) / 8; xCalc++) {
 			for (int yCalc = (player.getLocation().getRegionY() - 6) / 8; yCalc <= (player.getLocation().getRegionY() + 6) / 8; yCalc++) {
-				pb.putInt1(0);
-				pb.putInt1(0);
-				pb.putInt1(0);
-				pb.putInt1(0);
+				int region = yCalc + (xCalc << 8);
+				int[] data = Mapdata.getData(region);
+				//int[] data = XTEALoader.xteas.get(region);
+				pb.putInt(data[0]);
+				pb.putInt(data[1]);
+				pb.putInt(data[2]);
+				pb.putInt(data[3]);
 			}
 		}
 		pb.putLEShort(player.getLocation().getRegionX());
@@ -229,21 +238,40 @@ public class ActionSender {
 	 * Sends all the sidebar interfaces.
 	 * @return The action sender instance, for chaining.
 	 */
-	public ActionSender sendSideBarInterfaces() {
-		sendTab(77, 137); //chatbox
-		sendTab(86, 92); //Weapon tab
-		sendTab(87, 320); //Skills
-		sendTab(88, 274);
-		sendTab(89, 149);
-		sendTab(90, 387);
-		sendTab(91, 271);
-		sendTab(92, player.getPlayerConfiguration().getMagicBook().getInterfaceId());
-		sendTab(94, 550);
-		sendTab(95, 551);
-		sendTab(96, 182);
-		sendTab(97, 261);
-		sendTab(98, 464);
-		sendTab(99, 239); //Music tab
+	/**
+	 * Sends all the sidebar interfaces.
+	 * 
+	 * @return The action sender instance, for chaining.
+	 */
+	public ActionSender sendSidebarInterfaces() {
+		int magic_book = 218;
+		sendInterface(Constants.MAIN_WINDOW, 128, 137, true);//player name on chatbox
+		int start_pos = 135;
+		sendSidebarTab(start_pos++, 593);//attack 
+		sendSidebarTab(start_pos++, 320);//skills
+		sendSidebarTab(start_pos++, 274);//quests
+		sendSidebarTab(start_pos++, 149);//inv
+		sendSidebarTab(start_pos++, 387);//equipment
+		sendSidebarTab(start_pos++, 271);//prayers
+		sendSidebarTab(start_pos++, magic_book);//MAGIC
+		sendSidebarTab(start_pos++, 589);//cc
+		sendSidebarTab(start_pos++, 429);//friends
+		sendSidebarTab(start_pos++, 432);//ignores
+		sendSidebarTab(start_pos++, 182);//logout
+		sendSidebarTab(start_pos++, 261);//settings
+		sendSidebarTab(start_pos++, 216);//emotes
+		sendSidebarTab(start_pos++, 239);//music
+		return this;
+	}
+	
+	/**
+	 * Sends a sidebar tab
+	 * @param pos
+	 * @param child
+	 * @return
+	 */
+	public ActionSender sendSidebarTab(int pos, int child) {
+		sendInterface(Constants.MAIN_WINDOW, pos, child, true);
 		return this;
 	}
 
@@ -257,7 +285,7 @@ public class ActionSender {
 	 * @param interfaceId The id of the interface to display.
 	 */
 	public ActionSender sendInterface(int interfaceId) {
-		sendInterface(548, 64, interfaceId, false);
+		sendInterface(548, 104, interfaceId, false);
 		return this;
 	}
 

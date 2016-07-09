@@ -13,7 +13,7 @@ public class TimeStamp {
 	/**
 	 * The format of the time stamp.
 	 */
-	private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+	private static DateFormat dateFormat = new SimpleDateFormat("MM/dd/Y HH:mm:ss");
 	
 	/**
 	 * Get the current time of an action.
@@ -21,6 +21,6 @@ public class TimeStamp {
 	 */
 	public static String add() {
 		Date date = new Date();
-		return "[" + dateFormat.format(date) + "] ";
+		return "[" + dateFormat.format(date) + "]";
 	}
 }

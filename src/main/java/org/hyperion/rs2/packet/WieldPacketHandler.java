@@ -1,13 +1,14 @@
 package org.hyperion.rs2.packet;
 
 import org.hyperion.rs2.Constants;
-import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.container.Equipment.EquipmentType;
 import org.hyperion.rs2.model.container.Inventory;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
 
 /**
  * Handles the 'wield' and 'remove' option on items.
@@ -47,8 +48,9 @@ public class WieldPacketHandler implements PacketHandler {
 		int slot = packet.getLEShort();
 		int interfaceId = packet.getLEInt() >> 16;
 		int id = packet.getLEShort();
-		
-		if (interfaceId != 149) return;
+
+		Logger.log(Level.DEBUG, "Item wield : " + interfaceId);
+		if (interfaceId != Inventory.INTERFACE) return;
 		
 		if(slot >= 0 && slot < Inventory.SIZE) {
 			Item item = player.getInventory().get(slot);

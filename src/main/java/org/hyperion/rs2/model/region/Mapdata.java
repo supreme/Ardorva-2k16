@@ -62,7 +62,7 @@ public class Mapdata {
      * @return Returns the four mapdata.
      */
     public static int[] getData(int myRegion) {
-        System.out.println("Loading mapdata for region: " + myRegion);
+        //System.out.println("Loading mapdata for region: " + myRegion);
         if (mapLists[myRegion] == null || mapLists[myRegion].data[0] == 0) {
             System.out.println("Missing map data: " + myRegion);
             return new int[4];

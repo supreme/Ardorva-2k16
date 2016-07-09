@@ -1,5 +1,8 @@
 package org.hyperion.rs2.cache;
 
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,7 +13,7 @@ public final class Cache {
 	private static CacheFile containersInformCacheFile;
 	
 	public static final void init() throws IOException {
-		System.out.println("Loading cache...");
+		Logger.log(Level.CORE, "Loading cache...");
 		byte[] cacheFileBuffer = new byte[520];
 		RandomAccessFile containersInformFile = new RandomAccessFile("./data/cache/main_file_cache.idx255", "r");
 		RandomAccessFile dataFile =	new RandomAccessFile("./data/cache/main_file_cache.dat2", "r");
