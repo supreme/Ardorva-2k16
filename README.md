@@ -11,4 +11,4 @@ Once installed navigate to the directory and run:
 
 `mvn install`
 
-Download the cache from here" [Ardorva OSRS Cache](https://dl.dropboxusercontent.com/u/46497133/cache.zip) and place it in the data folder.
+Download the cache from here: [Ardorva OSRS Cache](https://dl.dropboxusercontent.com/u/46497133/cache.zip) and place it in the data folder.
