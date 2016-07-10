@@ -1,14 +1,10 @@
 package org.hyperion.rs2.content.combat.util;
 
 import org.hyperion.rs2.content.combat.item.ItemSets;
-import org.hyperion.rs2.content.combat.logic.CombatFormulas;
-import org.hyperion.rs2.content.combat.util.CombatData.AttackType;
 import org.hyperion.rs2.model.Entity;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.container.Equipment;
-import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
-import org.hyperion.rs2.model.player.WeaponAnimations;
 
 /**
  * Manages an entity's combat by updating max hits, handling attack animations, etc.
@@ -75,23 +71,23 @@ public class CombatUtility {
 	 * Usually invoked on an equipment change.
 	 */
 	public void refresh() {
-		if (entity instanceof Player) {
-			Player player = (Player) entity;
-			sendWeaponTab(player);
-			maxHit = CombatFormulas.calculateMeleeRangeMaxHit(player, AttackType.MELEE);
-			walkAnimation = WeaponAnimations.getWalkAnim(player);
-			runAnimation = WeaponAnimations.getRunAnim(player);
-			attackAnimation = CombatAnimations.getAttackingAnimation(player);
-			blockAnimation = CombatAnimations.getDefensiveAnimation(player);
-			attackSpeed = AttackSpeeds.getAttackSpeed(player);
-			itemSet = ItemSets.NONE; //ItemSets.get(player);
-		} else {
-			NPC npc = (NPC) entity;
-			maxHit = npc.getDefinition().getMaxHit();
-			attackAnimation = CombatAnimations.getAttackingAnimation(npc);
-			blockAnimation = CombatAnimations.getDefensiveAnimation(npc);
-			attackSpeed = AttackSpeeds.getAttackSpeed(npc);
-		}
+//		if (entity instanceof Player) {
+//			Player player = (Player) entity;
+//			sendWeaponTab(player);
+//			maxHit = CombatFormulas.calculateMeleeRangeMaxHit(player, AttackType.MELEE);
+//			walkAnimation = WeaponAnimations.getWalkAnim(player);
+//			runAnimation = WeaponAnimations.getRunAnim(player);
+//			attackAnimation = CombatAnimations.getAttackingAnimation(player);
+//			blockAnimation = CombatAnimations.getDefensiveAnimation(player);
+//			attackSpeed = AttackSpeeds.getAttackSpeed(player);
+//			itemSet = ItemSets.NONE; //ItemSets.get(player);
+//		} else {
+//			NPC npc = (NPC) entity;
+//			maxHit = npc.getDefinition().getMaxHit();
+//			attackAnimation = CombatAnimations.getAttackingAnimation(npc);
+//			blockAnimation = CombatAnimations.getDefensiveAnimation(npc);
+//			attackSpeed = AttackSpeeds.getAttackSpeed(npc);
+//		}
 	}
 	
 	/**

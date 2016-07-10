@@ -1,14 +1,14 @@
 package org.hyperion.rs2.model.object;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.hyperion.rs2.model.World;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import org.hyperion.rs2.model.World;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * Loads objects from a JSON file and adds/removes them in the game world.
@@ -36,10 +36,8 @@ public class ObjectManager {
             for (GameObject object : objects) {
             	World.getWorld().getRegionManager().getRegionByLocation(object.getLocation()).addGameObject(object);
             }
-            System.out.println("Loaded " + objects.length + " game objects...");
-        } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			Logger.log(Level.CORE, "Loaded " + objects.length + " game objects...");
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

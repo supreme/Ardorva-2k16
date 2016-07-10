@@ -1,17 +1,17 @@
 package org.hyperion.rs2;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.util.logging.Logger;
+import org.hyperion.util.Language;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-
-import org.hyperion.util.Language;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 
 /**
  * Manages server scripts.
@@ -44,17 +44,12 @@ public class ScriptManager {
 	private ScriptEngine jsEngine;
 
 	/**
-	 * The logger for this manager.
-	 */
-	private final Logger logger = Logger.getLogger(this.toString());
-
-	/**
 	 * Creates the script manager.
 	 */
 	private ScriptManager() {
 		mgr = new ScriptEngineManager();
 		jsEngine = mgr.getEngineByName("JavaScript");
-		System.out.println("Loading scripts...");
+		Logger.log(Level.CORE, "Loading scripts...");
 	}
 
 	/**

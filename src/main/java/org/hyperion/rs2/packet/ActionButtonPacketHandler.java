@@ -7,8 +7,9 @@ import org.hyperion.rs2.model.Animation;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.net.Packet;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
 
-import java.util.logging.Logger;
 
 /**
  * Handles clicking on most buttons in the interface.
@@ -17,15 +18,12 @@ import java.util.logging.Logger;
  */
 public class ActionButtonPacketHandler implements PacketHandler {
 
-	/**
-	 * The logger instance.
-	 */
-	private static final Logger logger = Logger.getLogger(ActionButtonPacketHandler.class.getName());
-	
 	@Override
 	public void handle(Player player, Packet packet) {
+		Logger.log(Level.DEBUG, "Incoming packet " + packet.getOpcode());
+
 		switch (packet.getOpcode()) {
-			case 153: //Game
+			case 113: //Game
 				handleActionButton(player, packet);
 				break;
 			case 240: //Chatbox
@@ -76,27 +74,30 @@ public class ActionButtonPacketHandler implements PacketHandler {
 				break;
 			case 261: //Settings tab
 				switch(buttonId) {
-					case 0: //Run button
+					case 55: //Run button
 						if (!player.getWalkingQueue().isRunning()) {
 							player.getWalkingQueue().setRunningToggled(true);
 						} else {
 							player.getWalkingQueue().setRunningToggled(false);
 						}
 						break;
+					default:
+						System.out.println("Settings: " + buttonId);
+						break;
 				}
 				break;
-			case 192: //Magic tab
+			case 218: //Magic tab
 				switch(buttonId) {
-					case 0: //Home teleport
-					case 15: //Varrock
-					case 18: //Lumby
-					case 21: //Fally
-					case 23: //House
-					case 26: //Cammy
-					case 32: //Ardougne
-					case 37: //Watchtower
-					case 44: //Trollheim
-					case 47: //Ape atoll
+					case 1: //Home teleport
+					case 16: //Varrock
+					case 19: //Lumby
+					case 22: //Fally
+					case 24: //House
+					case 27: //Cammy
+					case 33: //Ardougne
+					case 38: //Watchtower
+					case 45: //Trollheim
+					case 48: //Ape atoll
 						Teleport.create(player, buttonId);
 						break;
 				}
@@ -117,7 +118,7 @@ public class ActionButtonPacketHandler implements PacketHandler {
 				}
 				break;
 			default:
-				if (Constants.DEV_MODE && interfaceId != 548) {
+				if (Constants.DEV_MODE ) {
 					player.getActionSender().sendMessage("Unhandled action button | Interface: " + interfaceId + " Button: " + buttonId);
 				}
 				break;

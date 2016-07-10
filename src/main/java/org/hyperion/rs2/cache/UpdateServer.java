@@ -1,17 +1,17 @@
 package org.hyperion.rs2.cache;
 
+import org.hyperion.rs2.net.Packet;
+import org.hyperion.rs2.net.PacketBuilder;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
-
-import org.hyperion.rs2.net.Packet;
-import org.hyperion.rs2.net.PacketBuilder;
 
 public class UpdateServer {
 	
-	private static final Logger logger = Logger.getLogger(UpdateServer.class.getName());
 	private static RandomAccessFile crc;
 	private static CRC32 crc32 = new CRC32();
 	private static byte[] crcfile;
@@ -38,8 +38,7 @@ public class UpdateServer {
 	private static byte[] getFile(int cache, int id) {
 		byte[] file = readFile(cache, id);
 		if (file == null) {
-			logger.info("Invalid cache entry [cache=" + cache + ", id="
-					+ id + "]");
+			Logger.log(Level.CORE, "Invalid cache entry [cache=" + cache + ", id=" + id + "]");
 		}
 		return file;
 	}
@@ -93,7 +92,7 @@ public class UpdateServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Generating CRC refrence table...");
+		Logger.log(Level.CORE, "Generating CRC reference table...");
 		byte[] data = new byte[4048];
 		ByteBuffer crcPacketGen = ByteBuffer.wrap(data);
 		crcPacketGen.put((byte) 0).putInt(cacheLength(255) * 8);

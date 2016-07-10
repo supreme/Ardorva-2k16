@@ -50,7 +50,7 @@ public class WeaponAnimations {
 	 */
 	public static int getStandAnim(Player player) {
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
-		if (weapon != null) {
+		if (weapon != null && weapon.getDefinition().getWeaponDefinition() != null) {
 			return weapon.getDefinition().getWeaponDefinition().getStandAnimation();
 		} else {
 			return STAND;
@@ -63,7 +63,7 @@ public class WeaponAnimations {
 	 */
 	public static int getWalkAnim(Player player) {
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
-		if (weapon != null) {
+		if (weapon != null && weapon.getDefinition().getWeaponDefinition() != null) {
 			return weapon.getDefinition().getWeaponDefinition().getWalkAnimation();
 		} else {
 			return WALK;
@@ -76,7 +76,7 @@ public class WeaponAnimations {
 	 */
 	public static int getRunAnim(Player player) {
 		Item weapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
-		if (weapon != null) {
+		if (weapon != null && weapon.getDefinition().getWeaponDefinition() != null) {
 			return weapon.getDefinition().getWeaponDefinition().getRunAnimation();
 		} else {
 			return RUN;

@@ -1,5 +1,8 @@
 package org.hyperion.rs2.model.region;
 
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +55,7 @@ public class Mapdata {
             }
         }
 
-        System.out.println("Loaded " + count + " regional mapdata values...");
+        Logger.log(Level.CORE, "Loaded " + count + " XTEA values...");
     }
 
     /**
@@ -62,9 +65,8 @@ public class Mapdata {
      * @return Returns the four mapdata.
      */
     public static int[] getData(int myRegion) {
-        //System.out.println("Loading mapdata for region: " + myRegion);
         if (mapLists[myRegion] == null || mapLists[myRegion].data[0] == 0) {
-            System.out.println("Missing map data: " + myRegion);
+            Logger.log(Level.INFO, "Missing map data: " + myRegion);
             return new int[4];
         }
         return mapLists[myRegion].data;

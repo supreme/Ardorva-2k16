@@ -1,11 +1,10 @@
 package org.hyperion.rs2.model.container;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.hyperion.rs2.content.combat.util.CombatUtility;
 import org.hyperion.rs2.model.Item;
 import org.hyperion.rs2.model.player.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Contains equipment utility methods.
@@ -64,7 +63,10 @@ public class Equipment {
 		4232, 4233, 4234, 4302, 4507, 4512, 6215, 6217, 6219, 6221, 6223,
 		6225, 6227, 6229, 6231, 6233, 6235, 6237, 6239, 6241, 6243, 6245,
 		6247, 6249, 6251, 6253, 6255, 6257, 6259, 6261, 6263, 6265, 6267,
-		6269, 6271, 6273, 6275, 6277, 6279, 6524, 6889 };
+		6269, 6271, 6273, 6275, 6277, 6279, 6524, 6889,
+
+			//Start osrs
+			12825};
 
 	/**
 	 * Items which are classified as hats.

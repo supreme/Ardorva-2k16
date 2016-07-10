@@ -1,10 +1,5 @@
 package org.hyperion.rs2.model;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.hyperion.rs2.action.Action;
 import org.hyperion.rs2.action.ActionQueue;
 import org.hyperion.rs2.content.combat.CombatState;
 import org.hyperion.rs2.content.combat.DamageMap;
@@ -14,6 +9,10 @@ import org.hyperion.rs2.model.UpdateFlags.UpdateFlag;
 import org.hyperion.rs2.model.npc.NPC;
 import org.hyperion.rs2.model.player.Player;
 import org.hyperion.rs2.model.region.Region;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Represents a character in the game world, i.e. a <code>Player</code> or
@@ -26,7 +25,7 @@ public abstract class Entity {
 	/**
 	 * The default, i.e. spawn, location.
 	 */
-	public static final Location DEFAULT_LOCATION = Location.create(2606, 3102, 0);
+	public static final Location DEFAULT_LOCATION = Location.create(3087, 3491, 0);
 	
 	/**
 	 * The default death animation.

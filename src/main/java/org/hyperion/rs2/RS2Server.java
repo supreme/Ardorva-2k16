@@ -54,6 +54,7 @@ public class RS2Server {
 	 */
 	public RS2Server bind(int port) throws IOException {
 		Logger.log(Level.CORE, "Binding to port: " + port + "...");
+		//TODO: Set reuse address
 		acceptor.bind(new InetSocketAddress(port));
 		return this;
 	}

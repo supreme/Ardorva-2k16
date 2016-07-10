@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.container.Equipment;
 import org.hyperion.rs2.model.shops.Shop;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -92,7 +94,7 @@ public class DefinitionLoader {
 			RandomAccessFile in = new RandomAccessFile(PACKED_PATH, "r");
 			FileChannel channel = in.getChannel();
 			ByteBuffer buffer = channel.map(MapMode.READ_ONLY, 0,channel.size());
-			setBonuses(new HashMap<Integer, int[]>(buffer.remaining() / 26));
+			setBonuses(new HashMap<>(buffer.remaining() / 26));
 			int loaded = 0;
 			while (buffer.hasRemaining()) {
 				int itemId = buffer.getShort() & 0xffff;
@@ -105,7 +107,7 @@ public class DefinitionLoader {
 			}
 			channel.close();
 			in.close();
-			System.out.println("Loaded " + loaded + " item bonuses.");
+			Logger.log(Level.CORE, "Loaded " + loaded + " item bonuses.");
 		} catch (Throwable e) {
 			World.getWorld().handleError(e);
 		}
@@ -124,10 +126,8 @@ public class DefinitionLoader {
             		Equipment.getEquipmentTypes().put(def.getId(), Equipment.forSlot(itemName, def.getEquipmentDefinition().getSlot()));
             	}
             }
-            System.out.println("Loaded " + itemDefinitions.length + " item definitions...");
-        } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			Logger.log(Level.CORE, "Loaded " + itemDefinitions.length + " item definitions...");
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -139,9 +139,7 @@ public class DefinitionLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(DEFINITIONS_DIRECTORY + "npcdef.json"))) {
             Gson gson = new GsonBuilder().create();
             npcDefinitions = gson.fromJson(reader, NPCDefinition[].class);
-            System.out.println("Loaded " + npcDefinitions.length + " NPC definitions...");
-        } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            Logger.log(Level.CORE, "Loaded " + npcDefinitions.length + " NPC definitions...");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,10 +152,8 @@ public class DefinitionLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(SHOP_DIRECTORY + "shops.json"))) {
             Gson gson = new GsonBuilder().create();
             shops = gson.fromJson(reader, Shop[].class);
-            System.out.println("Loaded " + shops.length + " shops");
-        } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+            Logger.log(Level.CORE, "Loaded " + shops.length + " shops");
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

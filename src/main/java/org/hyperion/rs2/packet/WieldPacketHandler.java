@@ -29,6 +29,7 @@ public class WieldPacketHandler implements PacketHandler {
 	
 	@Override
 	public void handle(Player player, Packet packet) {
+		System.out.println("WieldPacketHandler: opcode" + packet.getOpcode());
 		switch(packet.getOpcode()) {
 			case WIELD:
 				handleItemWield(player, packet);
@@ -46,7 +47,7 @@ public class WieldPacketHandler implements PacketHandler {
 	 */
 	private void handleItemWield(Player player, Packet packet) {
 		int slot = packet.getLEShort();
-		int interfaceId = packet.getLEInt() >> 16;
+		int interfaceId = packet.getInt() >> 16;
 		int id = packet.getLEShort();
 
 		Logger.log(Level.DEBUG, "Item wield : " + interfaceId);
@@ -89,7 +90,7 @@ public class WieldPacketHandler implements PacketHandler {
 		int slot = packet.getShort();
 		int interfaceId = interfaceHash >> 16;
 		int child = interfaceHash & 0xff;
-		
+
 		if (Constants.DEV_MODE) {
 			player.getActionSender().sendMessage("Id: " + id + " Slot: " + slot + " Interface ID: " + interfaceId + " Child: " + child);
 		}
@@ -106,5 +107,4 @@ public class WieldPacketHandler implements PacketHandler {
 			}
 		}
 	}
-
 }

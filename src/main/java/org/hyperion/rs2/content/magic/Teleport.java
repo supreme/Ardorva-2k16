@@ -1,16 +1,12 @@
 package org.hyperion.rs2.content.magic;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.event.Event;
-import org.hyperion.rs2.model.Animation;
-import org.hyperion.rs2.model.Graphic;
-import org.hyperion.rs2.model.Item;
-import org.hyperion.rs2.model.Location;
-import org.hyperion.rs2.model.World;
+import org.hyperion.rs2.model.*;
 import org.hyperion.rs2.model.player.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles the teleporting actions.
@@ -27,52 +23,52 @@ public class Teleport {
 		/**
 		 * The home teleport.
 		 */
-		EDGEVILLE(0, Location.create(3093, 3493, 0), 1, new int[][] { /*EMPTY*/ }, false),
+		EDGEVILLE(1, Entity.DEFAULT_LOCATION, 1, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Varrock teleport.
 		 */
-		VARROCK(15, Location.create(3210, 3424, 0), 25, new int[][] { {554, 1}, {556, 3}, {563, 1} }, false),
+		VARROCK(16, Location.create(3210, 3424, 0), 25, new int[][] { {554, 1}, {556, 3}, {563, 1} }, false),
 		
 		/**
 		 * Lumbridge teleport.
 		 */
-		LUMBRIDGE(18, Location.create(3222, 3218, 0), 31, new int[][] { /*EMPTY*/ }, false),
+		LUMBRIDGE(19, Location.create(3222, 3218, 0), 31, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Falador teleport.
 		 */
-		FALADOR(21, Location.create(2964, 3378, 0), 37, new int[][] { /*EMPTY*/ }, false),
+		FALADOR(22, Location.create(2964, 3378, 0), 37, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * House teleport.
 		 */
-		HOUSE(23, Location.create(1883, 5115, 0), 40, new int[][] { /*EMPTY*/ }, false),
+		HOUSE(24, Location.create(1883, 5115, 0), 40, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Camelot teleport.
 		 */
-		CAMELOT(26, Location.create(2757, 3477, 0), 45, new int[][] { /*EMPTY*/ }, false),
+		CAMELOT(27, Location.create(2757, 3477, 0), 45, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Ardougne teleport.
 		 */
-		ARDOUGNE(32, Location.create(2529, 3307, 0), 51, new int[][] { /*EMPTY*/ }, false),
+		ARDOUGNE(33, Location.create(2529, 3307, 0), 51, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Watchtower teleport.
 		 */
-		WATCHTOWER(37, Location.create(2529, 3307, 0), 58, new int[][] { /*EMPTY*/ }, false),
+		WATCHTOWER(38, Location.create(2529, 3307, 0), 58, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Trollheim teleport.
 		 */
-		TROLLHEIM(44, Location.create(2529, 3307, 0), 61, new int[][] { /*EMPTY*/ }, false),
+		TROLLHEIM(45, Location.create(2529, 3307, 0), 61, new int[][] { /*EMPTY*/ }, false),
 		
 		/**
 		 * Ape Atoll teleport.
 		 */
-		APE_ATOLL(47, Location.create(2529, 3307, 0), 64, new int[][] { /*EMPTY*/ }, false);
+		APE_ATOLL(48, Location.create(2529, 3307, 0), 64, new int[][] { /*EMPTY*/ }, false);
 		
 		/**
 		 * The action button id.

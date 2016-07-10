@@ -1,7 +1,5 @@
 package org.hyperion.rs2.net;
 
-import org.apache.mina.core.future.IoFuture;
-import org.apache.mina.core.future.IoFutureListener;
 import org.hyperion.rs2.Constants;
 import org.hyperion.rs2.model.*;
 import org.hyperion.rs2.model.container.Equipment;
@@ -58,10 +56,10 @@ public class ActionSender {
 		sendSidebarInterfaces();
 		//sendPlayerConfiguration();
 
-		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93);
+		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93); //client side -> type 2
 		player.getInventory().addListener(inventoryListener);
 
-		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 0, 94); //-1, 64208
+		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 28, 94); //-1, 64208
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
@@ -70,8 +68,7 @@ public class ActionSender {
 		//player.getCombatUtility().refresh();
 		
 		
-		player.getEquipment().set(Equipment.SLOT_CAPE, new Item(6570, 1));
-		player.getEquipment().set(Equipment.SLOT_WEAPON, new Item(4151, 1));
+
 		//player.getEquipment().set(Equipment.SLOT_CAPE, new Item(6570, 1));
 
 
@@ -327,7 +324,7 @@ public class ActionSender {
 	 */
 	public ActionSender displayInterface(int id) {
 		player.getInterfaceState().interfaceOpened(id);
-		sendInterface(548, 62, id, false);
+		sendInterface(548, 104, id, false);
 		return this;
 	}
 
@@ -336,14 +333,11 @@ public class ActionSender {
 	 * @return The action sender instance, for chaining.
 	 */
 	public ActionSender sendLogout() {
-		player.getSession().write(new PacketBuilder(167).toPacket()).addListener(new IoFutureListener() {
-			@Override
-			public void operationComplete(IoFuture arg0) {
-				savePlayerConfiguration();
-				PlayerConfiguration.serialize(player, player.getPlayerConfiguration());
-				arg0.getSession().close(false);
-			}
-		});
+		player.getSession().write(new PacketBuilder(167).toPacket()).addListener(future -> {
+            savePlayerConfiguration();
+            PlayerConfiguration.serialize(player, player.getPlayerConfiguration());
+            future.getSession().close(false);
+        });
 		return this;
 	}
 

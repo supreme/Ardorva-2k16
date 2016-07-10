@@ -1,18 +1,19 @@
 package org.hyperion.rs2.model.npc;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.hyperion.rs2.model.Location;
 import org.hyperion.rs2.model.World;
 import org.hyperion.rs2.model.definitions.NPCDefinition;
 import org.hyperion.rs2.model.region.Region;
 import org.hyperion.rs2.model.region.RegionCoordinates;
+import org.hyperion.util.Logger;
+import org.hyperion.util.Logger.Level;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Populates the world with NPCs.
@@ -80,7 +81,7 @@ public class SpawnLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(SPAWN_FILE))) {
             Gson gson = new GsonBuilder().create();
             spawns = gson.fromJson(reader, Spawn[].class);
-            System.out.println("Loaded " + spawns.length + " NPC spawns...");
+			Logger.log(Level.CORE, "Loaded " + spawns.length + " NPC spawns...");
     		populateWorld();
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

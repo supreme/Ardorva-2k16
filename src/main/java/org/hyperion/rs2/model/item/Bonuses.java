@@ -96,8 +96,8 @@ public class Bonuses {
 	 * with the correct data.
 	 */
 	public void refresh() {
-		setBonuses();
-		updateInterface();
+		//setBonuses();
+		//updateInterface();
 	}
 	
 	/**
