@@ -73,10 +73,10 @@ public class WieldPacketHandler implements PacketHandler {
 					player.getEquipment().add(item);
 				}
 			}
+
+			player.getBonuses().refresh();
+			player.getCombatUtility().refresh();
 		}
-		
-		player.getBonuses().refresh();
-		player.getCombatUtility().refresh();
 	}
 	
 	/**
@@ -101,6 +101,8 @@ public class WieldPacketHandler implements PacketHandler {
 				if (player.getInventory().hasRoomFor(item)) {
 					player.getInventory().add(item);
 					player.getEquipment().set(slot, null);
+					player.getBonuses().refresh();
+					player.getCombatUtility().refresh();
 				} else {
 					player.getActionSender().sendMessage("You do not have any room in your inventory.");
 				}

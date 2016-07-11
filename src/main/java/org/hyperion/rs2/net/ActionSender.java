@@ -50,27 +50,20 @@ public class ActionSender {
 		sendInteractionOption("Follow", 3, false);
 		sendInteractionOption("Trade with", 4, false);
 
-//		player.getPlayerVariables().handleCounter(); TODO
-
 		sendSkills();
 		sendSidebarInterfaces();
-		//sendPlayerConfiguration();
+		sendPlayerConfiguration();
 
-		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93); //client side -> type 2
+		InterfaceContainerListener inventoryListener = new InterfaceContainerListener(player, Inventory.INTERFACE, 0, 93);
 		player.getInventory().addListener(inventoryListener);
 
-		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 28, 94); //-1, 64208
+		InterfaceContainerListener equipmentListener = new InterfaceContainerListener(player, Equipment.INTERFACE, 28, 94);
 		player.getEquipment().addListener(equipmentListener);
 		player.getEquipment().addListener(new EquipmentContainerListener(player));
 		player.getEquipment().addListener(new WeaponContainerListener(player));
 
 		//player.getBonuses().refresh();
 		//player.getCombatUtility().refresh();
-		
-		
-
-		//player.getEquipment().set(Equipment.SLOT_CAPE, new Item(6570, 1));
-
 
 		if (player.getName().equals("Stephen")) {
 			player.setRights(Player.Rights.ADMINISTRATOR);
@@ -99,8 +92,9 @@ public class ActionSender {
 			return this;
 		}
 
-		sendString(config.getWeaponTabInterface(), 0, config.getWeaponName());
-		sendTab(86, config.getWeaponTabInterface());
+		sendString(config.getWeaponTabInterface(), 1, config.getWeaponName());
+		sendString(config.getWeaponTabInterface(), 2, "Combat lvl: " + player.getSkills().getCombatLevel());
+		sendTab(135, config.getWeaponTabInterface());
 		return this;
 	}
 
@@ -199,7 +193,6 @@ public class ActionSender {
 			for (int yCalc = (player.getLocation().getRegionY() - 6) / 8; yCalc <= (player.getLocation().getRegionY() + 6) / 8; yCalc++) {
 				int region = yCalc + (xCalc << 8);
 				int[] data = Mapdata.getData(region);
-				//int[] data = XTEALoader.xteas.get(region);
 				pb.putInt(data[0]);
 				pb.putInt(data[1]);
 				pb.putInt(data[2]);

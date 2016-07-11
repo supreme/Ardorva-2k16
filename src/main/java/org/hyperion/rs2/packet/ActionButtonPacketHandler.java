@@ -24,6 +24,7 @@ public class ActionButtonPacketHandler implements PacketHandler {
 
 		switch (packet.getOpcode()) {
 			case 113: //Game
+			case 153:
 				handleActionButton(player, packet);
 				break;
 			case 240: //Chatbox

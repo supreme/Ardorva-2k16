@@ -48,7 +48,7 @@ public class PlayerConfiguration implements Serializable {
 	public PlayerConfiguration() {
 		magicBook = MagicBook.MODERN;
 		weaponName = "Unarmed";
-		weaponTabInterface = 92;
+		weaponTabInterface = 593;
 		autoRetaliating = true;
 		running = false;
 	}

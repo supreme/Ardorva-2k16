@@ -71,9 +71,9 @@ public class CombatUtility {
 	 * Usually invoked on an equipment change.
 	 */
 	public void refresh() {
-//		if (entity instanceof Player) {
-//			Player player = (Player) entity;
-//			sendWeaponTab(player);
+		if (entity instanceof Player) {
+			Player player = (Player) entity;
+			sendWeaponTab(player);
 //			maxHit = CombatFormulas.calculateMeleeRangeMaxHit(player, AttackType.MELEE);
 //			walkAnimation = WeaponAnimations.getWalkAnim(player);
 //			runAnimation = WeaponAnimations.getRunAnim(player);
@@ -81,13 +81,13 @@ public class CombatUtility {
 //			blockAnimation = CombatAnimations.getDefensiveAnimation(player);
 //			attackSpeed = AttackSpeeds.getAttackSpeed(player);
 //			itemSet = ItemSets.NONE; //ItemSets.get(player);
-//		} else {
+		} else {
 //			NPC npc = (NPC) entity;
 //			maxHit = npc.getDefinition().getMaxHit();
 //			attackAnimation = CombatAnimations.getAttackingAnimation(npc);
 //			blockAnimation = CombatAnimations.getDefensiveAnimation(npc);
 //			attackSpeed = AttackSpeeds.getAttackSpeed(npc);
-//		}
+		}
 	}
 	
 	/**
@@ -99,14 +99,16 @@ public class CombatUtility {
 		Item playerWeapon = player.getEquipment().get(Equipment.SLOT_WEAPON);
 		if (playerWeapon != null && playerWeapon.getDefinition().getWeaponDefinition() != null) {
 			int interfaceId = playerWeapon.getDefinition().getWeaponDefinition().getInterfaceId();
-			player.getActionSender().sendTab(86, interfaceId);
+			player.getActionSender().sendTab(135, interfaceId);
 			player.getActionSender().sendString(interfaceId, 0, playerWeapon.getDefinition().getName());
 			player.getPlayerConfiguration().setWeaponTabInterface(interfaceId);
 		} else {
-			player.getActionSender().sendTab(86, 92);
-			player.getActionSender().sendString(92, 0, "Unarmed");
-			player.getPlayerConfiguration().setWeaponTabInterface(92);
+			player.getActionSender().sendTab(135, 593);
+			player.getActionSender().sendString(593, 1, "Unarmed");
+			player.getPlayerConfiguration().setWeaponTabInterface(593);
 		}
+
+		player.getActionSender().sendString(593, 2, "Combat lvl: " + player.getSkills().getCombatLevel());
 	}
 	
 	/**

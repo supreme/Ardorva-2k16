@@ -1,6 +1,5 @@
 package org.hyperion.rs2;
 
-import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.hyperion.rs2.model.World;
 import org.hyperion.util.Logger;
@@ -25,7 +24,7 @@ public class RS2Server {
 	/**
 	 * The <code>IoAcceptor</code> instance.
 	 */
-	private final IoAcceptor acceptor = new NioSocketAcceptor();
+	private final NioSocketAcceptor acceptor = new NioSocketAcceptor();
 
 	/**
 	 * The <code>GameEngine</code> instance.
@@ -42,6 +41,7 @@ public class RS2Server {
 	 */
 	public RS2Server() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		World.getWorld().init(engine);
+		acceptor.setReuseAddress(true);
 		acceptor.setHandler(new ConnectionHandler());
 		//acceptor.getFilterChain().addFirst("throttleFilter", new ConnectionThrottleFilter());
 	}
